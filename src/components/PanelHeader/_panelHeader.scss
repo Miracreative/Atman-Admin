@@ -1,0 +1,14 @@
+
+.panelhead {
+    margin-bottom: 40px;
+    padding: 30px 50px;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    border-bottom: 1px solid rgba(245, 89, 38, 1);
+    &__title {
+      margin-right: auto;
+      font-size: 48px;
+      font-weight: 400;
+    }
+  }
