@@ -118,7 +118,7 @@ const EditAdmin = () => {
                     <label>
                         <span className='create-admin__label'>Пароль</span>
                         <input type="text" name='password' value={admin.password} onChange={handleChange}
-                          onInput={onChangeDisable}
+                        onInput={onChangeDisable}
                         />
                     </label>
 
@@ -132,9 +132,9 @@ const EditAdmin = () => {
 
                 </div>
             </div>
-          
+        
             <div className="parent-form__row">
-              <div className="parent-form__payments">
+            <div className="parent-form__payments">
                 <label className="create-admin__label">
                     <span>Роль администратора</span>
                     <div className="create-admin__checkboxes">
@@ -152,20 +152,20 @@ const EditAdmin = () => {
                     </label>
                     </div>
                 </label>
-              </div>
+            </div>
             </div>
 
 
 
-          </div>
+        </div>
         </div>
         <div className="parent-form__btns">
-          <button className='button button--red' type='button' onClick={() => onConfirmDelete(admin.id, admin.name, admin.email, admin.role, admin.password)}>Удалить</button>
-          <button className='button' type="button" disabled={disable} onClick={() => onEditAdmin(admin)}>Сохранить</button>
+        <button className='button button--red' type='button' onClick={() => onConfirmDelete(admin.id, admin.name, admin.email, admin.role, admin.password)}>Удалить</button>
+        <button className='button' type="button" disabled={disable} onClick={() => onEditAdmin(admin)}>Сохранить</button>
         </div>
-      </form>
-      <ConfirmModal question='Удалить админа?' text1={targetConfirm.name} text2={targetConfirm.email} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeAdmin(targetConfirm.id)}/>
-      <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+    </form>
+    <ConfirmModal question='Удалить админа?' text1={targetConfirm.name} text2={targetConfirm.email} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeAdmin(targetConfirm.id)}/>
+    <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
         del ?
         navigate('/admins-list') :
         console.log('edit')} />
