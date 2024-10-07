@@ -54,7 +54,7 @@ const Admins = () => {
                     <span>{id}</span>
                     <span>{name}</span>
                     <span>{email}</span>
-                   <Link className="rows-list__btn button" to={`/edit-parent/${id}`}>Edit</Link>
+                   <Link className="rows-list__btn button" to={`/edit-admin/${id}`}>Редактировать</Link>
                 </div>
                 <button 
                     className='btn-trash'

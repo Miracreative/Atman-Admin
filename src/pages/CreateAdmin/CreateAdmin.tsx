@@ -26,15 +26,21 @@ const CreateAdmin = () => {
     const onCreateAdmin = () => {
         setLoading(true);
         createAdmin(admin)
-        .then(() => {
+        .then((res) => {
             setLoading(false);
-            setShowAlert(true)
-            setTextAlert('Новый администратор был успешно создан')
+            setShowAlert(true);
+            if(res.message) {
+                setTextAlert(res.message);
+            } else {
+                setTextAlert('Новый администратор был успешно создан')
+            }
+           
         }).catch(() => {
             setLoading(false);
             setShowAlert(true)
             setTextAlert('Что-то пошло не так')
         }).finally(() => {
+            setLoading(false);
             setShowAlert(true)
         })
     }

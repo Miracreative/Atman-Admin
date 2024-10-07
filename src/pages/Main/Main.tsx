@@ -6,7 +6,8 @@ import { getAllGoods } from "../../hooks/http.hook";
 
 import AdminPanel from "../AdminPanel/AdminPanel";
 import Admins from "../Admins/Admins";
-import CreateAdmin from '../CreateAdmin/CreateAdmin'
+import CreateAdmin from '../CreateAdmin/CreateAdmin';
+import EditAdmin from "../EditAdmin/EditAdmin";
 // import AdminList from "../AdminsList/AdminsList";
 // import Transaction from "../Transaction/Transaction";
 // import DishList from "../DishList/DishList";
@@ -53,7 +54,7 @@ const Main = () =>  {
                 <div className="navigation__top">
                     <img className="navigation__logo" src={logo} alt="logo" />
                     <div className="navigation__user">
-                        <div className="navigation__name">{name ? name : 'to A'}</div>
+                        <div className="navigation__name">{name ? name : 'Admin'}</div>
                         {/* <div className="navigation__login">{login}</div> */}
                     </div>
                 </div>
@@ -147,6 +148,7 @@ const Main = () =>  {
                     <Route path="/" element={<AdminPanel/>}/>
                     <Route path="/admins-list" element={<Admins/>}/>
                     <Route path="/admins-create" element={<CreateAdmin/>}/>
+                    <Route path="/edit-admin/:id" element={<EditAdmin />}/>
                 </Routes>
             </div>
         </div>

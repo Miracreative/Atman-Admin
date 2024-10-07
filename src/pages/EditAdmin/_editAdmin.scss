@@ -1,0 +1,198 @@
+.parent-form {
+    &__inner {
+      display: flex;
+      font-family: 'Monsterrat', sans-serif;
+    }
+    input[type=text],
+    .input {
+      display: block;
+      width: 100%;
+      padding: 23px 30px;
+      border: 1px solid rgba(53, 53, 53, 1);
+      border-radius: 20px;
+    }
+    &__left {
+      padding-right: 40px;
+    }
+    
+    &__plus {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 50px;
+      height: 50px;
+      background-color: #fff;
+      border-radius: 50%;
+      border: 1px solid rgba(53, 53, 53, 1);
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 20px;
+        height: 1px;
+        transform: translate(-50%, -50%);
+        background-color: black;
+      }
+      &::after {
+        transform: translate(-50%, -50%) rotate(90deg);
+  
+      }
+    }
+    &__right {
+      width: 100%;
+      padding-left: 40px;
+      border-left: 1px solid rgba(53, 53, 53, 1);
+    }
+    &__col-box {
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+    }
+    &__col {
+      display: block;
+      width: 48%;
+      label {
+        display: block;
+        + label {
+          margin-top: 30px;
+        }
+      }
+    }
+    &__label-name {
+      font-size: 12px;
+      padding-left: 20px;
+    }
+    &__labels-box {
+      margin-top: 30px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      label {
+        width: 20%;
+      }
+      &--gender {
+        margin-top: 30px;
+        label:first-child {
+          width: 30%;
+        }
+      }
+      .checkbox {
+        margin-top: 0;
+        width: 31%;
+      }
+    }
+    &__checkboxes {
+      margin-top: 30px;
+    }
+    &__checkbox-list {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 30px 0;
+      width: 100%;
+      padding: 15px;
+      border-radius: 20px;
+      border: 1px solid rgba(53, 53, 53, 1);
+      background-color: #fff;
+      label {
+        width: 30%;
+      }
+      &--two-col {
+        label {
+          width: 45%;
+        }
+      }
+    }
+  
+    &__btns {
+      margin-top: 60px;
+      display: flex;
+      justify-content: end;
+      gap: 80px;
+      button {
+        max-width: 335px;
+      }
+    }
+    &__row {
+      margin-bottom: 50px;
+      padding-bottom: 50px;
+      border-bottom: 1px solid rgba(53, 53, 53, 1);
+    }
+    &__subtitle {
+      margin-bottom: 30px;
+      font-size: 36px;
+      font-weight: 400;
+    }
+    &__payments {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2.5vw;
+    }
+    &__payments-label {
+      text-align: center;
+      cursor: pointer;
+      span {
+        margin-bottom: 10px;
+        display: inline-block;
+        font-size: 12px;
+      }
+      div {
+        height: 70px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(245, 89, 38, 1);
+        border-radius: 20px;
+        img {
+          height: 100%;
+          object-fit: contain;
+        }
+      }
+      input:checked + div {
+        background-color: rgba(245, 89, 38, 1);
+        img {
+          filter: brightness(10);
+        }
+      }
+    }
+  
+    &__children {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5vw;
+    }
+    &__child {
+      display: flex;
+      gap: 2.5vw;
+      align-items: center;
+      height: 70px;
+      background-color: #fff;
+      border: 1px solid rgba(245, 89, 38, 1);
+      border-radius: 200px;
+      img {
+        width: 70px;
+        height: 70px;
+        border: 1px solid rgba(245, 89, 38, 1);
+        border-left: none;
+        border-radius: 50%;
+        object-fit: cover;
+        object-position: center;
+      }
+      a {
+        width: 150px;
+        height: 50px;
+        padding: 17px 10px;
+        margin-left: auto;
+        margin-right: 10px;
+        text-align: center;
+        background-color: rgba(245, 89, 38, 1);
+        color: #fff;
+        border-radius: 40px;
+      }
+    }
+  }
