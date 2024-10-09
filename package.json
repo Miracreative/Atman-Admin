@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.7",
+    "@types/lodash.debounce": "^4.0.9",
     "axios": "^1.7.7",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-email-validator": "^1.0.2",

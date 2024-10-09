@@ -94,6 +94,15 @@ const getOneKnowlege = async (id: any) => {
     } 
 }
 
+const getSearchKnowlege = async (searchText: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/base/${searchText}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
 const createKnowlege = async (knowlege: Knowlege) =>  {
     try {
         const response = await axios.post(`${SERVER_URL}/base`, {
@@ -153,5 +162,6 @@ export {
     createKnowlege,
     deleteKnowlege,
     getOneKnowlege,
+    getSearchKnowlege,
     getAllKnowlege
 };

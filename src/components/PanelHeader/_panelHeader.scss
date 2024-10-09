@@ -11,4 +11,19 @@
       font-size: 48px;
       font-weight: 400;
     }
+    input {
+      border-radius: 20px;
+      background-color: #353535;
+      padding-right: 120px;
+      color: white;
+    }
+    .search {
+      display: flex;
+      img {
+        width: 40px;
+        height: 40px;
+        margin-left: -80px;
+        margin-top: 18px;
+      }
+    }
   }

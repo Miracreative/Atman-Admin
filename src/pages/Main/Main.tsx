@@ -8,7 +8,7 @@ import AdminPanel from "../AdminPanel/AdminPanel";
 import Admins from "../Admins/Admins";
 import CreateAdmin from '../CreateAdmin/CreateAdmin';
 import EditAdmin from "../EditAdmin/EditAdmin";
-import Knowlege from "../Knowege/Knowlege";
+import Knowlege from "../Knowlege/Knowlege";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { getAllKnowlege } from "../../hooks/http.hook";
+import { getAllKnowlege, getSearchKnowlege } from "../../hooks/http.hook";
+import debounce from 'lodash.debounce';
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import Pagination from "../../components/Pagination/Pagination";
 import SetContent from "../../utils/SetContent";
@@ -16,13 +17,25 @@ const Knowlege = () => {
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState(1);
     const [search, setSearch] = useState('')
+    const [searchForBackend, setSearchForBackend] = useState('')
+
+    const inputRef = useRef<HTMLInputElement>(null);
+    const onClickClear = () => {
+        setSearch('');
+        inputRef.current?.focus();
+    };
+
+    const updateSearchValue = useCallback(
+        debounce((str:string) => {
+           setSearchForBackend(str);
+        }, 500),
+        [],
+    );
 
     const changePage = (step: any) => {
-        console.log(step);
-        // step  -1 means previous page and +1 is next
         getKnowlege(+currentPage + step);
         setCurrentPage(state => +state + step);
-      }
+    }
 
     const getKnowlege = (currentPage: number) => {
         // getAllKnowlege(currentPage).then(res => {
@@ -32,7 +45,7 @@ const Knowlege = () => {
         //     () => {setProcess('confirmed')}
         // );
         setKnowlege([
-            {
+            { 
                 title: 'Название',
                 content: 'Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля.',
                 file: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fru.freepik.com%2Fphotos%2F%25D0%25BC%25D0%25B8%25D0%25BB%25D1%258B%25D0%25B5-%25D0%25BA%25D0%25B0%25D1%2580%25D1%2582%25D0%25B8%25D0%25BD%25D0%25BA%25D0%25B8&psig=AOvVaw3SXWksXJnOPAJO4-_UyoeF&ust=1728542874409000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMi35MLZgIkDFQAAAAAdAAAAABAE',
@@ -56,8 +69,18 @@ const Knowlege = () => {
         getKnowlege(currentPage);
     }, [])
 
+    useEffect(() => {
+        // getSearchKnowlege(searchForBackend).then(res => {
+                // setKnowlege(res)
+            //        setTotalPages(res.max_page)
+            // }).then(
+            //     () => {setProcess('confirmed')}
+            // );
+    }, [searchForBackend])
+
     const onSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
+        updateSearchValue(searchForBackend);
     }
     
     const renderItems = (arr: any[]) => {
@@ -90,13 +113,16 @@ const Knowlege = () => {
         <>
             <PanelHeader title="База знаний" children={
                 <div className="search">
-                    <input type="text" placeholder="Search" value={search} onChange={(e) => onSearch(e)}/>
-                    <img src={attention} alt="search" />
+                    <input type="text" ref={inputRef} placeholder="Search" value={search} onChange={(e) => onSearch(e)}/>
+                    {
+                        search &&  <img onClick={onClickClear} src={attention} alt="search" />
+                    }
+                   
                 </div>
             } showBackBtn={false} />
             <SetContent process={process} component={renderItems(knowlege)}/>
             <div className="knowlege__wrapper">
-                <Link className="rows-list__btn button  knowlege__btn knowlege__btn--add" to={`/create-knowlege/`}>Добавть базу</Link>
+                <Link className="button  knowlege__btn knowlege__btn--add" to={`/create-knowlege/`}>Добавть базу</Link>
                 <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} />
             </div>
           
