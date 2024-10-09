@@ -3,6 +3,21 @@ import axios from 'axios';
 
 const SERVER_URL:string = 'http://192.168.0.153:5000/api';
 
+
+interface Admin {
+    name: string,
+    email: string,
+    role: string,
+    password: string,
+}
+
+interface Knowlege {
+    title: string,
+    content: string,
+    orientation: string,
+    file: object
+}
+
 const getAllAdmins = async () =>  {
     try {
         const response = await axios.get(`${SERVER_URL}/users`);
@@ -10,13 +25,6 @@ const getAllAdmins = async () =>  {
     } catch (error: any) {
         return error.response.data
     } 
-}
-
-interface Admin {
-    name: string,
-    email: string,
-    role: string,
-    password: string,
 }
 
 const createAdmin = async (admin: Admin) => {
@@ -56,11 +64,67 @@ const getOneAdmin = async (id: any) => {
 }
 
 const editAdmin = async (admin: Admin) =>  {
-    console.log(admin)
     try {
         const response = await axios.put(`${SERVER_URL}/users`, {
             data: {
                 admin
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getAllKnowlege = async (page: any) =>  {
+    try {
+        const response = await axios.get(`${SERVER_URL}/base/${page}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getOneKnowlege = async (id: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/base/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const createKnowlege = async (knowlege: Knowlege) =>  {
+    try {
+        const response = await axios.post(`${SERVER_URL}/base`, {
+            data: {
+                knowlege
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const editKnowlege = async (knowlege: Knowlege) =>  {
+    try {
+        const response = await axios.put(`${SERVER_URL}/base`, {
+            data: {
+                knowlege
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const deleteKnowlege = async (id: number) =>  {
+    try {
+        const response = await axios.delete(`${SERVER_URL}/base`, {
+            data: {
+                id
             }
         });
         return response.data;
@@ -78,12 +142,16 @@ const getAllGoods = async () =>  {
     } 
 }
 
-
 export { 
     getAllGoods, 
     createAdmin, 
     getAllAdmins,
     editAdmin,
     getOneAdmin,
-    deleteAdmin
+    deleteAdmin,
+    editKnowlege,
+    createKnowlege,
+    deleteKnowlege,
+    getOneKnowlege,
+    getAllKnowlege
 };

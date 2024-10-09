@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router';
 import './_panelHeader.scss'
 const PanelHeader = ({title, children, showBackBtn} : {
     title: string,
-    children: string | null,
+    children: any | null,
     showBackBtn: boolean
 }) => {
   const navigate = useNavigate();

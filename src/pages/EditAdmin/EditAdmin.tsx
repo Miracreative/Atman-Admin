@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate} from 'react-router-dom';
+import generatePass from '../../services/GeneratePass';
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import ModalAlert from '../../components/ModalAlert/ModalAlert';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
@@ -14,11 +15,11 @@ const EditAdmin = () => {
     const {id} = useParams(); 
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
-    const [showAlert, setShowAlert] = useState<boolean>(false);
+    const [showAlert, setShowAlert] = useState<boolean>(false); 
     const [textAlert, setTextAlert] = useState<string>('');
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [del, setDel] = useState<boolean>(false)
-    const [disable, setDisable] = useState<boolean>(true);
+    const [errors, setErrors] = useState<any>({});
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
         name: '',
@@ -35,6 +36,46 @@ const EditAdmin = () => {
         password: ''
     }); 
 
+
+    const validateValues = (inputName:string, inputValue: string) => {
+
+        let error = {
+            name: '',
+            email: '',
+            password: '',
+            repeatPassword: ''
+        };
+    
+        switch(inputName) {
+            case 'name':
+                if (inputValue.length < 2) {
+                error.name = "Имя слишком короткое";
+                } else {
+                error.name = '';
+                }
+                break;
+            case 'email':
+                let emailRegExp = /^[a-zA-Z0-9._]+@[a-z.]+\.[a-z]{2,6}$/i;
+                if (!emailRegExp.test(inputValue)) {
+                error.email = "Email некорректный"
+                } else {
+                error.email = "";
+                }
+                break;
+            case 'password':
+                if (inputValue.length < 6) {
+                error.password = "Пароль очень короткий";
+                } else {
+                error.password = "";
+                }
+                break;
+            default:
+                console.error('Чекнули тип админа');
+        }
+     
+        return error;
+      };
+
   //отправляем запрос получния данных об админе
     useEffect(() => { 
         getOneAdmin(id).then(res => {
@@ -43,10 +84,21 @@ const EditAdmin = () => {
         })
     }, []);
 
-
+    const checkForm = () => {
+        if (admin.name && admin.email && admin.password && admin.role) {
+          for (let key in errors) {
+            if (errors[key] !== '') {
+              return true
+            }
+          }
+          return false
+        }
+        return true
+      }
 //обработчик текстовых инпутов
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>): void => {
-        setAdmin(state => ({...state, [e.target.name]: e.target.value}))
+        setAdmin(state => ({...state, [e.target.name]: e.target.value}));
+        setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
     const onEditAdmin = (admin: {
@@ -91,11 +143,6 @@ const EditAdmin = () => {
         setShowConfirm(true);
         setTargetConfirm({id, name, role, email, password})
     }
-    const onChangeDisable = () => {
-        if(admin.password.length >= 6) {
-            setDisable(false);
-        }
-    }
 
     let spinner = loading ? <Spinner active/> : null;
 
@@ -113,13 +160,26 @@ const EditAdmin = () => {
                 <div className="parent-form__col">
                     <label>
                         <span className='create-admin__label'>E-Mail</span>
-                        <input type="text" name='email' value={admin.email} onChange={handleChange}/>
+                        <input className={`input ${errors.email ? 'input--error' : ''}`} type="text" name="email"
+                        value={admin.email}
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.email}</div>
                     </label>
                     <label>
                         <span className='create-admin__label'>Пароль</span>
-                        <input type="text" name='password' value={admin.password} onChange={handleChange}
-                        onInput={onChangeDisable}
-                        />
+                        <input className={`input ${errors.password ? 'input--error' : ''}`} name="password"
+                        type={'password'}
+                        value={admin.password}
+                        autoComplete='off'
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.password}</div>
+                        <button className="create-admin__gen" type="button"
+                        onClick={() => {
+                            setAdmin((state: any) => ({...state, password: generatePass()}))
+                            setErrors((state: any) => ({...state, password: ''}))
+                        }}>
+                            Кликните здесь, чтобы создать пароль автоматически
+                        </button>
                     </label>
 
                 </div>
@@ -127,7 +187,10 @@ const EditAdmin = () => {
 
                 <label>
                     <span className='create-admin__label'>Имя</span>
-                    <input type="text" name='name' value={admin.name} onChange={handleChange}/>
+                    <input className={`input ${errors.name ? 'input--error' : ''}`} type="text" name="name"
+                        value={admin.name} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.name}</div>
                     </label>
 
                 </div>
@@ -161,7 +224,7 @@ const EditAdmin = () => {
         </div>
         <div className="parent-form__btns">
         <button className='button button--red' type='button' onClick={() => onConfirmDelete(admin.id, admin.name, admin.email, admin.role, admin.password)}>Удалить</button>
-        <button className='button' type="button" disabled={disable} onClick={() => onEditAdmin(admin)}>Сохранить</button>
+        <button className='button' type="button" disabled={checkForm()} onClick={() => onEditAdmin(admin)}>Сохранить</button>
         </div>
     </form>
     <ConfirmModal question='Удалить админа?' text1={targetConfirm.name} text2={targetConfirm.email} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeAdmin(targetConfirm.id)}/>

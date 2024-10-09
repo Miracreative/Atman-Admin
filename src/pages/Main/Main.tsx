@@ -1,32 +1,14 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { NavLink, useNavigate } from 'react-router-dom';
-import { getAllGoods } from "../../hooks/http.hook";
+
 
 
 import AdminPanel from "../AdminPanel/AdminPanel";
 import Admins from "../Admins/Admins";
 import CreateAdmin from '../CreateAdmin/CreateAdmin';
 import EditAdmin from "../EditAdmin/EditAdmin";
-// import AdminList from "../AdminsList/AdminsList";
-// import Transaction from "../Transaction/Transaction";
-// import DishList from "../DishList/DishList";
-// import EditDish from "../EditDish/EditDish";
-// import CreateDish from "../CreateDish/CreateDish";
-// import MainSlider from "../MainSlider/MainSlider";
-// import Rate from "../Rate/Rate";
-// import Youtube from "../Youtube/Youtube";
-// import Children from "../Children/Children";
-// import EditChild from "../EditChild/EditChild";
-// import Parents from "../Parents/Parents";
-// import EditParent from "../EditParent/EditParent";
-// import OrderList from "../OrderList/OrderList";
-// import Order from "../Order/Order";
-// import Kitchen from "../Kitchen/Kitchen";
-// import Promocode from "../Promocode/Promocode";
-// import Settings from "../Settings/Settings";
-
-// import Editor from "../Editor/Editor";
+import Knowlege from "../Knowege/Knowlege";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -69,11 +51,12 @@ const Main = () =>  {
                             Создать админа
                         </NavLink>
                     </li>
-                    {/* <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/admins-list">
-                            List of admins
+                    <li className="navigation__item">
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/knowledge-list">
+                            База знаний
                         </NavLink>
                     </li>
+                    {/* 
                     <li className="navigation__item">
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/transaction">
                             Transaction
@@ -149,6 +132,7 @@ const Main = () =>  {
                     <Route path="/admins-list" element={<Admins/>}/>
                     <Route path="/admins-create" element={<CreateAdmin/>}/>
                     <Route path="/edit-admin/:id" element={<EditAdmin />}/>
+                    <Route path="/knowledge-list" element={<Knowlege />}/>
                 </Routes>
             </div>
         </div>
