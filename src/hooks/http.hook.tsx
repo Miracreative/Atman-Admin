@@ -14,8 +14,7 @@ interface Admin {
 interface Knowlege {
     title: string,
     content: string,
-    orientation: string,
-    file: object
+    file: any
 }
 
 const getAllAdmins = async () =>  {
@@ -78,7 +77,8 @@ const editAdmin = async (admin: Admin) =>  {
 
 const getAllKnowlege = async (page: any) =>  {
     try {
-        const response = await axios.get(`${SERVER_URL}/base/${page}`);
+        const response = await axios.get(`${SERVER_URL}/base-admin/${page}`);
+        console.log(response.data);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -96,20 +96,8 @@ const getOneKnowlege = async (id: any) => {
 
 const getSearchKnowlege = async (searchText: any) => {
     try {
-        const response = await axios.get(`${SERVER_URL}/base/${searchText}`);
-        return response.data;
-    } catch (error: any) {
-        return error.response.data;
-    } 
-}
-
-const createKnowlege = async (knowlege: Knowlege) =>  {
-    try {
-        const response = await axios.post(`${SERVER_URL}/base`, {
-            data: {
-                knowlege
-            }
-        });
+      
+        const response = await axios.get(`${SERVER_URL}/base-search/${searchText}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -159,7 +147,6 @@ export {
     getOneAdmin,
     deleteAdmin,
     editKnowlege,
-    createKnowlege,
     deleteKnowlege,
     getOneKnowlege,
     getSearchKnowlege,

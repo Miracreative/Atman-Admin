@@ -22,14 +22,15 @@ const Knowlege = () => {
     const inputRef = useRef<HTMLInputElement>(null);
     const onClickClear = () => {
         setSearch('');
+        setSearchForBackend('');
+        getKnowlege(currentPage);
         inputRef.current?.focus();
     };
 
     const updateSearchValue = useCallback(
         debounce((str:string) => {
            setSearchForBackend(str);
-        }, 500),
-        [],
+        }, 1000),[],
     );
 
     const changePage = (step: any) => {
@@ -38,31 +39,12 @@ const Knowlege = () => {
     }
 
     const getKnowlege = (currentPage: number) => {
-        // getAllKnowlege(currentPage).then(res => {
-        //     // setKnowlege(res)
-        //        setTotalPages(res.max_page)
-        // }).then(
-        //     () => {setProcess('confirmed')}
-        // );
-        setKnowlege([
-            { 
-                title: 'Название',
-                content: 'Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля.',
-                file: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fru.freepik.com%2Fphotos%2F%25D0%25BC%25D0%25B8%25D0%25BB%25D1%258B%25D0%25B5-%25D0%25BA%25D0%25B0%25D1%2580%25D1%2582%25D0%25B8%25D0%25BD%25D0%25BA%25D0%25B8&psig=AOvVaw3SXWksXJnOPAJO4-_UyoeF&ust=1728542874409000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMi35MLZgIkDFQAAAAAdAAAAABAE',
-                file_name: 'название доокумента',
-                id: 0
-            },
-            {
-                title: 'Название',
-                content: 'Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля.',
-                file: 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fru.freepik.com%2Fphotos%2F%25D0%25BC%25D0%25B8%25D0%25BB%25D1%258B%25D0%25B5-%25D0%25BA%25D0%25B0%25D1%2580%25D1%2582%25D0%25B8%25D0%25BD%25D0%25BA%25D0%25B8&psig=AOvVaw3SXWksXJnOPAJO4-_UyoeF&ust=1728542874409000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMi35MLZgIkDFQAAAAAdAAAAABAE',
-                file_name: 'Название доокумента',
-                id: 1
-            },
-        ])
-
-        setProcess('confirmed')
-        setTotalPages(2)
+        getAllKnowlege(currentPage).then(res => {
+            setKnowlege(res.result) 
+            setTotalPages(res.pages)
+        }).then(
+            () => {setProcess('confirmed')}
+        );
     }
 
     useEffect(() => {
@@ -70,24 +52,30 @@ const Knowlege = () => {
     }, [])
 
     useEffect(() => {
-        // getSearchKnowlege(searchForBackend).then(res => {
-                // setKnowlege(res)
-            //        setTotalPages(res.max_page)
-            // }).then(
-            //     () => {setProcess('confirmed')}
-            // );
+        if(searchForBackend == '') {
+            getKnowlege(currentPage);
+        } else {
+            getSearchKnowlege(searchForBackend).then(res => {
+                console.log('search', res)
+                    setKnowlege(res)
+                       setTotalPages(1)
+                }).then(
+                    () => {setProcess('confirmed')}
+                );
+        }
     }, [searchForBackend])
 
     const onSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
+       
         setSearch(e.target.value)
-        updateSearchValue(searchForBackend);
+        updateSearchValue(e.target.value);
     }
     
     const renderItems = (arr: any[]) => {
+        
         const knowlegeList = arr.map((item: { id: number; title: string; content: string; file_name: string}, i:number) => {
             const {id, title, content, file_name} = item;
             return (
-                // <li key={id} className="rows-list__item">
                 <li key={id} className='rows-list__box knowlege__box'>
                     <span>{i + 1}</span>
                     <span>{title}</span>
@@ -96,12 +84,11 @@ const Knowlege = () => {
                         <img src={fileImage} alt="file" />
                         <span>{file_name}</span>
                     </span>
-                   <Link className="rows-list__btn button button--red  knowlege__btn" to={`/edit-knowlege/${id}`}>Редактировать</Link>
+                    <Link className="rows-list__btn button button--red  knowlege__btn" to={`/edit-knowlege/${id}`}>Редактировать</Link>
                 </li>
-            // </li>
             )
         })
-
+        
         return (
             <ul className="rows-list">
                 {knowlegeList}
@@ -120,7 +107,14 @@ const Knowlege = () => {
                    
                 </div>
             } showBackBtn={false} />
-            <SetContent process={process} component={renderItems(knowlege)}/>
+
+            {
+                knowlege.length > 0 ? <SetContent process={process} component={renderItems(knowlege)}/> : 
+                <li className='knowlege__box'>
+                    <p>Ничего не найдено по запросу</p>
+                </li>
+            }
+            
             <div className="knowlege__wrapper">
                 <Link className="button  knowlege__btn knowlege__btn--add" to={`/create-knowlege/`}>Добавть базу</Link>
                 <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} />
