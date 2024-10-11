@@ -144,7 +144,7 @@ const EditKnowlege = () => {
     <>
        <PanelHeader title="Редактировать базу" children={null} showBackBtn={true} />
        {spinner}
-       <form acceptCharset='utf-8' className="create-knowlege" id="create-knowlege" ref={form}>
+       <form  className="create-knowlege" id="create-knowlege" ref={form} accept-charset='utf-8'>
                 <div className="create-knowlege__box">
                 <label className="create-knowlege__label">
                     <span>Название базы знаний</span>

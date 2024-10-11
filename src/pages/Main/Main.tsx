@@ -11,6 +11,7 @@ import EditAdmin from "../EditAdmin/EditAdmin";
 import Knowlege from "../Knowlege/Knowlege";
 import CreateKnowlege from "../CreateKnowlege/CreateKnowlege";
 import EditKnowlege from "../EditKnowlege/EditKnowlege";
+import Sertifications from "../Sertifications/Sertifications";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -56,6 +57,11 @@ const Main = () =>  {
                     <li className="navigation__item">
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/knowledge-list">
                             База знаний
+                        </NavLink>
+                    </li>
+                    <li className="navigation__item">
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/sertifications-list">
+                            Сертификаты
                         </NavLink>
                     </li>
                     {/* 
@@ -137,6 +143,7 @@ const Main = () =>  {
                     <Route path="/knowledge-list" element={<Knowlege />}/>
                     <Route path="/create-knowlege" element={<CreateKnowlege />}/>
                     <Route path="/edit-knowlege/:id" element={<EditKnowlege />}/>
+                    <Route path="/sertifications-list" element={<Sertifications />}/>
                 </Routes>
             </div>
         </div>

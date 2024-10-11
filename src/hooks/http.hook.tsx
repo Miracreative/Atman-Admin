@@ -78,7 +78,6 @@ const editAdmin = async (admin: Admin) =>  {
 const getAllKnowlege = async (page: any) =>  {
     try {
         const response = await axios.get(`${SERVER_URL}/base-admin/${page}`);
-        console.log(response.data);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -104,18 +103,6 @@ const getSearchKnowlege = async (searchText: any) => {
     } 
 }
 
-const editKnowlege = async (knowlege: Knowlege) =>  {
-    try {
-        const response = await axios.put(`${SERVER_URL}/base`, {
-            data: {
-                knowlege
-            }
-        });
-        return response.data;
-    } catch (error: any) {
-        return error.response.data;
-    } 
-}
 
 const deleteKnowlege = async (id: number) =>  {
     try {
@@ -139,6 +126,26 @@ const getAllGoods = async () =>  {
     } 
 }
 
+const getAllSertifications = async (page: any) =>  {
+    try {
+        const response = await axios.get(`${SERVER_URL}/sertificate/${page}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getSearchSertifications = async (searchText: any) => {
+    try {
+      
+        const response = await axios.get(`${SERVER_URL}/sertificate-search/${searchText}`);
+        console.log(response)
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
 export { 
     getAllGoods, 
     createAdmin, 
@@ -146,9 +153,10 @@ export {
     editAdmin,
     getOneAdmin,
     deleteAdmin,
-    editKnowlege,
     deleteKnowlege,
     getOneKnowlege,
     getSearchKnowlege,
-    getAllKnowlege
+    getAllKnowlege,
+    getAllSertifications,
+    getSearchSertifications
 };
