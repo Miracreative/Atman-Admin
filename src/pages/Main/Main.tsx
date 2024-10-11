@@ -9,7 +9,8 @@ import Admins from "../Admins/Admins";
 import CreateAdmin from '../CreateAdmin/CreateAdmin';
 import EditAdmin from "../EditAdmin/EditAdmin";
 import Knowlege from "../Knowlege/Knowlege";
-import CreateKnowlege from "../CreateKmowlege/CreateKnowlege";
+import CreateKnowlege from "../CreateKnowlege/CreateKnowlege";
+import EditKnowlege from "../EditKnowlege/EditKnowlege";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -135,6 +136,7 @@ const Main = () =>  {
                     <Route path="/edit-admin/:id" element={<EditAdmin />}/>
                     <Route path="/knowledge-list" element={<Knowlege />}/>
                     <Route path="/create-knowlege" element={<CreateKnowlege />}/>
+                    <Route path="/edit-knowlege/:id" element={<EditKnowlege />}/>
                 </Routes>
             </div>
         </div>

@@ -1,25 +1,41 @@
-import { useState} from 'react';
-import Spinner from '../Spinner/Spinner';
-import ModalAlert from '../ModalAlert/ModalAlert';
+import { useState, useEffect, useRef } from 'react';
+import { useParams, useNavigate} from 'react-router-dom';
 import fileImage from '../../assets/icons/file.svg'
+import PanelHeader from '../../components/PanelHeader/PanelHeader';
+import ModalAlert from '../../components/ModalAlert/ModalAlert';
+import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
+import Spinner from '../../components/Spinner/Spinner';
 import axios from 'axios';
-import './_knowlegeForm.scss'
 
-const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
-        knowledge: {
-            title: string,
-            content: string,
-            file: any
-		},
-		setKnowlege: (value: any) => void,
-		buttonTitle: string,
-		form: any
-	}) => {
-        const [loading, setLoading] = useState(false);
-        const [textAlert, setTextAlert] = useState('');
-        const [showAlert, setShowAlert] = useState(false);
-		const [errors, setErrors] = useState<any>({});
-		const validateValues = (inputName:string, inputValue: string) => {
+import { getOneKnowlege, deleteKnowlege } from '../../hooks/http.hook';
+
+import './_editKnowlege.scss'
+
+const EditKnowlege = () => {
+    const form = useRef<any>(null);
+    const {id} = useParams(); 
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [showAlert, setShowAlert] = useState<boolean>(false); 
+    const [textAlert, setTextAlert] = useState<string>('');
+    const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const [del, setDel] = useState<boolean>(false)
+    const [errors, setErrors] = useState<any>({});
+    const [targetConfirm, setTargetConfirm] = useState({
+        id: 0,
+        title: ''
+    });
+
+    const [knowledge, setKnowledge] = useState({
+        id: 0,
+        title: '',
+        content: '',
+        file: '',
+        file_name: ''
+    }); 
+
+
+    const validateValues = (inputName:string, inputValue: string) => {
 
 		let error = {
 			title: '',
@@ -56,8 +72,15 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
 		return error;
 	};
 
-	const checkForm = () => {
-		if (knowledge.title && knowledge.content && knowledge.file) {
+  //отправляем запрос получния данных об админе
+    useEffect(() => { 
+        getOneKnowlege(id).then(res => {
+            setKnowledge(res)
+        })
+    }, []);
+
+    const checkForm = () => {
+		if (knowledge.title && knowledge.content) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -67,30 +90,19 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
 		}
 		return true
 	}
-
-
-	const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
-		const { name, value } = e.target;
-		setKnowlege((state: any) => ({...state, [name]: value}))
-		setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
-	}
-
-	const clearForm = () => {
-        form.current.reset()
-		setKnowlege((state: any) => {
-            let newState = {...state}
-            for (let key in newState) {
-                newState[key] = '';
-            }
-            return newState;
-		})
-	}
+//обработчик текстовых инпутов
+    const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
+        const { name, value } = e.target;
+        setKnowledge((state:any) => ({...state, [name]: value}))
+        setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
+    }
 
     const submitForm = async (e: any) => {
         e.preventDefault()
+        setLoading(true);
         const formData = new FormData(e.target.form);
-        console.log(e.target.form)
-        axios.post('http://192.168.0.153:5000/api/base', formData, {
+        formData.append('id', `${knowledge.id}`)
+        axios.put('http://192.168.0.153:5000/api/base', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -98,7 +110,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
           .then(() => {
             setLoading(false);
             setShowAlert(true);
-            setTextAlert('Новая база была успешно создана')
+            setTextAlert('Новая база была успешно обновлена')
           })
           .catch(() => {
             setLoading(false);
@@ -109,15 +121,30 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
             setShowAlert(true)
         })
     }
+  
+    
+    const removeKnowlege = (id: number) => {
+        setShowConfirm(false);
+        deleteKnowlege(id)
+        setDel(true)
+        setShowAlert(true);
+        setTextAlert('База успешно удалена');
+    }
+  // показываем окно подтверждения
+    const onConfirmDelete = (id: number, title: string) => {
+        setShowConfirm(true);
+        setTargetConfirm({id, title})
+    }
 
     const regular = /^.*[\/\\]| \(\d+\)\.\w+$/g
 
     let spinner = loading ? <Spinner active/> : null;
 
-	return (
-        <>
-            {spinner}
-            <form acceptCharset='utf-8' className="create-knowlege" id="create-knowlege" ref={form}>
+    return (
+    <>
+       <PanelHeader title="Редактировать базу" children={null} showBackBtn={true} />
+       {spinner}
+       <form acceptCharset='utf-8' className="create-knowlege" id="create-knowlege" ref={form}>
                 <div className="create-knowlege__box">
                 <label className="create-knowlege__label">
                     <span>Название базы знаний</span>
@@ -146,18 +173,22 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
                 </div>
                 <div className="create-knowlege__btns">
                 <button type="button" className="create-knowlege__btn button button--orange"
-                onClick={clearForm}>Очистить форму</button>
+                onClick={() => onConfirmDelete(knowledge.id, knowledge.title)}>Удалить базу</button>
                 <button type="button" className="create-knowlege__btn button"
                 disabled={checkForm()}
                 onClick={(e) => {
                     submitForm(e)
-                    clearForm();
-                }}>{buttonTitle}</button>
+                }}>Обновить базу</button>
                 </div>
             </form>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
-        </>
-	)
+            <ConfirmModal question='Удалить админа?' text1={targetConfirm.title} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeKnowlege(targetConfirm.id)}/>
+            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+                del ?
+                navigate('/knowledge-list') :
+                console.log('edit')} />
+    </>
+  )
 }
 
-export default KnowlegeForm;
+export default EditKnowlege;
+
