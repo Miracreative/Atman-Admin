@@ -11,12 +11,6 @@ interface Admin {
     password: string,
 }
 
-interface Knowlege {
-    title: string,
-    content: string,
-    file: any
-}
-
 const getAllAdmins = async () =>  {
     try {
         const response = await axios.get(`${SERVER_URL}/users`);
@@ -42,11 +36,7 @@ const createAdmin = async (admin: Admin) => {
 
 const deleteAdmin = async (id:number) =>  {
     try {
-        const response = await axios.delete(`${SERVER_URL}/users`, {
-            data: {
-                id
-            }
-        });
+        const response = await axios.delete(`${SERVER_URL}/users/${id}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -106,11 +96,7 @@ const getSearchKnowlege = async (searchText: any) => {
 
 const deleteKnowlege = async (id: number) =>  {
     try {
-        const response = await axios.delete(`${SERVER_URL}/base`, {
-            data: {
-                id
-            }
-        });
+        const response = await axios.delete(`${SERVER_URL}/base/${id}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -139,7 +125,61 @@ const getSearchSertifications = async (searchText: any) => {
     try {
       
         const response = await axios.get(`${SERVER_URL}/sertificate-search/${searchText}`);
-        console.log(response)
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getOneSertificate = async (id: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/sertificate-one/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response;
+    } 
+}
+
+const deleteSertificate = async (id: number) =>  {
+    try {
+        const response = await axios.delete(`${SERVER_URL}/sertificate/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+
+const getAllNews = async (page: any) =>  {
+    try {
+        const response = await axios.get(`${SERVER_URL}/news-pagination/${page}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getSearchNews = async (searchText: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/news-search/${searchText}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getOneNews = async (id: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/news/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response;
+    } 
+}
+
+const deleteNews = async (id: number) =>  {
+    try {
+        const response = await axios.delete(`${SERVER_URL}/news/${id}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -158,5 +198,11 @@ export {
     getSearchKnowlege,
     getAllKnowlege,
     getAllSertifications,
-    getSearchSertifications
+    getSearchSertifications,
+    getOneSertificate,
+    deleteSertificate,
+    getAllNews,
+    getSearchNews,
+    getOneNews,
+    deleteNews
 };

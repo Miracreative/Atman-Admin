@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { getAllSertifications, getSearchSertifications } from "../../hooks/http.hook";
+import { getAllNews, getSearchNews } from "../../hooks/http.hook";
 import debounce from 'lodash.debounce';
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import Pagination from "../../components/Pagination/Pagination";
@@ -8,10 +8,10 @@ import SetContent from "../../utils/SetContent";
 
 import fileImage from "../../assets/icons/file.svg";
 import attention from "../../assets/icons/attention.svg";
-import './_sertifications.scss'
-const Sertifications = () => {
+import './_news.scss'
+const News = () => {
 
-    const [sertifications, setSertifications] = useState<any[]>([]);
+    const [news, setNews] = useState<any[]>([]);
     
     const [process, setProcess] = useState<string>('loading');
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -23,7 +23,7 @@ const Sertifications = () => {
     const onClickClear = () => {
         setSearch('');
         setSearchForBackend('');
-        getSertifications(currentPage);
+        getNews(currentPage);
         inputRef.current?.focus();
     };
 
@@ -34,13 +34,13 @@ const Sertifications = () => {
     );
 
     const changePage = (step: any) => {
-        getSertifications(+currentPage + step);
+        getNews(+currentPage + step);
         setCurrentPage(state => +state + step);
     }
 
-    const getSertifications = (currentPage: number) => {
-        getAllSertifications(currentPage).then(res => {
-            setSertifications(res.result) 
+    const getNews = (currentPage: number) => {
+        getAllNews(currentPage).then(res => {
+            setNews(res.result) 
             setTotalPages(res.pages)
         }).then(
             () => {setProcess('confirmed')}
@@ -48,18 +48,16 @@ const Sertifications = () => {
     }
 
     useEffect(() => {
-        getSertifications(currentPage);
+        getNews(currentPage);
     }, [])
 
     useEffect(() => {
         if(searchForBackend == '') {
-            getSertifications(currentPage);
+            getNews(currentPage);
         } else {
-
-            getSearchSertifications(searchForBackend).then(res => {
-                console.log(res)
-                    setSertifications(res)
-                       setTotalPages(1)
+            getSearchNews(searchForBackend).then(res => {
+                    setNews(res)
+                    setTotalPages(1)
                 }).then(
                     () => {setProcess('confirmed')}
                 );
@@ -74,31 +72,44 @@ const Sertifications = () => {
     
     const renderItems = (arr: any[]) => {
         
-        const sertificationsList = arr.map((item: { id: number; title: string; content: string; file_name: string}, i:number) => {
-            const {id, title} = item;
+        const newsList = arr.map((item: { id: number; title: string; content: string; imagessrc: any[]}, i:number) => {
+            const {id, title, content, imagessrc} = item;
+
+            const imagesItems = (arr: any[]) => {
+                const images = arr.map((_, i) => {
+                    return (
+                            <img key={i} src={fileImage} alt="image" />
+                    )
+                })
+                return (
+                   images
+                )
+            }
             return (
-                <li key={id} className='rows-list__box sertifications__box'>
+                <li key={id} className='rows-list__box news__box'>
                     <span>{i + 1}</span>
                     <span>{title}</span>
+                    <span>{content}</span>
                     <span>
-                        <img src={fileImage} alt="file" />
-                        <span>Файл сертификата</span>
+                    {
+                        imagesItems(imagessrc)
+                    }
                     </span>
-                    <Link className="rows-list__btn button button--red  sertifications__btn" to={`/edit-sertifications/${id}`}>Редактировать</Link>
+                    <Link className="rows-list__btn button button--red  news__btn" to={`/edit-news/${id}`}>Редактировать</Link>
                 </li>
             )
         })
         
         return (
             <ul className="rows-list">
-                {sertificationsList}
+                {newsList}
             </ul>
         )
     }
    
     return (
         <>
-            <PanelHeader title="Сертификаты" children={
+            <PanelHeader title="Новости" children={
                 <div className="search">
                     <input type="text" ref={inputRef} placeholder="Search" value={search} onChange={(e) => onSearch(e)}/>
                     {
@@ -109,14 +120,14 @@ const Sertifications = () => {
             } showBackBtn={false} />
 
             {
-                sertifications.length > 0 ? <SetContent process={process} component={renderItems(sertifications)}/> : 
-                <li className='sertifications__box'>
+                news.length > 0 ? <SetContent process={process} component={renderItems(news)}/> : 
+                <li className='news__box'>
                     <p>Ничего не найдено по запросу</p>
                 </li>
             }
             
-            <div className="sertifications__wrapper">
-                <Link className="button  sertifications__btn sertifications__btn--add" to={`/create-sertifications/`}>Добавить сертификат</Link>
+            <div className="news__wrapper">
+                <Link className="button  news__btn news__btn--add" to={`/create-news/`}>Добавить новость</Link>
                 <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} />
             </div>
           
@@ -125,4 +136,4 @@ const Sertifications = () => {
     )
 }
 
-export default Sertifications;
+export default News;

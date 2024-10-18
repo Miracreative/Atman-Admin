@@ -12,6 +12,10 @@ import Knowlege from "../Knowlege/Knowlege";
 import CreateKnowlege from "../CreateKnowlege/CreateKnowlege";
 import EditKnowlege from "../EditKnowlege/EditKnowlege";
 import Sertifications from "../Sertifications/Sertifications";
+import EditSertification from "../EditSertification/EditSertification";
+import CreateSertificate from "../CreateSertificate/CreateSertificate";
+import News from "../News/News";
+import EditNews from "../EditNews/EditNews";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -64,67 +68,11 @@ const Main = () =>  {
                             Сертификаты
                         </NavLink>
                     </li>
-                    {/* 
                     <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/transaction">
-                            Transaction
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/news">
+                            Новости
                         </NavLink>
                     </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/dish-list">
-                            Meals
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/rate">
-                            Prices
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/main-slider">
-                            Main Slider
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/youtube">
-                            Entertainment
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/catering">
-                            Catering
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/children">
-                            Children
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/parents">
-                            Parents
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/order-list">
-                            List of orders
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/kitchen">
-                            Kitchen
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/promocode">
-                            Promo codes
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/settings">
-                            Settings
-                        </NavLink>
-                    </li> */}
                 </ul>
                 <div className="navigation__bottom">
                     <NavLink to="/" className="navigation__exit">
@@ -144,6 +92,10 @@ const Main = () =>  {
                     <Route path="/create-knowlege" element={<CreateKnowlege />}/>
                     <Route path="/edit-knowlege/:id" element={<EditKnowlege />}/>
                     <Route path="/sertifications-list" element={<Sertifications />}/>
+                    <Route path="/edit-sertifications/:id" element={<EditSertification />}/>
+                    <Route path="/create-sertifications" element={<CreateSertificate />}/>
+                    <Route path="/news" element={<News />}/>
+                    <Route path="/edit-news/:id" element={<EditNews />}/>
                 </Routes>
             </div>
         </div>

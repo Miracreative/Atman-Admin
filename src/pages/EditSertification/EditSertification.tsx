@@ -7,11 +7,11 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Spinner from '../../components/Spinner/Spinner';
 import axios from 'axios';
 
-import { getOneKnowlege, deleteKnowlege } from '../../hooks/http.hook';
+import { getOneSertificate, deleteSertificate } from '../../hooks/http.hook';
 
-import './_editKnowlege.scss'
+import './_editSertification.scss'
 
-const EditKnowlege = () => {
+const EditSertification = () => {
     const form = useRef<any>(null);
     const {id} = useParams(); 
     const navigate = useNavigate();
@@ -26,20 +26,20 @@ const EditKnowlege = () => {
         title: ''
     });
 
-    const [knowledge, setKnowledge] = useState({
+    const [sertificate, setSertificate] = useState({
         id: 0,
         title: '',
-        content: '',
-        file: '',
-        file_name: ''
+        type: '',
+        imagesrc: '',
+        file: ''
     }); 
 
 
-    const validateValues = (inputName:string, inputValue: string) => {
+    const validateValues = (inputName: string, inputValue: string) => {
 
 		let error = {
 			title: '',
-			content: '',
+			type: '',
             file: ''
 		};
 
@@ -49,13 +49,6 @@ const EditKnowlege = () => {
                 error.title = "Название слишком короткое";
                 } else {
                 error.title = '';
-                }
-                break;
-		case 'content':
-			if (inputValue.length < 10) {
-                error.content = "Текста слишком мало";
-                } else {
-                error.content = '';
                 }
                 break;
 		case 'file':
@@ -74,13 +67,13 @@ const EditKnowlege = () => {
 
   //отправляем запрос получния данных об админе
     useEffect(() => { 
-        getOneKnowlege(id).then(res => {
-            setKnowledge(res)
+        getOneSertificate(id).then(res => {
+            setSertificate(res)
         })
     }, []);
 
     const checkForm = () => {
-		if (knowledge.title && knowledge.content) {
+		if (sertificate.title && sertificate.type) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -93,7 +86,7 @@ const EditKnowlege = () => {
 //обработчик текстовых инпутов
     const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
         const { name, value } = e.target;
-        setKnowledge((state:any) => ({...state, [name]: value}))
+        setSertificate((state:any) => ({...state, [name]: value}))
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
@@ -101,17 +94,17 @@ const EditKnowlege = () => {
         e.preventDefault()
         setLoading(true);
         const formData = new FormData(e.target.form);
-        formData.append('id', `${knowledge.id}`)
-        axios.put('http://192.168.0.153:5000/api/base', formData, {
+        formData.append('id', `${sertificate.id}`)
+        axios.put('http://192.168.0.153:5000/api/sertificate', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           })
           .then(() => {
             setLoading(false);
-            setShowAlert(true);
-            setTextAlert('База была успешно обновлена')
-          })
+            setShowAlert(true); 
+            setTextAlert('Сертификат был успешно обновлен')
+          }) 
           .catch(() => {
             setLoading(false);
             setShowAlert(true)
@@ -123,12 +116,12 @@ const EditKnowlege = () => {
     }
   
     
-    const removeKnowlege = (id: number) => {
+    const removeSertification = (id: number) => {
         setShowConfirm(false);
-        deleteKnowlege(id)
+        deleteSertificate(id)
         setDel(true)
         setShowAlert(true);
-        setTextAlert('База успешно удалена');
+        setTextAlert('Сертификат успешно удален');
     }
   // показываем окно подтверждения
     const onConfirmDelete = (id: number, title: string) => {
@@ -142,53 +135,62 @@ const EditKnowlege = () => {
 
     return (
     <>
-       <PanelHeader title="Редактировать базу" children={null} showBackBtn={true} />
+       <PanelHeader title="Редактировать сертификат" children={null} showBackBtn={true} />
        {spinner}
-       <form  className="create-knowlege" id="create-knowlege" ref={form} acceptCharset='utf-8'>
-                <div className="create-knowlege__box">
-                <label className="create-knowlege__label">
-                    <span>Название базы знаний</span>
+            <form  className="create-sertification" id="create-sertification" ref={form} acceptCharset='utf-8'>
+                <div className="create-sertification__box">
+                <label className="create-sertification__label">
+                    <span>Название сертификата</span>
                     <input className={`input ${errors.title ? 'input--error' : ''}`} type="text" name="title"
-                    value={knowledge.title} 
+                    value={sertificate.title} 
                     onChange={handleChange}/>
                     <div className='error'>{errors.title}</div>
                 </label>
-                <label className="create-knowlege__label">
-                    <span>Содержание базы</span>
-                    <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
-                    name="content"
-                    value={knowledge.content}
-                    onChange={handleChange}/>
-                    <div className='error'>{errors.content}</div>
-                </label>
-                <label className="create-knowlege__label create-knowlege__input">
-                    <span>Загрузите файл</span>
+                
+                <label className="create-sertification__label create-sertification__input">
+                    <span>Загрузите файл, если хотите заменить существующий</span>
                     <input className='' type="file" name="file" id="file"
                     onChange={handleChange}/>
                     <img src={fileImage} alt="file_image" />
-                    <span>{knowledge.file ? knowledge.file.replace(regular, '') : 'Файл не выбран'}</span>
+                    <span>{sertificate.file ? sertificate.file.replace(regular, '') : (sertificate.imagesrc ? sertificate.imagesrc.replace(regular, '') : 'Файла нет')}</span>
                     <div className='error'>{errors.file}</div>
                 </label>
-                
+                <label className="create-sertification__label">
+                    <span>Тип сертификата</span>
+                    <div className="create-sertification__checkboxes">
+                    <label className="create-sertification__checkbox">
+                    <input className="sr-only" type="radio" name="type" value="album"
+                    checked={sertificate.type === 'album' ? true : false}
+                    onChange={handleChange}/>
+                    <span>Альбомная</span>
+                </label>
+                <label className="create-sertification__checkbox">
+                    <input className="sr-only" type="radio" name="type" value="portrait"
+                    checked={sertificate.type === 'portrait' ? true : false}
+                    onChange={handleChange}/>
+                    <span>Портретная</span>
+                    </label>
+                    </div>
+                </label>
                 </div>
-                <div className="create-knowlege__btns">
-                <button type="button" className="create-knowlege__btn button button--orange"
-                onClick={() => onConfirmDelete(knowledge.id, knowledge.title)}>Удалить базу</button>
-                <button type="button" className="create-knowlege__btn button"
+                <div className="create-sertification__btns">
+                <button type="button" className="create-sertification__btn button button--orange"
+                onClick={() => onConfirmDelete(sertificate.id, sertificate.title)}>Удалить сертификат</button>
+                <button type="button" className="create-sertification__btn button"
                 disabled={checkForm()}
                 onClick={(e) => {
                     submitForm(e)
-                }}>Обновить базу</button>
+                }}>Обновить сертификат</button>
                 </div>
             </form>
-            <ConfirmModal question='Удалить базу?' text1={targetConfirm.title} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeKnowlege(targetConfirm.id)}/>
+            <ConfirmModal question='Удалить сертификат?' text1={targetConfirm.title} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeSertification(targetConfirm.id)}/>
             <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
-                navigate('/knowledge-list') :
+                navigate('/sertifications-list') :
                 console.log('edit')} />
     </>
   )
 }
 
-export default EditKnowlege;
+export default EditSertification;
 

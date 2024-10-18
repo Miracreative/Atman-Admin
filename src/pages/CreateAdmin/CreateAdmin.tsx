@@ -54,7 +54,7 @@ const CreateAdmin = () => {
         <AdminForm 
             admin={admin} 
             setAdmin={setAdmin} 
-            buttonTitle="Созадть админа" 
+            buttonTitle="Созадать админа" 
             sendData={onCreateAdmin}
             form={form}
             >
