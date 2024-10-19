@@ -103,14 +103,6 @@ const deleteKnowlege = async (id: number) =>  {
     } 
 }
 
-const getAllGoods = async () =>  {
-    try {
-        const response = await axios.get(`${SERVER_URL}/goods`);
-        return response.data;
-    } catch (error: any) {
-        return error.response.data;
-    } 
-}
 
 const getAllSertifications = async (page: any) =>  {
     try {
@@ -186,8 +178,84 @@ const deleteNews = async (id: number) =>  {
     } 
 }
 
+const getAllGoods = async (page: any) =>  {
+    try {
+        const response = await axios.get(`${SERVER_URL}/goods-pagination/${page}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getSearchGoods = async (searchText: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/goods-search/${searchText}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getGoodsOnMainParameters = async (main: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/goods-main/${main}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getOneGood = async (id: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/goods/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response;
+    } 
+}
+
+const deleteGood = async (id: number) =>  {
+    try {
+        const response = await axios.delete(`${SERVER_URL}/goods/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const createFavourite = async (id:number) => {
+   
+    try {
+        const response = await axios.post(`${SERVER_URL}/favourite`, {
+            data: {
+                good_id: id
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        return error.response.data
+    }
+}
+
+const getAllFavouriteGoods = async () => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/favourite`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const deleteFavourite = async (id: number) =>  {
+    try {
+        const response = await axios.delete(`${SERVER_URL}/favourite/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
 export { 
-    getAllGoods, 
     createAdmin, 
     getAllAdmins,
     editAdmin,
@@ -204,5 +272,14 @@ export {
     getAllNews,
     getSearchNews,
     getOneNews,
-    deleteNews
+    deleteNews,
+    getAllGoods,
+    getSearchGoods,
+    getOneGood,
+    deleteGood,
+    getGoodsOnMainParameters,
+    getAllFavouriteGoods,
+    createFavourite,
+    deleteFavourite,
+
 };

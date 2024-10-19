@@ -39,8 +39,7 @@ const EditSertification = () => {
 
 		let error = {
 			title: '',
-			type: '',
-            file: ''
+			type: ''
 		};
 
 		switch(inputName) {
@@ -51,13 +50,6 @@ const EditSertification = () => {
                 error.title = '';
                 }
                 break;
-		case 'file':
-			if (!inputValue) {
-			error.file = "Прикрепите файл";
-			} else {
-			error.file = "";
-			}
-			break;
 		default:
 			console.error('Неизвестное поле');
 		}
@@ -153,7 +145,7 @@ const EditSertification = () => {
                     onChange={handleChange}/>
                     <img src={fileImage} alt="file_image" />
                     <span>{sertificate.file ? sertificate.file.replace(regular, '') : (sertificate.imagesrc ? sertificate.imagesrc.replace(regular, '') : 'Файла нет')}</span>
-                    <div className='error'>{errors.file}</div>
+                   
                 </label>
                 <label className="create-sertification__label">
                     <span>Тип сертификата</span>

@@ -16,6 +16,8 @@ import EditSertification from "../EditSertification/EditSertification";
 import CreateSertificate from "../CreateSertificate/CreateSertificate";
 import News from "../News/News";
 import EditNews from "../EditNews/EditNews";
+import CreateNews from "../CreateNews/CreateNews";
+import Goods from "../Goods/Goods";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -73,6 +75,11 @@ const Main = () =>  {
                             Новости
                         </NavLink>
                     </li>
+                    <li className="navigation__item">
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/goods">
+                            Товары
+                        </NavLink>
+                    </li>
                 </ul>
                 <div className="navigation__bottom">
                     <NavLink to="/" className="navigation__exit">
@@ -96,6 +103,8 @@ const Main = () =>  {
                     <Route path="/create-sertifications" element={<CreateSertificate />}/>
                     <Route path="/news" element={<News />}/>
                     <Route path="/edit-news/:id" element={<EditNews />}/>
+                    <Route path="/create-news" element={<CreateNews />}/>
+                    <Route path="/goods" element={<Goods />}/>
                 </Routes>
             </div>
         </div>

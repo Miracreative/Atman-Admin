@@ -58,13 +58,6 @@ const EditKnowlege = () => {
                 error.content = '';
                 }
                 break;
-		case 'file':
-			if (!inputValue) {
-			error.file = "Прикрепите файл";
-			} else {
-			error.file = "";
-			}
-			break;
 		default:
 			console.error('Неизвестное поле');
 		}
@@ -167,7 +160,7 @@ const EditKnowlege = () => {
                     onChange={handleChange}/>
                     <img src={fileImage} alt="file_image" />
                     <span>{knowledge.file ? knowledge.file.replace(regular, '') : 'Файл не выбран'}</span>
-                    <div className='error'>{errors.file}</div>
+                    
                 </label>
                 
                 </div>

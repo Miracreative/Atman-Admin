@@ -63,16 +63,9 @@ const EditNews = () => {
             break;
         case 'content':
 			if (inputValue.length < 2) {
-			error.files = "Новость слишком короткая";
+			error.content = "Новость слишком короткая";
 			} else {
-			error.files = "";
-			}
-			break;
-		case 'files':
-			if (!inputValue) {
-			error.files = "Прикрепите файлы";
-			} else {
-			error.files = "";
+			error.content = "";
 			}
 			break;
 		default:
@@ -233,21 +226,12 @@ const EditNews = () => {
                     <input className='' type="file" name="files" multiple
                     onChange={handleChange} ref={fileInput}/>
                     <button className='button' type="button">Загрузить файлы</button>
-                    <div className='error'>{errors.file}</div>
                 </label>
                 <div className="create-news__image-wrapper">
                     {
                         images
                     }
                 </div>
-                {/* <label className="create-news__label create-news__input">
-                    <span>Загрузите файлы, если хотите заменить существующие</span>
-                    <input className='' type="file" name="files" multiple
-                    onChange={handleChange}/>
-                    <img src={fileImage} alt="file_image" />
-                    <span>{sertificate.file ? sertificate.file.replace(regular, '') : (sertificate.imagesrc ? sertificate.imagesrc.replace(regular, '') : 'Файла нет')}</span>
-                    <div className='error'>{errors.file}</div>
-                </label>*/}
                 </div>
                 <div className="create-news__btns">
                 <button type="button" className="create-news__btn button button--orange"

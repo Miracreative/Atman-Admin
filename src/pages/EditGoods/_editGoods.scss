@@ -1,31 +1,9 @@
 @import '../../scss/_functions';
-.create-news {
+.create-goods {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 50px 20px;
-  &__span {
-    display: block;
-    margin-top: 20px;
-    margin-left: 40px;
-  }
-  &__image-wrapper {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-    justify-content: flex-start;
-  }
-  &__image-container {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-
-    img {
-      width: 40px;
-      height: 40px;
-      display: block;
-    }
-  }
   &__box {
     padding: 50px;
     background-color: rgba(240, 240, 240, 1);
@@ -39,19 +17,12 @@
     position: relative;
     input {
         opacity: 0;
-        position: relative;
-        z-index: 8;
-        background-color: red;
-        width: 320px;
-        height: 70px;
-        cursor: pointer;
     }
-    button {
+    img {
         position: absolute;
         display: block;
-        top: 40px;
+        top: 60px;
         left: 0px;
-        z-index: 2;
     }
     span {
         display: block;
@@ -167,7 +138,7 @@
   }
 }
 @media (max-width: 1920px) {
-  .create-news {
+  .create-admin {
     &__box {
       padding: calcVW(50);
     }
