@@ -128,7 +128,7 @@ const News = () => {
             
             <div className="news__wrapper">
                 <Link className="button  news__btn news__btn--add" to={`/create-news/`}>Добавить новость</Link>
-                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} setFlag={()=>console.log(true)}/>
             </div>
           
            

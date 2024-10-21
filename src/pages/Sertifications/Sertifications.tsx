@@ -117,7 +117,7 @@ const Sertifications = () => {
             
             <div className="sertifications__wrapper">
                 <Link className="button  sertifications__btn sertifications__btn--add" to={`/create-sertifications/`}>Добавить сертификат</Link>
-                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage}setFlag={()=>console.log(true)} />
             </div>
           
            

@@ -12,50 +12,9 @@ import { filtersData } from "../../data";
 import './_goods.scss'
 const Goods = () => {
 
-    const [goods, setGoods] = useState<any[]>([
-        {
-            id: 1,
-            article: '8632659873',
-            name: "Название",
-            description: "Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют."
-        },
-        {
-            id: 2,
-            article: '8632659873',
-            name: "Название",
-            description: "Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют."
-        },
-        {
-            id: 3,
-            article: '8632659873',
-            name: "Название",
-            description: "Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют."
-        },
-        {
-            id: 4,
-            article: '8632659873',
-            name: "Название",
-            description: "Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют."
-        },
-        {
-            id: 5,
-            article: '8632659873',
-            name: "Название",
-            description: "Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют. Ежедневные экстремальные условия эксплуатации автомобиля (вибрация, дорожные реагенты, перепады температур и т.д.) и требования к безопасности водителя и пассажиров, заставляют."
-        },
-    ]);
-    const [favourites, setFavourites] = useState<any[]>([
-        
-        {
-            id: 1,
-            good_id: 3
-        },
-        {
-            id: 2,
-            good_id: 5
-        },
-    
-    ]);
+    const [goods, setGoods] = useState<any[]>([]);
+    const [favourites, setFavourites] = useState<any[]>([]);
+    const [flag, setFlag] = useState<boolean>(false);
     const [isFavourite, setIsFavourite] = useState<any[]>([])
     const [process, setProcess] = useState<string>('loading');
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -92,30 +51,47 @@ const Goods = () => {
 
     const getGoods = (currentPage: number) => {
         setCheckedAll(true)
-        getAllGoods(currentPage).then(res => {
-            setGoods(res.result) 
-            setTotalPages(res.pages)
+        getAllGoods(currentPage).then(response => {
+            setGoods(response.result) 
+            setTotalPages(response.pages)
         }).then(
             () => getAllFavouriteGoods().then(res => {
-                setFavourites(res.result)
+                setFavourites(res.favourite);
+                createIsFavouritesArray(res.favourite)
+               
             }).then(
-                () =>createIsFavouritesArray()
-            ).then(
-                () => {setProcess('confirmed')}
+                () => getAllGoods(currentPage).then(response => {
+                    setGoods(response.result) 
+                }).then(
+                    () => {setProcess('confirmed');
+                        setFlag(true)
+                    }
+                )
             )
         )
+
+        // getAllFavouriteGoods().then(res => {
+        //             setFavourites(res.favourite);
+        //             // createIsFavouritesArray(res.favourite)
+        //         }).then(() =>
+        //             getAllGoods(currentPage).then(res => {
+        //                 setGoods(res.result) 
+        //                 setTotalPages(res.pages)
+        //             })
+        //         )
     }
 
     const getSearch = (searchForBackend:string) => {
         setCheckedAll(false)
         getSearchGoods(searchForBackend).then(res => {
-            setGoods(res)
+            setGoods(res.result)
             setTotalPages(1)
         }).then(
             () => getAllFavouriteGoods().then(res => {
-                setFavourites(res.result)
+                setFavourites(res.favourite);
+                createIsFavouritesArray(res.favourite)
             }).then(
-                () =>createIsFavouritesArray()
+                // () =>
             ).then(
                 () => {setProcess('confirmed')}
             )
@@ -138,9 +114,10 @@ const Goods = () => {
         // )
     }
 
-    const createIsFavouritesArray = () => {
+    const createIsFavouritesArray = (favourites: any) => {
         let arr:Boolean[] = [];
         let favorietsId:number[] = [];
+        console.log(favourites)
         favourites.forEach((item: {good_id: number}) => {
             favorietsId.push(item.good_id)
         })
@@ -156,14 +133,18 @@ const Goods = () => {
 
     useEffect(() => {
         
-        // getGoods(currentPage);
+        getGoods(currentPage);
         //тест
         
-        setTotalPages(2)
-        createIsFavouritesArray()
+        // setTotalPages(2)
+        // createIsFavouritesArray()
         
-        setProcess('confirmed')
-    }, [])
+        // setProcess('confirmed')
+    }, [flag])
+
+    const changeFlag = () => {
+        setFlag(flag =>!flag)
+    }
 
     useEffect(() => {
         if(searchForBackend == '' && checkedAll) {
@@ -303,7 +284,7 @@ const Goods = () => {
             
             <div className="goods__wrapper">
                 <Link className="button  goods__btn goods__btn--add" to={`/create-goods/`}>Добавить новость</Link>
-                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} setFlag={changeFlag} />
             </div>
           
            

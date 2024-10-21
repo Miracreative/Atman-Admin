@@ -117,7 +117,7 @@ const Knowlege = () => {
             
             <div className="knowlege__wrapper">
                 <Link className="button  knowlege__btn knowlege__btn--add" to={`/create-knowlege/`}>Добавить базу</Link>
-                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} />
+                <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} setFlag={()=>console.log(true)}/>
             </div>
           
            
