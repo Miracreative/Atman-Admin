@@ -9,7 +9,7 @@ import axios from 'axios';
 
 import { getOneGood, deleteGood } from '../../hooks/http.hook';
 
-import './_editGood.scss'
+import './_editGoods.scss'
 
 const EditGood = () => {
     const form = useRef<any>(null);
@@ -122,13 +122,13 @@ const EditGood = () => {
                 mainparameter: [1, 0, 1, 0, 0, 1, 1],
                 article: '0082156',
                 advantages: ['asdas', 'asdasd'],
-                thickness: '',
-                volume: '',
-                pcs: '', 
+                thickness: '27',
+                volume: '15',
+                pcs: '2', 
                 basetype: '',
                 color: '',
                 heatresistance: '',
-                name: '',
+                name: 'товарчик',
                 description: '',
                 type: '',
                 size: '',
@@ -163,7 +163,7 @@ const EditGood = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${good.id}`)
-        axios.put('http://192.168.0.153:5000/api/base', formData, {
+        axios.put('http://192.168.0.153:5000/api/goods', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -171,7 +171,7 @@ const EditGood = () => {
           .then(() => {
             setLoading(false);
             setShowAlert(true);
-            setTextAlert('База была успешно обновлена')
+            setTextAlert('Товар успешно удален')
           })
           .catch(() => {
             setLoading(false);
@@ -189,7 +189,7 @@ const EditGood = () => {
         deleteGood(id)
         setDel(true)
         setShowAlert(true);
-        setTextAlert('База успешно удалена');
+        setTextAlert('Товар успешно удален');
     }
   // показываем окно подтверждения
     const onConfirmDelete = (id: number, name: string) => {
@@ -201,48 +201,203 @@ const EditGood = () => {
 
     let spinner = loading ? <Spinner active/> : null;
 
+    const fileInputPersonal = useRef<any>(null)
+    const fileInputIndustrial = useRef<any>(null)
+
+    const imagesItemsFromBackend = (arr: any[]) => {
+        const images = arr.map((_, i) => {
+
+            return (
+                <div key={i} className="create-goods__image-container">
+                    <img  src={fileImage} alt="image" />
+                    <span>{ arr[i].replace(regular, '') }</span>
+                </div>
+                
+            )
+        })
+        return (
+           images
+        )
+    }
+
+    const imagesItemsFromUpload = (input: any) => {
+
+        let arrayForIteration = [];
+
+        for (let key in input?.current?.files) {
+            if (Number.isInteger(Number(key))) {
+                arrayForIteration.push(input?.current?.files[key].name)
+            }
+        }
+        const images = arrayForIteration.map((_, i) => {
+
+            return (
+                <div key={i} className="create-goods__image-container">
+                    <img  src={fileImage} alt="image" />
+                    <span>{ arrayForIteration[i].replace(regular, '') }</span>
+                </div>
+                
+            )
+        })
+        return (
+           images
+        )
+    }
+
+//    imagesItemsFromBackend(good.goodspersonalimages)
+
+    let imagesPersonal;
+
+    imagesPersonal = (fileInputPersonal?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputPersonal) : ((good?.goodspersonalimages?.length > 0) ? imagesItemsFromBackend(good.goodspersonalimages) : 'нет картинок')
+
+    let imagesIndustrial;
+
+    imagesIndustrial = (fileInputIndustrial?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputIndustrial) : ((good?.goodsindustrialimages?.length > 0) ? imagesItemsFromBackend(good.goodsindustrialimages) : 'нет картинок')
+
+    const handleAddAdvantages = () => {
+        console.log('click')
+    }
+
+    const rendererAdvantages = (advantages: any[]) => {
+        const inputsForAdv = advantages.map((_, i) => {
+
+            return (
+                <input type="text" className={`input ${errors.advantages ? 'input--error' : ''}`} value={advantages[i]}/>
+            )
+        })
+        return (
+           inputsForAdv
+        )
+    }
+
+    let advantagesList = rendererAdvantages(good?.advantages)
+    console.log(advantagesList)
+
     return (
     <>
-       <PanelHeader title="Редактировать базу" children={null} showBackBtn={true} />
+       <PanelHeader title="Редактировать товар" children={null} showBackBtn={true} />
        {spinner}
        <form  className="create-goods" id="create-goods" ref={form} acceptCharset='utf-8'>
-                <div className="create-goods__box">
+            <div className="create-goods__box">
+                <div className="create-goods__wrapper">
+                    <label className="create-goods__label">
+                        <span>Артикул</span>
+                        <input className={`input ${errors.article ? 'input--error' : ''}`} type="text" name="article"
+                        value={good.article} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.article}</div>
+                    </label>
+                    <label className="create-goods__label">
+                        <span>Название товара</span>
+                        <input className={`input ${errors.name ? 'input--error' : ''}`} type="text" name="name"
+                        value={good.name} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.name}</div>
+                    </label>
+                </div>
                 <label className="create-goods__label">
-                    <span>Название базы знаний</span>
-                    <input className={`input ${errors.title ? 'input--error' : ''}`} type="text" name="name"
-                    value={good.name} 
-                    onChange={handleChange}/>
-                    <div className='error'>{errors.title}</div>
-                </label>
-                <label className="create-goods__label">
-                    <span>Содержание базы</span>
-                    <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    <span>Описание товара</span>
+                    <textarea className={`input input--textarea ${errors.description ? 'input--error' : ''}`} 
                     name="description"
                     value={good.description}
                     onChange={handleChange}/>
-                    <div className='error'>{errors.content}</div>
+                    <div className='error'>{errors.description}</div>
                 </label>
                 <label className="create-goods__label create-goods__input">
-                    <span>Загрузите файл</span>
-                    <input className='' type="imageUrl" name="file" id="file"
+                    <span>Загрузите файл изображения материала</span>
+                    <input className='' type="file" name="imageUrl" id="file"
                     onChange={handleChange}/>
-                    <img src={fileImage} alt="file_image" />
-                    <span>{good.imageurl ? good.imageurl.replace(regular, '') : 'Файл не выбран'}</span>
-                    <div className='error'>{errors.file}</div>
+                    <button className='button' type="button">Загрузить файлы</button>
+                    <img className='create-goods__image' src={fileImage} alt="file_image" />
+                    <span className='create-goods__image--span'>{good.imageurl ? good.imageurl.replace(regular, '') : 'Файл не выбран'}</span>
+                    {/* <div className='error'>{errors.file}</div> */}
                 </label>
-                
+                <label className="create-goods__label create-goods__input">
+                    <span>Загрузите файлы, если хотите заменить существующие фотографии материалов для индивидуального использования (до 10 шт.)</span>
+                    <input className='' type="file" name="goodspersonalimages" multiple
+                    onChange={handleChange} ref={fileInputPersonal}/>
+                    <button className='button' type="button">Загрузить файлы</button>
+                </label>
+                <div className="create-goods__image-wrapper">
+                    {
+                        imagesPersonal
+                    }
+                    <label className="create-goods__label create-goods__input">
+                    <span>Загрузите файлы, если хотите заменить существующие фотографии материалов для промышленного использования (до 10 шт.)</span>
+                    <input className='' type="file" name="goodsindustrialimages" multiple
+                    onChange={handleChange} ref={fileInputPersonal}/>
+                    <button className='button' type="button">Загрузить файлы</button>
+                </label>
+                <div className="create-goods__image-wrapper">
+                    {
+                        imagesIndustrial
+                    }
+                </div>
+                </div>
+                <div className="create-goods__wrap">
+                    <h3 className='create-goods__title'>Характеристики</h3>
+                    <label className="create-goods__label">
+                       
+                        <span>Бренд</span>
+                        <input className={`input ${errors.brand ? 'input--error' : ''}`} type="text" name="brand"
+                        value={good.brand} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.brand}</div>
+                    </label>
+                    <label className="create-goods__label">
+                        <span>Цвет</span>
+                        <input className={`input ${errors.color ? 'input--error' : ''}`} type="text" name="color"
+                        value={good.color} 
+                        onChange={handleChange}/>
+                        {/* <div className='error'>{errors.color}</div> */}
+                    </label>
+                    <label className="create-goods__label">
+                       
+                        <span>Толщина</span>
+                        <input className={`input ${errors.thickness ? 'input--error' : ''}`} type="text" name="thickness"
+                        value={good.thickness} 
+                        onChange={handleChange}/>
+                        {/* <div className='error'>{errors.thickness}</div> */}
+                    </label>
+                    <label className="create-goods__label">
+                        <span>Тип лайнера</span>
+                        <input className={`input ${errors.linertype ? 'input--error' : ''}`} type="text" name="linerType"
+                        value={good.linertype} 
+                        onChange={handleChange}/>
+                        {/* <div className='error'>{errors.linertype}</div> */}
+                    </label>
+                    <label className="create-goods__label">
+                       <span>Тип основы</span>
+                       <input className={`input ${errors.type ? 'input--error' : ''}`} type="text" name="type"
+                       value={good.type} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.type}</div> */}
+                   </label>
+                   <label className="create-goods__label">
+                       <span>Плотность</span>
+                       <input className={`input ${errors.dencity ? 'input--error' : ''}`} type="text" name="dencity"
+                       value={good.dencity} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.dencity}</div> */}
+                   </label>
+                </div>
+                <div className="create-goods__wrap create-goods__wrap--advantages">
+                    <h3 className='create-goods__title'>Преимущества</h3>
+                    {advantagesList}
+                    <button className='button button--plus button--red' onClick={handleAddAdvantages}>+</button>
+                </div>
                 </div>
                 <div className="create-goods__btns">
                 <button type="button" className="create-goods__btn button button--orange"
-                onClick={() => onConfirmDelete(good.id, good.name)}>Удалить базу</button>
+                onClick={() => onConfirmDelete(good.id, good.name)}>Удалить товар</button>
                 <button type="button" className="create-goods__btn button"
                 disabled={checkForm()}
                 onClick={(e) => {
                     submitForm(e)
-                }}>Обновить базу</button>
+                }}>Обновить товар</button>
                 </div>
             </form>
-            <ConfirmModal question='Удалить базу?' text1={targetConfirm.name} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeGood(targetConfirm.id)}/>
+            <ConfirmModal question='Удалить товар?' text1={targetConfirm.name} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeGood(targetConfirm.id)}/>
             <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/goods') :

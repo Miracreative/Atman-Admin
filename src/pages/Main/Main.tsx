@@ -18,6 +18,7 @@ import News from "../News/News";
 import EditNews from "../EditNews/EditNews";
 import CreateNews from "../CreateNews/CreateNews";
 import Goods from "../Goods/Goods";
+import EditGood from "../EditGoods/EditGoods";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -105,6 +106,7 @@ const Main = () =>  {
                     <Route path="/edit-news/:id" element={<EditNews />}/>
                     <Route path="/create-news" element={<CreateNews />}/>
                     <Route path="/goods" element={<Goods />}/>
+                    <Route path="/edit-goods/:id" element={<EditGood />}/>
                 </Routes>
             </div>
         </div>
