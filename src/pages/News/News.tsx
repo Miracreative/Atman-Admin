@@ -120,7 +120,7 @@ const News = () => {
             } showBackBtn={false} />
 
             {
-                news.length > 0 ? <SetContent process={process} component={renderItems(news)}/> : 
+                news?.length > 0 ? <SetContent process={process} component={renderItems(news)}/> : 
                 <li className='news__box'>
                     <p>Ничего не найдено по запросу</p>
                 </li>

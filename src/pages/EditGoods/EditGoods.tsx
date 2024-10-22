@@ -5,6 +5,9 @@ import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import ModalAlert from '../../components/ModalAlert/ModalAlert';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Spinner from '../../components/Spinner/Spinner';
+import checked from "./../../assets/icons/checked.svg";
+import SetContent from "../../utils/SetContent";
+import { filtersData } from "../../data";
 import axios from 'axios';
 
 import { getOneGood, deleteGood } from '../../hooks/http.hook';
@@ -19,6 +22,7 @@ const EditGood = () => {
     const [showAlert, setShowAlert] = useState<boolean>(false); 
     const [textAlert, setTextAlert] = useState<string>('');
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const [process, setProcess] = useState<string>('loading');
     const [del, setDel] = useState<boolean>(false)
     const [errors, setErrors] = useState<any>({});
     const [targetConfirm, setTargetConfirm] = useState({
@@ -53,7 +57,7 @@ const EditGood = () => {
         dencity: ''
     }); 
 
-
+    const [filterArray, setFilterArray] = useState<number[]>(good?.mainparameter);
     const validateValues = (inputName:string, inputValue: string) => {
 
 		let error = {
@@ -109,35 +113,38 @@ const EditGood = () => {
 
   //отправляем запрос получния данных об админе
     useEffect(() => { 
-        // getOneGood(id).then(res => {
-        //     setGood(res)
-        // })
-        setGood({
-                id: 1,
-                imageurl: 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg',
-                material: 'резина вспененная',
-                goodspersonalimages:  ['https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg'],
-                goodsindustrialimages: ['https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg'],
-                parameter: [0, 0, 0,0, 0, 0, 0,0,1,0 ,1,2],
-                mainparameter: [1, 0, 1, 0, 0, 1, 1],
-                article: '0082156',
-                advantages: ['asdas', 'asdasd'],
-                thickness: '27',
-                volume: '15',
-                pcs: '2', 
-                basetype: '',
-                color: '',
-                heatresistance: '',
-                name: 'товарчик',
-                description: '',
-                type: '',
-                size: '',
-                brand: '',
-                linertype: '',
-                pdfurl: '',
-                typeglue: '',
-                dencity: ''
-            })
+        getOneGood(id).then(res => {
+            setGood(res)
+            setFilterArray(res.mainparameter)
+        }).then(
+            () =>setProcess('confirmed')
+        )
+        // setGood({
+        //         id: 1,
+        //         imageurl: 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg',
+        //         material: 'резина вспененная',
+        //         goodspersonalimages:  ['https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg'],
+        //         goodsindustrialimages: ['https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg'],
+        //         parameter: [0, 0, 0,0, 0, 0, 0,0,1,0 ,1,2],
+        //         mainparameter: [1, 0, 1, 0, 0, 1, 1],
+        //         article: '0082156',
+        //         advantages: ['asdas', 'asdasd'],
+        //         thickness: '27',
+        //         volume: '15',
+        //         pcs: '2', 
+        //         basetype: '',
+        //         color: '',
+        //         heatresistance: '',
+        //         name: 'товарчик',
+        //         description: '',
+        //         type: '',
+        //         size: '',
+        //         brand: '',
+        //         linertype: '',
+        //         pdfurl: '',
+        //         typeglue: '',
+        //         dencity: ''
+        //     })
     }, []);
 
     const checkForm = () => {
@@ -155,6 +162,14 @@ const EditGood = () => {
     const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
         const { name, value } = e.target;
         setGood((state:any) => ({...state, [name]: value}))
+        setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
+    }
+
+    const handleChangeAdvantages = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>, i: number): void => {
+        const { value } = e.target;
+        const newGood = good;
+            newGood.advantages[i] = value
+            setGood((state:any) => ({...state, advantages: newGood.advantages}))
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
@@ -208,7 +223,7 @@ const EditGood = () => {
         const images = arr.map((_, i) => {
 
             return (
-                <div key={i} className="create-goods__image-container">
+                <div key={i} className="create-news__image-container">
                     <img  src={fileImage} alt="image" />
                     <span>{ arr[i].replace(regular, '') }</span>
                 </div>
@@ -220,7 +235,7 @@ const EditGood = () => {
         )
     }
 
-    const imagesItemsFromUpload = (input: any) => {
+    const imagesItemsFromUpload = (input:any) => {
 
         let arrayForIteration = [];
 
@@ -232,7 +247,7 @@ const EditGood = () => {
         const images = arrayForIteration.map((_, i) => {
 
             return (
-                <div key={i} className="create-goods__image-container">
+                <div key={i} className="create-news__image-container">
                     <img  src={fileImage} alt="image" />
                     <span>{ arrayForIteration[i].replace(regular, '') }</span>
                 </div>
@@ -244,34 +259,93 @@ const EditGood = () => {
         )
     }
 
-//    imagesItemsFromBackend(good.goodspersonalimages)
+   imagesItemsFromBackend(good.goodspersonalimages)
 
     let imagesPersonal;
 
     imagesPersonal = (fileInputPersonal?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputPersonal) : ((good?.goodspersonalimages?.length > 0) ? imagesItemsFromBackend(good.goodspersonalimages) : 'нет картинок')
 
     let imagesIndustrial;
-
     imagesIndustrial = (fileInputIndustrial?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputIndustrial) : ((good?.goodsindustrialimages?.length > 0) ? imagesItemsFromBackend(good.goodsindustrialimages) : 'нет картинок')
 
-    const handleAddAdvantages = () => {
-        console.log('click')
+    const handleAddAdvantages = (e:any) => {
+        e.preventDefault()
+        const newGood = good;
+        if(!Array.isArray(newGood.advantages)) {
+            newGood.advantages = []
+        }
+        newGood.advantages.push('')
+        setGood(newGood)
+        setFlag(flag => !flag)
     }
 
+    const [flag, setFlag] = useState<boolean>(false)
+
     const rendererAdvantages = (advantages: any[]) => {
-        const inputsForAdv = advantages.map((_, i) => {
+        const inputsForAdv = advantages?.map((_, i: number) => {
 
             return (
-                <input type="text" className={`input ${errors.advantages ? 'input--error' : ''}`} value={advantages[i]}/>
+                <input type="text" key={i} className={`input ${errors.advantages ? 'input--error' : ''}`} value={advantages[i]} onChange={(e) => handleChangeAdvantages(e, i)}/>
             )
         })
         return (
            inputsForAdv
         )
     }
+    let advantagesList;
+    advantagesList = rendererAdvantages(good?.advantages)
 
-    let advantagesList = rendererAdvantages(good?.advantages)
-    console.log(advantagesList)
+    useEffect(() => {
+        advantagesList = rendererAdvantages(good?.advantages)
+    }, [flag])
+
+   
+
+    const onFilters = (id: number) => {
+        let newArray = good;
+        let newItem;
+        if( newArray.mainparameter[id] == 1) {
+            newItem = 0
+        } else {
+            newItem = 1
+        }
+        let newArr = [...newArray.mainparameter.slice(0, id), newItem, ...newArray.mainparameter.slice(id + 1, newArray.mainparameter.length)]
+        newArray.mainparameter = newArr;
+        setGood(newArray)
+        let newFilterArray = filterArray;
+        let newItem1;
+        if(newFilterArray[id] == 1) {
+            newItem1 = 0
+        } else {
+            newItem1 = 1
+        }
+        let newArr1 = [...newFilterArray.slice(0, id), newItem1, ...newFilterArray.slice(id + 1, newFilterArray.length)]
+        setFilterArray(newArr1)
+    }
+
+    const renderFilterPanel = (arr: any[]) => {
+        const filtersList = arr.map((item :{id:number; title:string}, i:number) => {
+            const {id, title} = item;
+            return (
+                <li key={id} className='filters__item'>
+                    <div className="filters__check" onClick={() => {onFilters(id)}}>
+                        { 
+                            good.mainparameter[i] ? <img src={checked} alt="checked" /> : null 
+                        }
+                    </div>
+                    <span className="filters__title">{title}</span>
+                </li>
+            )
+        })
+
+        return (
+            
+            filtersList
+            
+        )
+    }
+   
+
 
     return (
     <>
@@ -306,29 +380,30 @@ const EditGood = () => {
                 <label className="create-goods__label create-goods__input">
                     <span>Загрузите файл изображения материала</span>
                     <input className='' type="file" name="imageUrl" id="file"
-                    onChange={handleChange}/>
+                    onChange={handleChange} />
                     <button className='button' type="button">Загрузить файлы</button>
                     <img className='create-goods__image' src={fileImage} alt="file_image" />
                     <span className='create-goods__image--span'>{good.imageurl ? good.imageurl.replace(regular, '') : 'Файл не выбран'}</span>
                     {/* <div className='error'>{errors.file}</div> */}
                 </label>
-                <label className="create-goods__label create-goods__input">
-                    <span>Загрузите файлы, если хотите заменить существующие фотографии материалов для индивидуального использования (до 10 шт.)</span>
-                    <input className='' type="file" name="goodspersonalimages" multiple
+                <label className="create-news__label create-news__input">
+                    <span>Загрузите файлы, если хотите заменить существующие в разделе персональных товаров</span>
+                    <input className='' type="file" name="goodsPersonalImages" multiple
                     onChange={handleChange} ref={fileInputPersonal}/>
                     <button className='button' type="button">Загрузить файлы</button>
                 </label>
-                <div className="create-goods__image-wrapper">
+                <div className="create-news__image-wrapper">
                     {
                         imagesPersonal
                     }
-                    <label className="create-goods__label create-goods__input">
-                    <span>Загрузите файлы, если хотите заменить существующие фотографии материалов для промышленного использования (до 10 шт.)</span>
-                    <input className='' type="file" name="goodsindustrialimages" multiple
-                    onChange={handleChange} ref={fileInputPersonal}/>
+                </div>
+                <label className="create-news__label create-news__input">
+                    <span>Загрузите файлы, если хотите заменить существующие в разделе производственных</span>
+                    <input className='' type="file" name="goodsPersonalImages" multiple
+                    onChange={handleChange} ref={fileInputIndustrial}/>
                     <button className='button' type="button">Загрузить файлы</button>
                 </label>
-                <div className="create-goods__image-wrapper">
+                <div className="create-news__image-wrapper">
                     {
                         imagesIndustrial
                     }
@@ -384,8 +459,11 @@ const EditGood = () => {
                 <div className="create-goods__wrap create-goods__wrap--advantages">
                     <h3 className='create-goods__title'>Преимущества</h3>
                     {advantagesList}
-                    <button className='button button--plus button--red' onClick={handleAddAdvantages}>+</button>
+                    <button className='button button--plus button--red' onClick={(e) => handleAddAdvantages(e)}>+</button>
                 </div>
+                <div className="create-goods__wrap">
+                    <h3 className='create-goods__title'>К каким группам товарам относится данный товар</h3>
+                    <SetContent process={process} component={renderFilterPanel(filtersData)}/>
                 </div>
                 <div className="create-goods__btns">
                 <button type="button" className="create-goods__btn button button--orange"

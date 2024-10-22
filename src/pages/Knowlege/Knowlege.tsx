@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import Pagination from "../../components/Pagination/Pagination";
 import SetContent from "../../utils/SetContent";
+import Spinner from "../../components/Spinner/Spinner";
 
 import fileImage from "../../assets/icons/file.svg";
 import attention from "../../assets/icons/attention.svg";
@@ -12,7 +13,7 @@ import './_knowlege.scss'
 const Knowlege = () => {
 
     const [knowlege, setKnowlege] = useState<any[]>([]);
-    
+    const [loading, setLoading] = useState<boolean>(false);
     const [process, setProcess] = useState<string>('loading');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -39,11 +40,15 @@ const Knowlege = () => {
     }
 
     const getKnowlege = (currentPage: number) => {
+        setLoading(true);
         getAllKnowlege(currentPage).then(res => {
             setKnowlege(res.result) 
+            console.log('pfikf&')
             setTotalPages(res.pages)
         }).then(
-            () => {setProcess('confirmed')}
+            () => {setProcess('confirmed');
+                setLoading(true)
+            }
         );
     }
 
@@ -55,15 +60,15 @@ const Knowlege = () => {
         if(searchForBackend == '') {
             getKnowlege(currentPage);
         } else {
+            setLoading(true)
             getSearchKnowlege(searchForBackend).then(res => {
-                console.log('search', res)
                     setKnowlege(res)
                        setTotalPages(1)
                 }).then(
-                    () => {setProcess('confirmed')}
+                    () => {setProcess('confirmed'); setLoading(false)}
                 );
         }
-    }, [searchForBackend])
+    }, [searchForBackend, knowlege])
 
     const onSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
        
@@ -95,6 +100,7 @@ const Knowlege = () => {
             </ul>
         )
     }
+    let spinner = loading ? <Spinner active/> : null;
    
     return (
         <>
@@ -107,9 +113,10 @@ const Knowlege = () => {
                    
                 </div>
             } showBackBtn={false} />
+            {spinner}
 
             {
-                knowlege.length > 0 ? <SetContent process={process} component={renderItems(knowlege)}/> : 
+                knowlege?.length > 0 ? <SetContent process={process} component={renderItems(knowlege)}/> : 
                 <li className='knowlege__box'>
                     <p>Ничего не найдено по запросу</p>
                 </li>

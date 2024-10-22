@@ -109,7 +109,7 @@ const getAllSertifications = async (page: any) =>  {
         const response = await axios.get(`${SERVER_URL}/sertificate/${page}`);
         return response.data;
     } catch (error: any) {
-        return error.response.data;
+        return console.log(error)
     } 
 }
 

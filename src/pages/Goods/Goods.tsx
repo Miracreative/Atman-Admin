@@ -5,6 +5,7 @@ import debounce from 'lodash.debounce';
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import Pagination from "../../components/Pagination/Pagination";
 import SetContent from "../../utils/SetContent";
+import Spinner from "../../components/Spinner/Spinner";
 
 import attention from "../../assets/icons/attention.svg";
 import checked from "./../../assets/icons/checked.svg"
@@ -14,6 +15,7 @@ const Goods = () => {
 
     const [goods, setGoods] = useState<any[]>([]);
     const [favourites, setFavourites] = useState<any[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const [flag, setFlag] = useState<boolean>(false);
     const [isFavourite, setIsFavourite] = useState<any[]>([])
     const [process, setProcess] = useState<string>('loading');
@@ -21,9 +23,11 @@ const Goods = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [search, setSearch] = useState('');
     const [searchForBackend, setSearchForBackend] = useState('');
-    const [filterArray, setFilterArray] = useState<number[]>([0, 0, 0, 0, 0, 0, 0]);
+    const [filterArray, setFilterArray] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0]);
     const [parametersForBackend, setParametersForBackend] = useState<number[]>([])
     const [checkedAll, setCheckedAll] = useState<boolean>(true)
+
+    let spinner = loading ? <Spinner active/> : null;
 
     const inputRef = useRef<HTMLInputElement>(null);
     const onClickClear = () => {
@@ -50,6 +54,8 @@ const Goods = () => {
     }
 
     const getGoods = (currentPage: number) => {
+        setSearch('');
+        setSearchForBackend('');
         setCheckedAll(true)
         getAllGoods(currentPage).then(response => {
             setGoods(response.result) 
@@ -64,60 +70,56 @@ const Goods = () => {
                     setGoods(response.result) 
                 }).then(
                     () => {setProcess('confirmed');
-                        setFlag(true)
+                        setFlag(true);
+                        setLoading(false)
                     }
                 )
             )
         )
-
-        // getAllFavouriteGoods().then(res => {
-        //             setFavourites(res.favourite);
-        //             // createIsFavouritesArray(res.favourite)
-        //         }).then(() =>
-        //             getAllGoods(currentPage).then(res => {
-        //                 setGoods(res.result) 
-        //                 setTotalPages(res.pages)
-        //             })
-        //         )
     }
 
     const getSearch = (searchForBackend:string) => {
+        setLoading(true)
         setCheckedAll(false)
         getSearchGoods(searchForBackend).then(res => {
             setGoods(res.result)
+            console.log(res)
             setTotalPages(1)
         }).then(
             () => getAllFavouriteGoods().then(res => {
                 setFavourites(res.favourite);
                 createIsFavouritesArray(res.favourite)
             }).then(
-                // () =>
-            ).then(
-                () => {setProcess('confirmed')}
+                () => {setProcess('confirmed');
+                    setLoading(false)
+                }
             )
         )
     }
 
     const getParameters = (parametersForBackend:number[]) => {
-        onClickClear()
-        // getGoodsOnMainParameters(parametersForBackend).then(res => {
-        //     setGoods(res)
-        //     setTotalPages(1)
-        // }).then(
-        //     () => getAllFavouriteGoods().then(res => {
-        //         setFavourites(res.result)
-        //     }).then(
-        //         () =>createIsFavouritesArray()
-        //     ).then(
-        //         () => {setProcess('confirmed')}
-        //     )
-        // )
+        setCheckedAll(false)
+        setSearch('');
+        setSearchForBackend('');
+        getGoodsOnMainParameters(parametersForBackend).then(res => {
+            setGoods(res)
+            setTotalPages(1)
+        }).then(
+            () => getAllFavouriteGoods().then(res => {
+                setFavourites(res.result);
+                createIsFavouritesArray(res.favourite)
+            }).then(
+                () => {setProcess('confirmed');
+                    setLoading(false);
+                    setCheckedAll(false);
+                }
+            )
+        )
     }
 
     const createIsFavouritesArray = (favourites: any) => {
         let arr:Boolean[] = [];
         let favorietsId:number[] = [];
-        console.log(favourites)
         favourites.forEach((item: {good_id: number}) => {
             favorietsId.push(item.good_id)
         })
@@ -131,32 +133,26 @@ const Goods = () => {
         setIsFavourite(arr)
     }
 
-    useEffect(() => {
-        
-        getGoods(currentPage);
-        //тест
-        
-        // setTotalPages(2)
-        // createIsFavouritesArray()
-        
-        // setProcess('confirmed')
-    }, [flag])
 
     const changeFlag = () => {
-        setFlag(flag =>!flag)
+        setCheckedAll(true)
+        setFlag(flag =>!flag);
     }
 
     useEffect(() => {
-        if(searchForBackend == '' && checkedAll) {
-            // getGoods(currentPage);
-        } 
-        else if(searchForBackend == '' && !checkedAll) {
+        if(search == '' && checkedAll) {
+            getGoods(currentPage);
+            console.log('all')
+        }  else if(search == '' && !checkedAll) {
+            console.log('filter')
             getParameters(parametersForBackend)
-            setCheckedAll(false)
+            console.log(goods)
         } else {
-        //    getSearch(searchForBackend)
+            console.log('search')
+           getSearch(searchForBackend)
+
         }
-    }, [searchForBackend, parametersForBackend])
+    }, [searchForBackend, parametersForBackend, flag])
 
     const onSearch = (e:React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
@@ -164,7 +160,7 @@ const Goods = () => {
     }
 
     const handleChangeIsFavourite = (i: number, favourite: boolean, id:number) => {
-
+        
         favourite ? (
             deleteFavourite(id)
         ) : (
@@ -185,7 +181,7 @@ const Goods = () => {
     const hendleChoiseAllGoods = () => {
         onClickClear();
         setCheckedAll(true)
-        setFilterArray([0, 0, 0, 0, 0, 0, 0])
+        setFilterArray([0, 0, 0, 0, 0, 0, 0, 0])
     }
     
     const renderItems = (arr: any[]) => {
@@ -233,7 +229,7 @@ const Goods = () => {
             const {id, title} = item;
             return (
                 <li key={id} className='filters__item'>
-                    <div className="filters__check" onClick={() => onFilters(id)}>
+                    <div className="filters__check" onClick={() => {onFilters(id)}}>
                         {
                             filterArray[i] ? <img src={checked} alt="checked" /> : null
                         }
@@ -261,9 +257,9 @@ const Goods = () => {
                    
                 </div>
             } showBackBtn={false} />
-
+                {spinner}
                 <ul className="filters">
-                    <li key={7} className='filters__item'>
+                    <li key={8} className='filters__item'>
                         <div className="filters__check" onClick={() => {hendleChoiseAllGoods()}}>
                             {
                                 checkedAll ? 
@@ -276,7 +272,7 @@ const Goods = () => {
                 
                 </ul>
             {
-                goods.length > 0 ? <SetContent process={process} component={renderItems(goods)}/> : 
+                goods?.length > 0 ? <SetContent process={process} component={renderItems(goods)}/> : 
                 <li className='goods__box'>
                     <p>Ничего не найдено по запросу</p>
                 </li>

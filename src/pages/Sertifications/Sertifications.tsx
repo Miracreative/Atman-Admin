@@ -109,7 +109,7 @@ const Sertifications = () => {
             } showBackBtn={false} />
 
             {
-                sertifications.length > 0 ? <SetContent process={process} component={renderItems(sertifications)}/> : 
+                sertifications?.length > 0 ? <SetContent process={process} component={renderItems(sertifications)}/> : 
                 <li className='sertifications__box'>
                     <p>Ничего не найдено по запросу</p>
                 </li>
