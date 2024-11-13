@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { getAllKnowlege, getSearchKnowlege } from "../../hooks/http.hook";
+import { getAllSout, getSearchSout } from "../../hooks/http.hook";
 import debounce from 'lodash.debounce';
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import Pagination from "../../components/Pagination/Pagination";
@@ -9,10 +9,10 @@ import Spinner from "../../components/Spinner/Spinner";
 
 import fileImage from "../../assets/icons/file.svg";
 import attention from "../../assets/icons/attention.svg";
-import './_knowlege.scss'
-const Knowlege = () => {
+import './_sout.scss'
+const Sout = () => {
 
-    const [knowlege, setKnowlege] = useState<any[]>([]);
+    const [sout, setSout] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [process, setProcess] = useState<string>('loading');
     const [currentPage, setCurrentPage] = useState<number>(1);
@@ -24,7 +24,7 @@ const Knowlege = () => {
     const onClickClear = () => {
         setSearch('');
         setSearchForBackend('');
-        getKnowlege(currentPage);
+        getSout(currentPage);
         inputRef.current?.focus();
     };
 
@@ -35,14 +35,14 @@ const Knowlege = () => {
     );
 
     const changePage = (step: any) => {
-        getKnowlege(+currentPage + step);
+        getSout(+currentPage + step);
         setCurrentPage(state => +state + step);
     }
 
-    const getKnowlege = (currentPage: number) => {
+    const getSout = (currentPage: number) => {
         setLoading(true);
-        getAllKnowlege(currentPage).then(res => {
-            setKnowlege(res.result) 
+        getAllSout(currentPage).then(res => {
+            setSout(res.result) 
             setTotalPages(res.pages)
         }).then(
             () => {setProcess('confirmed');
@@ -52,16 +52,16 @@ const Knowlege = () => {
     }
 
     useEffect(() => {
-        getKnowlege(currentPage);
+        getSout(currentPage);
     }, [])
 
     useEffect(() => {
         if(searchForBackend == '') {
-            getKnowlege(currentPage);
+            getSout(currentPage);
         } else {
             setLoading(true)
-            getSearchKnowlege(searchForBackend).then(res => {
-                    setKnowlege(res)
+            getSearchSout(searchForBackend).then(res => {
+                    setSout(res)
                        setTotalPages(1)
                 }).then(
                     () => {setProcess('confirmed'); setLoading(false)}
@@ -77,25 +77,24 @@ const Knowlege = () => {
     
     const renderItems = (arr: any[]) => {
         
-        const knowlegeList = arr.map((item: { id: number; title: string; content: string; file_name: string}, i:number) => {
-            const {id, title, content, file_name} = item;
+        const soutList = arr.map((item: { id: number; name: string; filetype: string;}, i:number) => {
+            const {id, name, filetype} = item;
             return (
-                <li key={id} className='rows-list__box knowlege__box'>
+                <li key={id} className='rows-list__box sout__box'>
                     <span>{i + 1}</span>
-                    <span>{title}</span>
-                    <span>{content}</span>
+                    <span>{name}</span>
                     <span>
                         <img src={fileImage} alt="file" />
-                        <span>{file_name}</span>
+                        <span>{filetype}</span>
                     </span>
-                    <Link className="rows-list__btn button button--red  knowlege__btn" to={`/edit-knowlege/${id}`}>Редактировать</Link>
+                    <Link className="rows-list__btn button button--red  sout__btn" to={`/edit-sout/${id}`}>Редактировать</Link>
                 </li>
             )
         })
         
         return (
             <ul className="rows-list">
-                {knowlegeList}
+                {soutList}
             </ul>
         )
     }
@@ -103,7 +102,7 @@ const Knowlege = () => {
    
     return (
         <>
-            <PanelHeader title="База знаний" children={
+            <PanelHeader title="СОУТ" children={
                 <div className="search">
                     <input type="text" ref={inputRef} placeholder="Search" value={search} onChange={(e) => onSearch(e)}/>
                     {
@@ -115,14 +114,14 @@ const Knowlege = () => {
             {spinner}
 
             {
-                knowlege?.length > 0 ? <SetContent process={process} component={renderItems(knowlege)}/> : 
-                <li className='knowlege__box'>
+                sout?.length > 0 ? <SetContent process={process} component={renderItems(sout)}/> : 
+                <li className='sout__box'>
                     <p>Ничего не найдено по запросу</p>
                 </li>
             }
             
-            <div className="knowlege__wrapper">
-                <Link className="button  knowlege__btn knowlege__btn--add" to={`/create-knowlege/`}>Добавить базу</Link>
+            <div className="sout__wrapper">
+                <Link className="button  sout__btn sout__btn--add" to={`/create-sout/`}>Добавить СОУТ</Link>
                 <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} setFlag={()=>console.log(true)}/>
             </div>
           
@@ -131,4 +130,4 @@ const Knowlege = () => {
     )
 }
 
-export default Knowlege;
+export default Sout;

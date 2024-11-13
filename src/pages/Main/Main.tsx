@@ -19,6 +19,10 @@ import EditNews from "../EditNews/EditNews";
 import CreateNews from "../CreateNews/CreateNews";
 import Goods from "../Goods/Goods";
 import EditGood from "../EditGoods/EditGoods";
+import CreateGoods from "../CreateGoods/CreateGoods";
+import Sout from "../Sout/Sout";
+import EditSout from "../EditSout/EditSout";
+import CreateSout from "../CreateSout/CreateSout";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -80,6 +84,11 @@ const Main = () =>  {
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/goods">
                             Товары
                         </NavLink>
+                        <li className="navigation__item">
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/sout">
+                            СОУТ
+                        </NavLink>
+                    </li>
                     </li>
                 </ul>
                 <div className="navigation__bottom">
@@ -107,6 +116,10 @@ const Main = () =>  {
                     <Route path="/create-news" element={<CreateNews />}/>
                     <Route path="/goods" element={<Goods />}/>
                     <Route path="/edit-goods/:id" element={<EditGood />}/>
+                    <Route path="/create-goods" element={<CreateGoods />}/>
+                    <Route path="/sout" element={<Sout />}/>
+                    <Route path="/edit-sout/:id" element={<EditSout />}/>
+                    <Route path="/create-sout/" element={<CreateSout />}/>
                 </Routes>
             </div>
         </div>

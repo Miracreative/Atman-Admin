@@ -82,7 +82,7 @@ const SertificationForm = ({sertificate, setSertificate, buttonTitle, form} : {
     const submitForm = async (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target.form);
-        axios.post('http://192.168.0.153:5000/api/sertificate', formData, {
+        axios.post('http://83.147.246.205:5000/api/sertificate', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }

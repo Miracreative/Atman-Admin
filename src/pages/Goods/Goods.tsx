@@ -55,6 +55,7 @@ const Goods = () => {
 
     const getGoods = (currentPage: number) => {
         setSearch('');
+        setLoading(true)
         setSearchForBackend('');
         setCheckedAll(true)
         getAllGoods(currentPage).then(response => {
@@ -82,8 +83,7 @@ const Goods = () => {
         setLoading(true)
         setCheckedAll(false)
         getSearchGoods(searchForBackend).then(res => {
-            setGoods(res.result)
-            console.log(res)
+            setGoods(res)
             setTotalPages(1)
         }).then(
             () => getAllFavouriteGoods().then(res => {
@@ -106,8 +106,9 @@ const Goods = () => {
             setTotalPages(1)
         }).then(
             () => getAllFavouriteGoods().then(res => {
-                setFavourites(res.result);
+                setFavourites(res.favourite);
                 createIsFavouritesArray(res.favourite)
+                // setFlag(!flag);
             }).then(
                 () => {setProcess('confirmed');
                     setLoading(false);
@@ -120,10 +121,10 @@ const Goods = () => {
     const createIsFavouritesArray = (favourites: any) => {
         let arr:Boolean[] = [];
         let favorietsId:number[] = [];
-        favourites.forEach((item: {good_id: number}) => {
+        favourites?.forEach((item: {good_id: number}) => {
             favorietsId.push(item.good_id)
         })
-        goods.forEach((good: {id:number}) => {
+        goods?.forEach((good: {id:number}) => {
             if(favorietsId.indexOf(good.id) != -1) {
                 arr.push(true)
             } else {
@@ -142,15 +143,10 @@ const Goods = () => {
     useEffect(() => {
         if(search == '' && checkedAll) {
             getGoods(currentPage);
-            console.log('all')
         }  else if(search == '' && !checkedAll) {
-            console.log('filter')
             getParameters(parametersForBackend)
-            console.log(goods)
         } else {
-            console.log('search')
            getSearch(searchForBackend)
-
         }
     }, [searchForBackend, parametersForBackend, flag])
 
@@ -160,7 +156,6 @@ const Goods = () => {
     }
 
     const handleChangeIsFavourite = (i: number, favourite: boolean, id:number) => {
-        
         favourite ? (
             deleteFavourite(id)
         ) : (
@@ -176,6 +171,7 @@ const Goods = () => {
         }
         let newArr = [...newFavourite.slice(0, i), newItem, ...newFavourite.slice(i + 1, newFavourite.length)]
         setIsFavourite(newArr)
+        
     }
 
     const hendleChoiseAllGoods = () => {
@@ -211,6 +207,8 @@ const Goods = () => {
 
     const onFilters = (id: number) => {
         setCheckedAll(false)
+        setFlag(flag => !flag)
+
         let newFilterArray = filterArray;
         let newItem;
         if(newFilterArray[id] == 1) {
@@ -220,8 +218,9 @@ const Goods = () => {
         }
         let newArr = [...newFilterArray.slice(0, id), newItem, ...newFilterArray.slice(id + 1, newFilterArray.length)]
         setFilterArray(newArr)
-
+       
         updateParameters(newArr);
+        setFlag(flag => !flag)
     }
    
     const renderFilterPanel = (arr: any[]) => {
@@ -279,7 +278,7 @@ const Goods = () => {
             }
             
             <div className="goods__wrapper">
-                <Link className="button  goods__btn goods__btn--add" to={`/create-goods/`}>Добавить новость</Link>
+                <Link className="button  goods__btn goods__btn--add" to={`/create-goods/`}>Добавить товар</Link>
                 <Pagination currentPage={currentPage} totalPages={totalPages} changePage={changePage} setFlag={changeFlag} />
             </div>
           

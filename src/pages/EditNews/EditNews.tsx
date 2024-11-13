@@ -97,7 +97,6 @@ const EditNews = () => {
     const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
         const { name, value } = e.target;
         setNews((state:any) => ({...state, [name]: value}))
-        console.log(value)
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
@@ -106,17 +105,17 @@ const EditNews = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${news.id}`)
-        axios.put('http://192.168.0.153:5000/api/news', formData, {
+        axios.put('http://83.147.246.205:5000/api/news', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
-          })
-          .then(() => {
+        })
+        .then(() => {
             setLoading(false);
             setShowAlert(true); 
             setTextAlert('Новость была успешно обновлена')
-          }) 
-          .catch(() => {
+        }) 
+        .catch(() => {
             setLoading(false);
             setShowAlert(true)
             setTextAlert('Что-то пошло не так')

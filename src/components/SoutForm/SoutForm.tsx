@@ -1,17 +1,16 @@
-import { useState} from 'react';
+import { useState, useRef} from 'react';
 import Spinner from '../Spinner/Spinner';
 import ModalAlert from '../ModalAlert/ModalAlert';
 import fileImage from '../../assets/icons/file.svg'
 import axios from 'axios';
-import './_knowlegeForm.scss'
+import './_soutForm.scss'
 
-const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
-        knowledge: {
-            title: string,
-            content: string,
+const SoutForm = ({sout, setSout, buttonTitle, form} : {
+        sout: {
+            name: string,
             file: any
 		},
-		setKnowlege: (value: any) => void,
+		setSout: (value: any) => void,
 		buttonTitle: string,
 		form: any
 	}) => {
@@ -22,24 +21,16 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
 		const validateValues = (inputName:string, inputValue: string) => {
 
 		let error = {
-			title: '',
-			content: '',
+			name: '',
             file: ''
 		};
 
 		switch(inputName) {
-		case 'title':
+		case 'name':
 			if (inputValue.length < 2) {
-                error.title = "Название слишком короткое";
+                error.name = "Название слишком короткое";
                 } else {
-                error.title = '';
-                }
-                break;
-		case 'content':
-			if (inputValue.length < 10) {
-                error.content = "Текста слишком мало";
-                } else {
-                error.content = '';
+                error.name = '';
                 }
                 break;
 		case 'file':
@@ -55,9 +46,16 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
 
 		return error;
 	};
+    const regular = /^.*[\/\\]| \(\d+\)\.\w+$/g;
+
+    const fileInput = useRef<any>(null)
+
+    let soutFile;
+
+    soutFile = (fileInput?.current?.value.length > 0) ? fileInput?.current?.value.replace(regular, '') : 'Файл не выбран'
 
 	const checkForm = () => {
-		if (knowledge.title && knowledge.content && knowledge.file) {
+		if (sout.name && fileInput?.current?.value.length > 0) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -71,13 +69,13 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
 
 	const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
 		const { name, value } = e.target;
-		setKnowlege((state: any) => ({...state, [name]: value}))
+		setSout((state: any) => ({...state, [name]: value}))
 		setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
 	}
 
 	const clearForm = () => {
         form.current.reset()
-		setKnowlege((state: any) => {
+		setSout((state: any) => {
             let newState = {...state}
             for (let key in newState) {
                 newState[key] = '';
@@ -90,7 +88,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
         e.preventDefault()
         const formData = new FormData(e.target.form);
         console.log(e.target.form)
-        axios.post('http://83.147.246.205:5000/api/base', formData, {
+        axios.post('http://83.147.246.205:5000/api/sout', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -98,7 +96,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
           .then(() => {
             setLoading(false);
             setShowAlert(true);
-            setTextAlert('Новая база была успешно создана')
+            setTextAlert('Новаый СОУТ был успешно создан')
           })
           .catch(() => {
             setLoading(false);
@@ -110,44 +108,35 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
         })
     }
 
-    const regular = /^.*[\/\\]| \(\d+\)\.\w+$/g
 
     let spinner = loading ? <Spinner active/> : null;
 
 	return (
         <>
             {spinner}
-            <form acceptCharset='utf-8' className="create-knowlege" id="create-knowlege" ref={form}>
-                <div className="create-knowlege__box">
-                <label className="create-knowlege__label">
-                    <span>Название базы знаний</span>
-                    <input className={`input ${errors.title ? 'input--error' : ''}`} type="text" name="title"
-                    value={knowledge.title} 
+            <form acceptCharset='utf-8' className="create-sout" id="create-sout" ref={form}>
+                <div className="create-sout__box">
+                <label className="create-sout__label">
+                    <span>Название СОУТ</span>
+                    <input className={`input ${errors.name ? 'input--error' : ''}`} type="text" name="name"
+                    value={sout.name} 
                     onChange={handleChange}/>
-                    <div className='error'>{errors.title}</div>
+                    <div className='error'>{errors.name}</div>
                 </label>
-                <label className="create-knowlege__label">
-                    <span>Содержание базы</span>
-                    <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
-                    name="content"
-                    value={knowledge.content}
-                    onChange={handleChange}/>
-                    <div className='error'>{errors.content}</div>
-                </label>
-                <label className="create-knowlege__label create-knowlege__input">
+                <label className="create-sout__label create-sout__input">
                     <span>Загрузите файл</span>
                     <input className='' type="file" name="file" id="file"
-                    onChange={handleChange}/>
+                    onChange={handleChange} ref={fileInput}/>
                     <img src={fileImage} alt="file_image" />
-                    <span>{knowledge.file ? knowledge.file.replace(regular, '') : 'Файл не выбран'}</span>
+                    <span>{soutFile}</span>
                     <div className='error'>{errors.file}</div>
                 </label>
                 
                 </div>
-                <div className="create-knowlege__btns">
-                <button type="button" className="create-knowlege__btn button button--orange"
+                <div className="create-sout__btns">
+                <button type="button" className="create-sout__btn button button--orange"
                 onClick={clearForm}>Очистить форму</button>
-                <button type="button" className="create-knowlege__btn button"
+                <button type="button" className="create-sout__btn button"
                 disabled={checkForm()}
                 onClick={(e) => {
                     submitForm(e)
@@ -160,4 +149,4 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
 	)
 }
 
-export default KnowlegeForm;
+export default SoutForm;

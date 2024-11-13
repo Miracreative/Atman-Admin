@@ -1,3 +1,3 @@
 module.exports = {
-    SERVER_URL: 'https://93d8-212-12-25-176.ngrok-free.app/api',
+    SERVER_URL: 'http://83.147.246.205:5000/api',
 };

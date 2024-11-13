@@ -7,7 +7,7 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Spinner from '../../components/Spinner/Spinner';
 import checked from "./../../assets/icons/checked.svg";
 import SetContent from "../../utils/SetContent";
-import { filtersData } from "../../data";
+import { filtersData, parametersData } from "../../data";
 import axios from 'axios';
 
 import { getOneGood, deleteGood } from '../../hooks/http.hook';
@@ -15,6 +15,7 @@ import { getOneGood, deleteGood } from '../../hooks/http.hook';
 import './_editGoods.scss'
 
 const EditGood = () => {
+   
     const form = useRef<any>(null);
     const {id} = useParams(); 
     const navigate = useNavigate();
@@ -57,7 +58,11 @@ const EditGood = () => {
         dencity: ''
     }); 
 
-    const [filterArray, setFilterArray] = useState<number[]>(good?.mainparameter);
+    const [mainParametersArray, setMainParametersArray] = useState<number[]>(good?.mainparameter);
+
+    const [parametersArray, setParametersArray] = useState<number[]>(good?.mainparameter);
+
+
     const validateValues = (inputName:string, inputValue: string) => {
 
 		let error = {
@@ -111,40 +116,15 @@ const EditGood = () => {
 		return error;
 	};
 
-  //отправляем запрос получния данных об админе
+  //отправляем запрос получния данных о товаре
     useEffect(() => { 
         getOneGood(id).then(res => {
             setGood(res)
-            setFilterArray(res.mainparameter)
+            setMainParametersArray(res.mainparameter)
         }).then(
             () =>setProcess('confirmed')
+            
         )
-        // setGood({
-        //         id: 1,
-        //         imageurl: 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg',
-        //         material: 'резина вспененная',
-        //         goodspersonalimages:  ['https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg'],
-        //         goodsindustrialimages: ['https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg', 'https://img.freepik.com/free-photo/landscape-morning-fog-mountains-with-hot-air-balloons-sunrise_335224-794.jpg'],
-        //         parameter: [0, 0, 0,0, 0, 0, 0,0,1,0 ,1,2],
-        //         mainparameter: [1, 0, 1, 0, 0, 1, 1],
-        //         article: '0082156',
-        //         advantages: ['asdas', 'asdasd'],
-        //         thickness: '27',
-        //         volume: '15',
-        //         pcs: '2', 
-        //         basetype: '',
-        //         color: '',
-        //         heatresistance: '',
-        //         name: 'товарчик',
-        //         description: '',
-        //         type: '',
-        //         size: '',
-        //         brand: '',
-        //         linertype: '',
-        //         pdfurl: '',
-        //         typeglue: '',
-        //         dencity: ''
-        //     })
     }, []);
 
     const checkForm = () => {
@@ -173,29 +153,55 @@ const EditGood = () => {
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
+    const deleteEmptyAdvantages = (): void => {
+        let newGood = good;
+        newGood.advantages = newGood.advantages.filter((item: string) => item !== '')
+        setGood((state:any) => ({...state, advantages: newGood.advantages}))
+    }
+
     const submitForm = async (e: any) => {
         e.preventDefault()
         setLoading(true);
+        deleteEmptyAdvantages();
         const formData = new FormData(e.target.form);
-        formData.append('id', `${good.id}`)
-        axios.put('http://192.168.0.153:5000/api/goods', formData, {
+        formData.delete('type')
+        formData.append('id', `${good.id}`);
+        formData.append('type', `${good.type}`);
+        formData.delete('basetype')
+        formData.append('baseType', `${good.basetype}`);
+        formData.delete('linertype')
+        formData.append('linerType', `${good.linertype}`);
+        formData.delete('typeglue')
+        formData.append('typeGlue', `${good.typeglue}`);
+        formData.delete('heatresistance')
+        formData.append('heatResistance', `${good.heatresistance}`);
+        formData.append('advantages', JSON.stringify(good.advantages).replace('[', '{')
+        .replace(']', '}'));
+        formData.append('mainParameter', JSON.stringify(good.mainparameter).replace('[', '{')
+        .replace(']', '}'));
+        formData.append('parameter', JSON.stringify(good.parameter).replace('[', '{')
+        .replace(']', '}'));
+
+        axios.put('http://83.147.246.205:5000/api/goods', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           })
-          .then(() => {
+        .then(() => {
             setLoading(false);
             setShowAlert(true);
-            setTextAlert('Товар успешно удален')
-          })
-          .catch(() => {
+            setTextAlert('Товар успешно обновлен')
+        })
+        .catch(() => {
             setLoading(false);
             setShowAlert(true)
             setTextAlert('Что-то пошло не так')
         }).finally(() => {
             setLoading(false);
             setShowAlert(true)
+           
         })
+       
     }
   
     
@@ -218,6 +224,8 @@ const EditGood = () => {
 
     const fileInputPersonal = useRef<any>(null)
     const fileInputIndustrial = useRef<any>(null)
+    const fileInputPdf = useRef<any>(null)
+    const fileInputMaterial = useRef<any>(null)
 
     const imagesItemsFromBackend = (arr: any[]) => {
         const images = arr.map((_, i) => {
@@ -268,6 +276,15 @@ const EditGood = () => {
     let imagesIndustrial;
     imagesIndustrial = (fileInputIndustrial?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputIndustrial) : ((good?.goodsindustrialimages?.length > 0) ? imagesItemsFromBackend(good.goodsindustrialimages) : 'нет картинок')
 
+    let imagePdf;
+
+    imagePdf = (fileInputPdf?.current?.value.length > 0) ? fileInputPdf?.current?.value.replace(regular, '') : (good.pdfurl ? good.pdfurl.replace(regular, '') : 'Файл не выбран')
+
+    let imageMaterial;
+
+    
+    imageMaterial = (fileInputMaterial?.current?.value.length > 0) ? fileInputMaterial?.current?.value.replace(regular, '') : (good.imageurl ? good.imageurl.replace(regular, '') : 'Файл не выбран')
+
     const handleAddAdvantages = (e:any) => {
         e.preventDefault()
         const newGood = good;
@@ -301,7 +318,7 @@ const EditGood = () => {
 
    
 
-    const onFilters = (id: number) => {
+    const onMainParameters = (id: number) => {
         let newArray = good;
         let newItem;
         if( newArray.mainparameter[id] == 1) {
@@ -312,7 +329,7 @@ const EditGood = () => {
         let newArr = [...newArray.mainparameter.slice(0, id), newItem, ...newArray.mainparameter.slice(id + 1, newArray.mainparameter.length)]
         newArray.mainparameter = newArr;
         setGood(newArray)
-        let newFilterArray = filterArray;
+        let newFilterArray = mainParametersArray;
         let newItem1;
         if(newFilterArray[id] == 1) {
             newItem1 = 0
@@ -320,20 +337,66 @@ const EditGood = () => {
             newItem1 = 1
         }
         let newArr1 = [...newFilterArray.slice(0, id), newItem1, ...newFilterArray.slice(id + 1, newFilterArray.length)]
-        setFilterArray(newArr1)
+        setMainParametersArray(newArr1)
     }
 
-    const renderFilterPanel = (arr: any[]) => {
+    const onParameters = (id: number) => {
+        let newArray = good;
+        let newItem;
+        if( newArray.parameter[id] == 1) {
+            newItem = 0
+        } else {
+            newItem = 1
+        }
+        let newArr = [...newArray.parameter.slice(0, id), newItem, ...newArray.parameter.slice(id + 1, newArray.parameter.length)]
+        newArray.parameter = newArr;
+        setGood(newArray)
+        console.log(newArray.parameter)
+        let newFilterArray = parametersArray;
+        let newItem1;
+        if(newFilterArray[id] == 1) {
+            newItem1 = 0
+        } else {
+            newItem1 = 1
+        }
+        let newArr1 = [...newFilterArray.slice(0, id), newItem1, ...newFilterArray.slice(id + 1, newFilterArray.length)]
+        setParametersArray(newArr1)
+    }
+
+    const renderMainParameters = (arr: any[]) => {
         const filtersList = arr.map((item :{id:number; title:string}, i:number) => {
             const {id, title} = item;
             return (
                 <li key={id} className='filters__item'>
-                    <div className="filters__check" onClick={() => {onFilters(id)}}>
+                    <div className="filters__check" onClick={() => {onMainParameters(id)}}>
                         { 
                             good.mainparameter[i] ? <img src={checked} alt="checked" /> : null 
                         }
                     </div>
                     <span className="filters__title">{title}</span>
+                </li>
+            )
+        })
+
+        return (
+            
+            filtersList
+            
+        )
+    }
+
+    const renderParameters = (arr: any[]) => {
+        const filtersList = arr.map((item :{id:number; title:string}, i:number) => {
+            const {id, title} = item;
+            // console.log(good.parameter)
+            return (
+                <li key={id} className='parameters__item'>
+                    <div className="parameters__check" onClick={() => {onParameters(id)}}>
+                        { 
+                            good.parameter && good.parameter[i] ? <img src={checked} alt="checked" /> : null 
+                        }
+                    </div>
+                    <span className="parameters__title">{title}</span>
                 </li>
             )
         })
@@ -378,28 +441,37 @@ const EditGood = () => {
                     <div className='error'>{errors.description}</div>
                 </label>
                 <label className="create-goods__label create-goods__input">
-                    <span>Загрузите файл изображения материала</span>
-                    <input className='' type="file" name="imageUrl" id="file"
-                    onChange={handleChange} />
-                    <button className='button' type="button">Загрузить файлы</button>
+                    <span>Документ о товаре</span>
+                    <input className='' type="file" name="pdfUrl" id="pdf"
+                    onChange={handleChange} ref={fileInputPdf}/>
+                    <button className='button' type="button">Загрузить файл</button>
                     <img className='create-goods__image' src={fileImage} alt="file_image" />
-                    <span className='create-goods__image--span'>{good.imageurl ? good.imageurl.replace(regular, '') : 'Файл не выбран'}</span>
+                    <span className='create-goods__image--span'>{imagePdf}</span>
                     {/* <div className='error'>{errors.file}</div> */}
                 </label>
-                <label className="create-news__label create-news__input">
-                    <span>Загрузите файлы, если хотите заменить существующие в разделе персональных товаров</span>
+                <label className="create-goods__label create-goods__input">
+                    <span>Изображение материала</span>
+                    <input className='' type="file" name="imageUrl" id="file"
+                    onChange={handleChange} ref={fileInputMaterial}/>
+                    <button className='button' type="button">Загрузить картинку</button>
+                    <img className='create-goods__image' src={fileImage} alt="file_image" />
+                    <span className='create-goods__image--span'>{imageMaterial}</span>
+                    {/* <div className='error'>{errors.file}</div> */}
+                </label>
+                <label className="create-goods__label create-goods__input">
+                    <span>Персональные товары</span>
                     <input className='' type="file" name="goodsPersonalImages" multiple
                     onChange={handleChange} ref={fileInputPersonal}/>
-                    <button className='button' type="button">Загрузить файлы</button>
+                    <button className='button' type="button">Загрузить картинки</button>
                 </label>
-                <div className="create-news__image-wrapper">
+                <div className="create-goods__image-wrapper">
                     {
                         imagesPersonal
                     }
                 </div>
-                <label className="create-news__label create-news__input">
-                    <span>Загрузите файлы, если хотите заменить существующие в разделе производственных</span>
-                    <input className='' type="file" name="goodsPersonalImages" multiple
+                <label className="create-goods__label create-goods__input">
+                    <span>Производственные товары</span>
+                    <input className='' type="file" name="goodsIndustrialImages" multiple
                     onChange={handleChange} ref={fileInputIndustrial}/>
                     <button className='button' type="button">Загрузить файлы</button>
                 </label>
@@ -411,6 +483,13 @@ const EditGood = () => {
                 </div>
                 <div className="create-goods__wrap">
                     <h3 className='create-goods__title'>Характеристики</h3>
+                    <label className="create-goods__label">
+                       <span>Тип материала</span>
+                       <input className={`input ${errors.type ? 'input--error' : ''}`} type="text" name="type"
+                       value={good.type} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.material}</div> */}
+                   </label>
                     <label className="create-goods__label">
                        
                         <span>Бренд</span>
@@ -436,15 +515,15 @@ const EditGood = () => {
                     </label>
                     <label className="create-goods__label">
                         <span>Тип лайнера</span>
-                        <input className={`input ${errors.linertype ? 'input--error' : ''}`} type="text" name="linerType"
+                        <input className={`input ${errors.linertype ? 'input--error' : ''}`} type="text" name="linertype"
                         value={good.linertype} 
                         onChange={handleChange}/>
                         {/* <div className='error'>{errors.linertype}</div> */}
                     </label>
                     <label className="create-goods__label">
                        <span>Тип основы</span>
-                       <input className={`input ${errors.type ? 'input--error' : ''}`} type="text" name="type"
-                       value={good.type} 
+                       <input className={`input ${errors.basetype ? 'input--error' : ''}`} type="text" name="basetype"
+                       value={good.basetype} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.type}</div> */}
                    </label>
@@ -455,6 +534,48 @@ const EditGood = () => {
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.dencity}</div> */}
                    </label>
+                   <label className="create-goods__label">
+                       <span>Материал</span>
+                       <input className={`input ${errors.material ? 'input--error' : ''}`} type="text" name="material"
+                       value={good.material} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.material}</div> */}
+                   </label>
+                   <label className="create-goods__label">
+                       <span>Объем</span>
+                       <input className={`input ${errors.volume ? 'input--error' : ''}`} type="text" name="volume"
+                       value={good.volume} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.material}</div> */}
+                   </label>
+                   <label className="create-goods__label">
+                       <span>Количество</span>
+                       <input className={`input ${errors.pcs ? 'input--error' : ''}`} type="text" name="pcs"
+                       value={good.pcs} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.material}</div> */}
+                   </label>
+                   <label className="create-goods__label">
+                       <span>Темп. устойч.</span>
+                       <input className={`input ${errors.heatResistance ? 'input--error' : ''}`} type="text" name="heatresistance"
+                       value={good.heatresistance} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.material}</div> */}
+                   </label>
+                   <label className="create-goods__label">
+                       <span>Размер</span>
+                       <input className={`input ${errors.size ? 'input--error' : ''}`} type="text" name="size"
+                       value={good.size} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.material}</div> */}
+                   </label>
+                   <label className="create-goods__label">
+                       <span>Тип клея</span>
+                       <input className={`input ${errors.typeGlue ? 'input--error' : ''}`} type="text" name="typeglue"
+                       value={good.typeglue} 
+                       onChange={handleChange}/>
+                       {/* <div className='error'>{errors.material}</div> */}
+                   </label>
                 </div>
                 <div className="create-goods__wrap create-goods__wrap--advantages">
                     <h3 className='create-goods__title'>Преимущества</h3>
@@ -463,7 +584,13 @@ const EditGood = () => {
                 </div>
                 <div className="create-goods__wrap">
                     <h3 className='create-goods__title'>К каким группам товарам относится данный товар</h3>
-                    <SetContent process={process} component={renderFilterPanel(filtersData)}/>
+                    <SetContent process={process} component={renderMainParameters(filtersData)}/>
+                </div>
+                <div className="create-goods__wrap">
+                    <h3 className='create-goods__title'>Параметры товара</h3>
+                    <div className="parameters">
+                        <SetContent process={process} component={renderParameters(parametersData)}/>
+                    </div>
                 </div>
                 <div className="create-goods__btns">
                 <button type="button" className="create-goods__btn button button--orange"
