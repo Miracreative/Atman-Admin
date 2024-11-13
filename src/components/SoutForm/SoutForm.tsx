@@ -96,7 +96,7 @@ const SoutForm = ({sout, setSout, buttonTitle, form} : {
           .then(() => {
             setLoading(false);
             setShowAlert(true);
-            setTextAlert('Новаый СОУТ был успешно создан')
+            setTextAlert('Новый СОУТ был успешно создан')
           })
           .catch(() => {
             setLoading(false);

@@ -296,6 +296,45 @@ const deleteSout = async (id: number) =>  {
         return error.response.data;
     } 
 }
+
+const getAllPerson = async (page: any) =>  {
+    try {
+        const response = await axios.get(`${SERVER_URL}/person/${page}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getOnePerson = async (id: any) => {
+    try {
+        const response = await axios.get(`${SERVER_URL}/person-one/${id}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+const getSearchPerson = async (searchText: any) => {
+    try {
+      
+        const response = await axios.get(`${SERVER_URL}/person-search/${searchText}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
+
+
+const deletePerson = async (id: number) =>  {
+    try {
+        const response = await axios.delete(`${SERVER_URL}/person/${id}`);
+   
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
 export { 
     createAdmin, 
     getAllAdmins,
@@ -326,4 +365,8 @@ export {
     getOneSout,
     getSearchSout,
     getAllSout,
+    deletePerson,
+    getOnePerson,
+    getSearchPerson,
+    getAllPerson,
 };

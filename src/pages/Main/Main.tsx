@@ -23,6 +23,9 @@ import CreateGoods from "../CreateGoods/CreateGoods";
 import Sout from "../Sout/Sout";
 import EditSout from "../EditSout/EditSout";
 import CreateSout from "../CreateSout/CreateSout";
+import Persons from "../Persons/Persons";
+import EditPerson from "../EditPerson/EditPerson";
+import CreatePerson from "../CreatePerson/CreatePerson";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -88,6 +91,9 @@ const Main = () =>  {
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/sout">
                             СОУТ
                         </NavLink>
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/persons">
+                           Сотрудники
+                        </NavLink>
                     </li>
                     </li>
                 </ul>
@@ -120,6 +126,9 @@ const Main = () =>  {
                     <Route path="/sout" element={<Sout />}/>
                     <Route path="/edit-sout/:id" element={<EditSout />}/>
                     <Route path="/create-sout/" element={<CreateSout />}/>
+                    <Route path="/persons/" element={<Persons />}/>
+                    <Route path="/edit-person/:id" element={<EditPerson />}/>
+                    <Route path="/create-person" element={<CreatePerson />}/>
                 </Routes>
             </div>
         </div>
