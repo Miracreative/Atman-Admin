@@ -26,6 +26,8 @@ import CreateSout from "../CreateSout/CreateSout";
 import Persons from "../Persons/Persons";
 import EditPerson from "../EditPerson/EditPerson";
 import CreatePerson from "../CreatePerson/CreatePerson";
+import CreateCompany from "../CreateCompany/CreateCompany";
+import EditCompany from "../EditCompany/EditCompany";
 import './_main.scss'
 
 import logo from './../../assets/icons/logo.svg';
@@ -94,6 +96,12 @@ const Main = () =>  {
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/persons">
                            Сотрудники
                         </NavLink>
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/create-company">
+                           Создать компанию
+                        </NavLink>
+                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/edit-company">
+                           Редактировать компанию
+                        </NavLink>
                     </li>
                     </li>
                 </ul>
@@ -129,6 +137,8 @@ const Main = () =>  {
                     <Route path="/persons/" element={<Persons />}/>
                     <Route path="/edit-person/:id" element={<EditPerson />}/>
                     <Route path="/create-person" element={<CreatePerson />}/>
+                    <Route path="/create-company" element={<CreateCompany />}/>
+                    <Route path="/edit-company" element={<EditCompany />}/>
                 </Routes>
             </div>
         </div>

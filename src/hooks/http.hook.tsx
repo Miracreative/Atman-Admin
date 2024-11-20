@@ -335,6 +335,15 @@ const deletePerson = async (id: number) =>  {
         return error.response.data;
     } 
 }
+
+const getCompany = async () =>  {
+    try {
+        const response = await axios.get(`${SERVER_URL}/company`);
+        return response.data[0];
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
 export { 
     createAdmin, 
     getAllAdmins,
@@ -369,4 +378,5 @@ export {
     getOnePerson,
     getSearchPerson,
     getAllPerson,
+    getCompany
 };
