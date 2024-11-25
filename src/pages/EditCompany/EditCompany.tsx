@@ -1,14 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate} from 'react-router-dom';
 import fileImage from '../../assets/icons/file.svg'
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import ModalAlert from '../../components/ModalAlert/ModalAlert';
-import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Spinner from '../../components/Spinner/Spinner';
 import InputMask from 'react-input-mask';
 
 import axios from 'axios';
-
+ 
 import { getCompany } from '../../hooks/http.hook';
 
 import './_editCompany.scss'
@@ -16,15 +14,14 @@ import './_editCompany.scss'
 const EditCompany = () => {
     const form = useRef<any>(null);
     const fileInput = useRef<any>(null)
-    const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState<boolean>(false); 
     const [textAlert, setTextAlert] = useState<string>('');
-    const [del, setDel] = useState<boolean>(false)
     const [errors, setErrors] = useState<any>({});
 
     const [company, setCompany] = useState({
         id: 0,
+        fullname: '',
         shortname: '',
         actualaddress: '',
         postaladdress: '',
@@ -226,7 +223,7 @@ const EditCompany = () => {
     }, []);
 
     const checkForm = () => {
-		if (company.name) {
+		if (company.fullname && fileInput?.current?.value.length > 0 && company.shortname && company.actualaddress && company.postaladdress && company.legaladdress && company.director && company.phone && company.email && company.website && company.inn && company.kpp && company.okpo && company.ogrn && company.okved && company.bankname && company.accountnumber && company.correspondentaccount && company.bic && company.file) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -248,6 +245,34 @@ const EditCompany = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${company.id}`)
+        formData.delete('fullname')
+        formData.append('fullName', `${company.fullname}`);
+        formData.delete('shortname');
+        formData.append('shortName', `${company.shortname}`);
+        formData.delete('actualaddress');
+        formData.append('actualAddress', `${company.actualaddress}`);
+        formData.delete('postaladdress');
+        formData.append('postalAddress', `${company.postaladdress}`);
+        formData.delete('legaladdress');
+        formData.append('legalAddress', `${company.legaladdress}`);
+        formData.delete('inn');
+        formData.append('INN', `${company.inn}`);
+        formData.delete('kpp');
+        formData.append('KPP', `${company.kpp}`);
+        formData.delete('okpo');
+        formData.append('OKPO', `${company.okpo}`);
+        formData.delete('ogrn');
+        formData.append('OGRN', `${company.ogrn}`);
+        formData.delete('okved');
+        formData.append('OKVED', `${company.okved}`);
+        formData.delete('bankname');
+        formData.append('bankName', `${company.bankname}`);
+        formData.delete('accountnumber');
+        formData.append('accountNumber', `${company.accountnumber}`);
+        formData.delete('correspondentaccount');
+        formData.append('correspondentAccount', `${company.correspondentaccount}`);
+        formData.delete('bic');
+        formData.append('BIC', `${company.bic}`);
         axios.put('http://83.147.246.205:5000/api/company', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -256,7 +281,7 @@ const EditCompany = () => {
           .then(() => {
             setLoading(false);
             setShowAlert(true);
-            setTextAlert('Сотрудник был успешно обновлен')
+            setTextAlert('Компания была успешно обновлена')
           })
           .catch(() => {
             setLoading(false);
@@ -274,22 +299,85 @@ const EditCompany = () => {
 
     return (
     <>
-       <PanelHeader title="Редактировать сотрудника" children={null} showBackBtn={true} />
+       <PanelHeader title="Редактировать компанию" children={null} showBackBtn={true} />
        {spinner}
        <form  className="create-company" id="create-company" ref={form} acceptCharset='utf-8'>
-            <div className='create-company__inner'>
+       <div className='create-company__inner'>
                 <div className="create-company__right">
                 <div className="create-company__col-box">
                     <div className="create-company__col">
                     <label className="create-company__label">
-                        <span>Имя сотрудника</span>
-                        <input className={`input ${errors.name ? 'input--error' : ''}`} type="text" name="name"
-                        value={company.name} 
+                        <span>Наименование предприятия полное:</span>
+                        <input className={`input ${errors.name ? 'input--error' : ''}`} type="text" name="fullname"
+                        value={company.fullname} 
                         onChange={handleChange}/>
-                        <div className='error'>{errors.name}</div>
+                        <div className='error'>{errors.fullname}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Наименование предприятия краткое:</span>
+                        <input className={`input ${errors.name ? 'input--error' : ''}`} type="text" name="shortname"
+                        value={company.shortname} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.shortname}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Фактический адрес:</span>
+                        <input className={`input ${errors.actualaddress ? 'input--error' : ''}`} type="text" name="actualaddress"
+                        value={company.actualaddress} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.actualaddress}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Почтовый адрес:</span>
+                        <input className={`input ${errors.postaladdress ? 'input--error' : ''}`} type="text" name="postaladdress"
+                        value={company.postaladdress} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.postaladdress}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Юридический адрес:</span>
+                        <input className={`input ${errors.legaladdress ? 'input--error' : ''}`} type="text" name="legaladdress"
+                        value={company.legaladdress} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.legaladdress}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Директор:</span>
+                        <input className={`input ${errors.director ? 'input--error' : ''}`} type="text" name="director"
+                        value={company.director} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.director}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Телефон:</span>
+                        {
+                            <InputMask 
+                                mask="8-999-999-99-99" 
+                                maskChar=" " 
+                                className="input" 
+                                value={company.phone} 
+                                name="phone" 
+                                onChange={handleChange}
+                            />
+                        }
+                        <div className='error'>{errors.phone}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>E-mail</span>
+                        <input className={`input ${errors.email ? 'input--error' : ''}`} type="text" name="email"
+                        value={company.email} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.email}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Веб-сайт:</span>
+                        <input className={`input ${errors.website ? 'input--error' : ''}`} type="text" name="website"
+                        value={company.website} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.website}</div>
                     </label>
                     <label className="create-company__label create-company__input">
-                        <span>Загрузите фото</span>
+                        <span>Загрузите карточку компании</span>
                         <input className='' type="file" name="file" id="file" ref={fileInput}
                         onChange={handleChange}/>
                         <img src={fileImage} alt="file_image" />
@@ -299,38 +387,74 @@ const EditCompany = () => {
                 </div>
                 <div className="create-company__col">
                     <label className="create-company__label">
-                        <span>E-mail</span>
-                        <input className={`input ${errors.email ? 'input--error' : ''}`} type="text" name="email"
-                        value={company.email} 
+                        <span>ИНН:</span>
+                        <input className={`input ${errors.inn ? 'input--error' : ''}`} type="text" name="inn"
+                        value={company.inn} 
                         onChange={handleChange}/>
-                        <div className='error'>{errors.email}</div>
+                        <div className='error'>{errors.inn}</div>
                     </label>
                     <label className="create-company__label">
-                        <span>WhatsApp</span>
-                        {
-                            <InputMask 
-                                mask="8-999-999-99-99" 
-                                maskChar=" " 
-                                className="input" 
-                                value={company.watsapp} 
-                                name="watsapp" 
-                                onChange={handleChange}
-                            />
-                        }
-                        <div className='error'>{errors.watsapp}</div>
+                        <span>КПП:</span>
+                        <input className={`input ${errors.kpp ? 'input--error' : ''}`} type="text" name="kpp"
+                        value={company.kpp} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.kpp}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>ОКПО:</span>
+                        <input className={`input ${errors.okpo ? 'input--error' : ''}`} type="text" name="okpo"
+                        value={company.okpo} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.okpo}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>ОГРН:</span>
+                        <input className={`input ${errors.ogrn ? 'input--error' : ''}`} type="text" name="ogrn"
+                        value={company.ogrn} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.ogrn}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>ОКВЭД:</span>
+                        <input className={`input ${errors.okved ? 'input--error' : ''}`} type="text" name="okved"
+                        value={company.okved} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.okved}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Наименование банка:</span>
+                        <input className={`input ${errors.bankname ? 'input--error' : ''}`} type="text" name="bankname"
+                        value={company.bankname} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.bankname}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Расчетный счет:</span>
+                        <input className={`input ${errors.accountnumber ? 'input--error' : ''}`} type="text" name="accountnumber"
+                        value={company.accountnumber} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.accountnumber}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>Корреспондентский счет:</span>
+                        <input className={`input ${errors.correspondentaccount ? 'input--error' : ''}`} type="text" name="correspondentaccount"
+                        value={company.correspondentaccount} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.correspondentaccount}</div>
+                    </label>
+                    <label className="create-company__label">
+                        <span>БИК:</span>
+                        <input className={`input ${errors.bic ? 'input--error' : ''}`} type="text" name="bic"
+                        value={company.bic} 
+                        onChange={handleChange}/>
+                        <div className='error'>{errors.bic}</div>
                     </label>
                 </div>
                 
                 </div>
-                <label className="create-company__label create-company--textarea">
-                    <span>Описание</span>
-                    <textarea className={`input input--textarea  ${errors.descr ? 'input--error' : ''}`} 
-                    name="descr"
-                    value={company.descr}
-                    onChange={handleChange}/>
-                    <div className='error'>{errors.descr}</div>
-                </label>
+                
                 </div>
+                
                 
                 </div>
                 
@@ -339,12 +463,10 @@ const EditCompany = () => {
                 disabled={checkForm()}
                 onClick={(e) => {
                     submitForm(e)
-                }}>Обновить сотрудника</button>
+                }}>Обновить компанию</button>
                 </div>
             </form>
             <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
-                del ?
-                navigate('/companys') :
                 console.log('edit')} />
     </>
   )
