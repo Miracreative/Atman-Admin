@@ -84,7 +84,6 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
     const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
         const { name, value } = e.target;
         setNews((state:any) => ({...state, [name]: value}))
-        console.log(value)
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
