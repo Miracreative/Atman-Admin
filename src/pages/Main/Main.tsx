@@ -96,9 +96,9 @@ const Main = () =>  {
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/persons">
                            Сотрудники
                         </NavLink>
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/create-company">
+                        {/* <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/create-company">
                            Создать компанию
-                        </NavLink>
+                        </NavLink> */}
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/edit-company">
                            Редактировать компанию
                         </NavLink>
@@ -139,6 +139,7 @@ const Main = () =>  {
                     <Route path="/create-person" element={<CreatePerson />}/>
                     <Route path="/create-company" element={<CreateCompany />}/>
                     <Route path="/edit-company" element={<EditCompany />}/>
+                  
                 </Routes>
             </div>
         </div>

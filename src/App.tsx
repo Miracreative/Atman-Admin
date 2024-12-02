@@ -2,6 +2,8 @@ import Main from "./pages/Main/Main";
 import { useState } from "react";
 import Spinner from './components/Spinner/Spinner';
 import Login from "./components/Login/Login";
+import Recovery from "./pages/Recovery/Recovery.tsx";
+import Password from "./pages/Password/Password.tsx";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { isLogIn } from './redux/slices/authSlice.tsx';
@@ -58,7 +60,8 @@ export default function App() {
         {spinner}
         <Routes >
           <Route path="/" element={<Login login={login} loginError={loadingError} />} />
-          {/* <Route path="/recovery/" element={<Recovery />} /> */}
+          <Route path="/recovery/" element={<Recovery />} />
+          <Route path="/password/:token" element={<Password />}/>
         </Routes>
       </>
     )

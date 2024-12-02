@@ -11,10 +11,6 @@ interface Admin {
     password: string,
 }
 
-interface Login {
-    email: string,
-    password: string,
-}
 
 const getAllAdmins = async () =>  {
     try {
@@ -364,6 +360,29 @@ const auth = async (logName: string, password: string) => {
         return error.response.data
     }
 }
+
+const reset = async (email: string) => {
+   
+    try {
+        const response = await axios.post(`${SERVER_URL}/auth/reset`, {
+            data: {
+                email
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        return error.response.data
+    }
+}
+const pass = async (token: any) => {
+    try {
+      
+        const response = await axios.get(`${SERVER_URL}/auth/password/${token}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
 export { 
     createAdmin, 
     getAllAdmins,
@@ -399,5 +418,7 @@ export {
     getSearchPerson,
     getAllPerson,
     getCompany,
-    auth
+    auth,
+    reset,
+    pass
 };
