@@ -54,18 +54,18 @@ export default function App() {
 
   loading ? spinner = <Spinner active={true} /> : spinner = <Spinner active={false} />
 
-  if (!window.sessionStorage.getItem('isLogin')) {
-    return (
-      <>
-        {spinner}
-        <Routes >
-          <Route path="/" element={<Login login={login} loginError={loadingError} />} />
-          <Route path="/recovery/" element={<Recovery />} />
-          <Route path="/password/:token" element={<Password />}/>
-        </Routes>
-      </>
-    )
-  } else {
+  // if (!window.sessionStorage.getItem('isLogin')) {
+    // return (
+    //   <>
+    //     {spinner}
+    //     <Routes >
+    //       <Route path="/" element={<Login login={login} loginError={loadingError} />} />
+    //       <Route path="/recovery/" element={<Recovery />} />
+    //       <Route path="/password/:token" element={<Password />}/>
+    //     </Routes>
+    //   </>
+    // )
+  // } else {
     return (
       <>
         {spinner}
@@ -73,5 +73,5 @@ export default function App() {
       </>
 
     )
-  }
+  // }
 }

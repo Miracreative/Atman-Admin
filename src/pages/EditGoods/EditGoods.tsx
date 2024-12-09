@@ -7,7 +7,7 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Spinner from '../../components/Spinner/Spinner';
 import checked from "./../../assets/icons/checked.svg";
 import SetContent from "../../utils/SetContent";
-import { filtersData, parametersData } from "../../data";
+import { filtersData, recommendData, parametersData } from "../../data";
 import axios from 'axios';
 
 import { getOneGood, deleteGood } from '../../hooks/http.hook';
@@ -39,6 +39,7 @@ const EditGood = () => {
         goodsindustrialimages: [],
         parameter: [],
         mainparameter: [],
+        recommendparameter: [],
         article: '',
         advantages: [],
         thickness: '',
@@ -59,6 +60,8 @@ const EditGood = () => {
     }); 
 
     const [mainParametersArray, setMainParametersArray] = useState<number[]>(good?.mainparameter);
+
+    const [recommendParametersArray, setRecommendParametersArray] = useState<number[]>(good?.recommendparameter);
 
     const [parametersArray, setParametersArray] = useState<number[]>(good?.mainparameter);
 
@@ -178,6 +181,8 @@ const EditGood = () => {
         formData.append('advantages', JSON.stringify(good.advantages).replace('[', '{')
         .replace(']', '}'));
         formData.append('mainParameter', JSON.stringify(good.mainparameter).replace('[', '{')
+        .replace(']', '}'));
+        formData.append('recommendparameter', JSON.stringify(good.recommendparameter).replace('[', '{')
         .replace(']', '}'));
         formData.append('parameter', JSON.stringify(good.parameter).replace('[', '{')
         .replace(']', '}'));
@@ -340,6 +345,28 @@ const EditGood = () => {
         setMainParametersArray(newArr1)
     }
 
+    const onRecommendParameters = (id: number) => {
+        let newArray = good;
+        let newItem;
+        if( newArray.recommendparameter[id] == 1) {
+            newItem = 0
+        } else {
+            newItem = 1
+        }
+        let newArr = [...newArray.recommendparameter.slice(0, id), newItem, ...newArray.recommendparameter.slice(id + 1, newArray.recommendparameter.length)]
+        newArray.recommendparameter = newArr;
+        setGood(newArray)
+        let newFilterArray = recommendParametersArray;
+        let newItem1;
+        if(newFilterArray[id] == 1) {
+            newItem1 = 0
+        } else {
+            newItem1 = 1
+        }
+        let newArr1 = [...newFilterArray.slice(0, id), newItem1, ...newFilterArray.slice(id + 1, newFilterArray.length)]
+        setRecommendParametersArray(newArr1)
+    }
+
     const onParameters = (id: number) => {
         let newArray = good;
         let newItem;
@@ -371,6 +398,28 @@ const EditGood = () => {
                     <div className="filters__check" onClick={() => {onMainParameters(id)}}>
                         { 
                             good.mainparameter[i] ? <img src={checked} alt="checked" /> : null 
+                        }
+                    </div>
+                    <span className="filters__title">{title}</span>
+                </li>
+            )
+        })
+
+        return (
+            
+            filtersList
+            
+        )
+    }
+
+    const renderRecommendParameters = (arr: any[]) => {
+        const filtersList = arr.map((item :{id:number; title:string}, i:number) => {
+            const {id, title} = item;
+            return (
+                <li key={id} className='filters__item'>
+                    <div className="filters__check" onClick={() => {onRecommendParameters(id)}}>
+                        { 
+                            good.recommendparameter[i] ? <img src={checked} alt="checked" /> : null 
                         }
                     </div>
                     <span className="filters__title">{title}</span>
@@ -585,6 +634,10 @@ const EditGood = () => {
                 <div className="create-goods__wrap">
                     <h3 className='create-goods__title'>К каким группам товарам относится данный товар</h3>
                     <SetContent process={process} component={renderMainParameters(filtersData)}/>
+                </div>
+                <div className="create-goods__wrap">
+                    <h3 className='create-goods__title'>К каким группам рекомендаций относится данный товар</h3>
+                    <SetContent process={process} component={renderRecommendParameters(recommendData)}/>
                 </div>
                 <div className="create-goods__wrap">
                     <h3 className='create-goods__title'>Параметры товара</h3>
