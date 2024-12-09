@@ -3,7 +3,7 @@ export const filtersData = [
         id: 0,
         title: 'Акриловые двусторонние клейкие ленты'
     },
-   {
+    {
         id: 1,
         title: 'Вспененные двусторонние клейкие ленты'
     },
@@ -31,14 +31,13 @@ export const filtersData = [
         id: 7,
         title: 'Резины'
     },
-]
-
+];
 export const recommendData = [
     {
         id: 0,
         title: 'Автомобильная промышленность'
     },
-   {
+    {
         id: 1,
         title: 'Производство бытовой техники'
     },
@@ -62,8 +61,7 @@ export const recommendData = [
         id: 6,
         title: 'РОС'
     },
-]
-
+];
 export const parametersData = [
     {
         id: 0,
@@ -161,4 +159,4 @@ export const parametersData = [
         id: 23,
         title: 'Поверхности с плохим сопряжением'
     },
-]
+];

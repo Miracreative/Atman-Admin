@@ -35,6 +35,12 @@ body {
     bottom: 8px;
     cursor: pointer;
   }
+  &--pass {
+    img {
+      bottom: auto;
+      top: 50px;
+    }
+  }
 }
 
 .input {
