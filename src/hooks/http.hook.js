@@ -1,5 +1,5 @@
 import axios from 'axios';
-const SERVER_URL = 'http://83.147.246.205:5000/api';
+const SERVER_URL = 'https://api.atman-auto.ru/api';
 const getAllAdmins = async () => {
     try {
         const response = await axios.get(`${SERVER_URL}/users`);

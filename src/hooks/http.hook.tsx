@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const SERVER_URL:string = 'http://83.147.246.205:5000/api';
+const SERVER_URL:string = 'https://api.atman-auto.ru/api';
 
 
 interface Admin {
