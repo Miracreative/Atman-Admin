@@ -105,7 +105,7 @@ const EditNews = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${news.id}`)
-        axios.put('http://83.147.246.205:5000/api/news', formData, {
+        axios.put('https://api.atman-auto.ru/api/news', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }

@@ -89,8 +89,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
     const submitForm = async (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target.form);
-        console.log(e.target.form)
-        axios.post('http://83.147.246.205:5000/api/base', formData, {
+        axios.post('https://api.atman-auto.ru/api/base', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
