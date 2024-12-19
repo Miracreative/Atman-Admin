@@ -171,7 +171,7 @@ const EditGood = () => {
             .replace(']', '}'));
         formData.append('parameter', JSON.stringify(good.parameter).replace('[', '{')
             .replace(']', '}'));
-        axios.put('http://83.147.246.205:5000/api/goods', formData, {
+        axios.put('https://api.atman-auto.ru/api/goods', formData, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }

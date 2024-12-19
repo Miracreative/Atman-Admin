@@ -71,7 +71,7 @@ const SoutForm = ({ sout, setSout, buttonTitle, form }) => {
         e.preventDefault();
         const formData = new FormData(e.target.form);
         console.log(e.target.form);
-        axios.post('http://83.147.246.205:5000/api/sout', formData, {
+        axios.post('https://api.atman-auto.ru/api/sout', formData, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }

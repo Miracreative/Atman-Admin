@@ -277,7 +277,7 @@ const EditCompany = () => {
         formData.append('correspondentAccount', `${company.correspondentaccount}`);
         formData.delete('bic');
         formData.append('BIC', `${company.bic}`);
-        axios.put('http://83.147.246.205:5000/api/company', formData, {
+        axios.put('https://api.atman-auto.ru/api/company', formData, {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }

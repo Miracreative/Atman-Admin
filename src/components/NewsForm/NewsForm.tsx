@@ -101,7 +101,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
     const submitForm = async (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target.form);
-        axios.post('http://83.147.246.205:5000/api/news', formData, {
+        axios.post('https://api.atman-auto.ru/api/news', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
