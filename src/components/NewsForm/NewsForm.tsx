@@ -11,6 +11,8 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
             content: string,
             descr: string,
             imagessrc: string[],
+            main: string,
+            mainimage: any,
             files: any
 		},
 		setNews: (value: any) => void,
@@ -19,6 +21,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
 	}) => {
 
     const fileInput = useRef<any>(null)
+    const mainInput = useRef<any>(null)
     const [loading, setLoading] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState<boolean>(false); 
     const [textAlert, setTextAlert] = useState<string>('');
@@ -57,6 +60,13 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
         case 'files':
             if (!inputValue) {
             error.files = "Прикрепите файлы";
+            } else {
+            error.files = "";
+            }
+            break;
+        case 'mainimage':
+            if (!inputValue) {
+            error.files = "Прикрепите файл";
             } else {
             error.files = "";
             }
@@ -153,6 +163,8 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
 
     images = (fileInput?.current?.files?.length) > 0 ? imagesItemsFromUpload() : <span className="create-news__span">Пока еще нет картинок</span>  
 
+
+
 	return (
         <>
             {spinner}
@@ -194,7 +206,14 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                         images
                     }
                 </div>
-                
+                <label className="create-knowlege__label create-knowlege__input">
+                    <span>Загрузите файл</span>
+                    <input className='' type="file" name="main" id="main"
+                    onChange={handleChange} ref={mainInput}/>
+                    <img src={fileImage} alt="file_image" />
+                    <span>{(mainInput?.current?.value.length > 0) ? mainInput?.current?.value.replace(regular, '') : (news.main ? news.main.replace(regular, '') : 'Файл не выбран')}</span>
+                    <div className='error'>{errors.mainimage}</div>
+                </label>
                 </div>
                 <div className="create-knowlege__btns">
                 <button type="button" className="create-knowlege__btn button button--orange"
