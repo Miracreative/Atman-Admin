@@ -208,7 +208,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                 </div>
                 <label className="create-knowlege__label create-knowlege__input">
                     <span>Загрузите файл</span>
-                    <input className='' type="file" name="main" id="main"
+                    <input className='' type="file" name="mainimage" id="main"
                     onChange={handleChange} ref={mainInput}/>
                     <img src={fileImage} alt="file_image" />
                     <span>{(mainInput?.current?.value.length > 0) ? mainInput?.current?.value.replace(regular, '') : (news.main ? news.main.replace(regular, '') : 'Файл не выбран')}</span>
