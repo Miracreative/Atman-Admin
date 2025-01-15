@@ -1,27 +1,51 @@
 import Main from "./pages/Main/Main";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Spinner from './components/Spinner/Spinner';
 import Login from "./components/Login/Login";
 import { Route, Routes } from "react-router-dom";
-import { useDispatch } from 'react-redux';
-import { isLogIn } from './redux/slices/authSlice.tsx';
-import {auth} from './hooks/http.hook';
+import { useDispatch, useSelector } from 'react-redux';
+import { isLogIn, setUser } from './redux/slices/authSlice.tsx';
+import {auth, checkAuth} from './hooks/http.hook';
 import "./scss/app.scss"
 
 export default function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
-  const isLoading = () => {
-    setLoading(true);
-  }
 
-  const isLoaded = () => {
-    setLoading(false);
-  }
+  const isAuth = useSelector(state => state.auth.auth);
+  
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      checkAuth()
+        .then(response => {
+          console.log(response );
+          
+        // localStorage.setItem('token', response.token)
+        // dispatch(isLogIn(true))
+        // нужно имя пользователя
+      });
+    }
+  }, [])
+
   const login = (logName:string, password:string) => {
-    isLoading()
+    setLoading(true);
     auth(logName, password)
+      .then(response => {
+        console.log(response);
+        
+        if(response.status === 200) {
+          localStorage.setItem('token', response.data.token)
+          dispatch(isLogIn(true))
+          dispatch(setUser(response.data.user_name))
+          // нужно имя пользователя
+        } else {
+          throw new Error("Ошибка!");
+        }
+      })
+      .catch(error => console.log('catch', error))
+      .finally (() => setLoading(false))
 
     //для локальной разработки
 
@@ -52,23 +76,22 @@ export default function App() {
 
   loading ? spinner = <Spinner active={true} /> : spinner = <Spinner active={false} />
 
-  if (!window.sessionStorage.getItem('isLogin')) {
+  if (isAuth) {
     return (
       <>
+        {spinner}
+        <Main />
+    </>
+    )
+  } else {
+    return (
+       <>
         {spinner}
         <Routes >
           <Route path="/" element={<Login login={login} loginError={loadingError} />} />
           {/* <Route path="/recovery/" element={<Recovery />} /> */}
         </Routes>
-      </>
-    )
-  } else {
-    return (
-      <>
-        {spinner}
-        <Main />
-      </>
-
+     </>
     )
   }
 }

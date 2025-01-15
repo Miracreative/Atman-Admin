@@ -3,6 +3,15 @@ import axios from 'axios';
 
 const SERVER_URL:string = 'http://83.147.246.205:5000/api';
 
+const $api = axios.create({
+    withCredentials: true,
+    baseURL: SERVER_URL
+})
+
+$api.interceptors.request.use(config => {
+    config.headers.Authorization = `${localStorage.getItem('token')}`
+    return config
+})
 
 interface Admin {
     name: string,
@@ -351,17 +360,30 @@ const getCompany = async () =>  {
 }
 
 const auth = async (logName: string, password: string) => {
-   
     try {
-        const response = await axios.post(`${SERVER_URL}/auth/login`, {
+        const response = await $api.post(`/auth/login`, {
             data: {
                 email: logName,
                 password
             }
         });
-        return response.data;
+        
+        
+        return response;
     } catch (error: any) {
-        return error.response.data
+        console.log('error', error);
+        
+        return error
+    }
+}
+
+const checkAuth = async () => {
+    try {
+        const response = await $api.get(`${SERVER_URL}/auth/refresh`);
+        
+        return response;
+    } catch (error: any) {
+        return error
     }
 }
 export { 
@@ -399,5 +421,6 @@ export {
     getSearchPerson,
     getAllPerson,
     getCompany,
-    auth
+    auth,
+    checkAuth
 };
