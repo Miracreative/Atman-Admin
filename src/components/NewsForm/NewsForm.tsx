@@ -3,7 +3,28 @@ import Spinner from '../Spinner/Spinner';
 import ModalAlert from '../ModalAlert/ModalAlert';
 import fileImage from '../../assets/icons/file.svg'
 import axios from 'axios';
-import './_newsForm.scss'
+import './_newsForm.scss';
+
+import {
+    BoldItalicUnderlineToggles,
+    MDXEditor,
+    MDXEditorMethods,
+    UndoRedo,
+    headingsPlugin,
+    listsPlugin,
+    markdownShortcutPlugin,
+    quotePlugin,
+    thematicBreakPlugin,
+    toolbarPlugin,
+    frontmatterPlugin,
+    InsertFrontmatter,
+    InsertTable,
+    ListsToggle,
+    Separator,
+    CreateLink,
+    BlockTypeSelect,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
 
 const NewsForm = ({news, setNews, buttonTitle, form} : {
         news: {
@@ -19,7 +40,9 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
 		buttonTitle: string,
 		form: any
 	}) => {
-
+    const mkdStr = ``;
+    const [value, setValue] = useState(mkdStr);
+    const ref = useRef<MDXEditorMethods>(null);
     const fileInput = useRef<any>(null)
     const mainInput = useRef<any>(null)
     const [loading, setLoading] = useState<boolean>(false);
@@ -74,12 +97,12 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
         default:
             console.error('Неизвестное поле');
         }
-
         return error;
     };
 
     const checkForm = () => {
-        if (news.title && news.content && news.files) {
+        if (news.title && news.files && value) {
+        
         for (let key in errors) {
             if (errors[key] !== '') {
             return true
@@ -94,7 +117,9 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
     const handleChange = (e:React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>): void => {
         const { name, value } = e.target;
         setNews((state:any) => ({...state, [name]: value}))
+      
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
+        console.log(news)
     }
 
 	const clearForm = () => {
@@ -163,8 +188,10 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
 
     images = (fileInput?.current?.files?.length) > 0 ? imagesItemsFromUpload() : <span className="create-news__span">Пока еще нет картинок</span>  
 
-
-
+    const changeContent = (e: any) => {
+        setValue(value)
+        setNews((state:any) => ({...state, content: e}))
+    }
 	return (
         <>
             {spinner}
@@ -188,13 +215,39 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
 
                 <label className="create-knowlege__label">
                     <span>Содержание новости</span>
-                    <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
                     name="content"
                     value={news.content}
                     onChange={handleChange}/>
-                    <div className='error'>{errors.content}</div>
+                    <div className='error'>{errors.content}</div> */}
+                    <MDXEditor
+                    ref={ref}
+                    onChange={changeContent}
+                    markdown=""
+                    plugins={[
+                        toolbarPlugin({
+                            toolbarClassName: "my-classname",
+                            toolbarContents: () => (
+                                <>
+                                    <BlockTypeSelect />
+                                    <UndoRedo />
+                                    <BoldItalicUnderlineToggles />
+                                    <InsertFrontmatter />
+                                    <ListsToggle />
+                                    <CreateLink />
+                                </>
+                            ),
+                        }),
+                        headingsPlugin(),
+                        listsPlugin(),
+                        quotePlugin(),
+                        thematicBreakPlugin(),
+                        markdownShortcutPlugin(),
+                        frontmatterPlugin(),
+                    ]}
+                />
                 </label>
-
+                <div className='error'>{errors.content}</div>
                 <label className="create-news__label create-news__input">
                     <input className='' type="file" name="files" multiple
                     onChange={handleChange} ref={fileInput}/>
@@ -223,6 +276,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                 onClick={(e) => {
                     submitForm(e)
                     clearForm();
+                    console.log(news)
                 }}>{buttonTitle}</button>
                 </div>
             </form>
