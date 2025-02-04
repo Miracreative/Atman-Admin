@@ -27,6 +27,7 @@ import {
     BlockTypeSelect,
 } from "@mdxeditor/editor";
 import "@mdxeditor/editor/style.css";
+import ReactMarkdown from 'react-markdown';
 
 import { getOneNews, deleteNews } from '../../hooks/http.hook';
 
@@ -44,6 +45,7 @@ const EditNews = () => {
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [del, setDel] = useState<boolean>(false)
     const [errors, setErrors] = useState<any>({});
+    const [oldText, setOldText] = useState<string>('')
  
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
@@ -113,6 +115,7 @@ const EditNews = () => {
     useEffect(() => { 
         getOneNews(id).then(res => {
             setNews(res)
+            setOldText(res.content)
         })
     }, []);
 
@@ -139,6 +142,11 @@ const EditNews = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${news.id}`)
+        if(news.content.length > 0) {
+            formData.append('content', `${news.content}`)
+        } else {
+            formData.append('content', `${oldText}`)
+        }
         axios.put('https://api.atman-auto.ru/api/news', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -257,6 +265,18 @@ const EditNews = () => {
                     value={news.content}
                     onChange={handleChange}/>
                     <div className='error'>{errors.content}</div> */}
+                    <div className="create-knowlege__text">
+                        <ReactMarkdown>{oldText}</ReactMarkdown>
+                    </div>
+                </label>
+                <label className="create-knowlege__label">
+                    <span>Перепишите текст новости, если это необходимо</span>
+                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    name="content"
+                    value={news.content}
+                    onChange={handleChange}/>
+                    <div className='error'>{errors.content}</div> */}
+                </label>
                     <MDXEditor
                         ref={ref}
                         onChange={changeContent}
@@ -283,7 +303,6 @@ const EditNews = () => {
                             frontmatterPlugin(),
                         ]}
                     />
-                </label>
 
                 <label className="create-news__label create-news__input">
                     <span>Загрузите файлы, если хотите заменить существующие</span>

@@ -17,6 +17,7 @@ const getAllAdmins = async () =>  {
         const response = await axios.get(`${SERVER_URL}/users`);
         return response.data;
     } catch (error: any) {
+        console.log(error);
         return error.response.data
     } 
 }

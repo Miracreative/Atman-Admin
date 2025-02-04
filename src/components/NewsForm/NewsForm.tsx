@@ -101,7 +101,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
     };
 
     const checkForm = () => {
-        if (news.title && news.files && value) {
+        if (news.title && news.files && news.descr && news.content) {
         
         for (let key in errors) {
             if (errors[key] !== '') {
@@ -136,9 +136,11 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
     const submitForm = async (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target.form);
+        formData.append('content', `${news.content}`)
         axios.post('https://api.atman-auto.ru/api/news', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
+                // 'Content-Type': 'multipart/form-data'
             }
           })
           .then(() => {
@@ -213,13 +215,14 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                     <div className='error'>{errors.descr}</div>
                 </label>
 
-                <label className="create-knowlege__label">
+                {/* <label> */}
                     <span>Содержание новости</span>
                     {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
                     name="content"
                     value={news.content}
                     onChange={handleChange}/>
                     <div className='error'>{errors.content}</div> */}
+                {/* </label> */}
                     <MDXEditor
                     ref={ref}
                     onChange={changeContent}
@@ -246,7 +249,6 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                         frontmatterPlugin(),
                     ]}
                 />
-                </label>
                 <div className='error'>{errors.content}</div>
                 <label className="create-news__label create-news__input">
                     <input className='' type="file" name="files" multiple
