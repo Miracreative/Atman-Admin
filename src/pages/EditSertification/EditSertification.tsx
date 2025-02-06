@@ -87,7 +87,7 @@ const EditSertification = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${sertificate.id}`)
-        axios.put('http://83.147.246.205:5000/api/sertificate', formData, {
+        axios.put('https://api.atman-auto.ru/api/sertificate', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }

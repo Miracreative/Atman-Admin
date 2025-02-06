@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useDeferredValue } from 'react';
 import { useParams, useNavigate} from 'react-router-dom';
 import fileImage from '../../assets/icons/file.svg'
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
@@ -7,6 +7,28 @@ import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Spinner from '../../components/Spinner/Spinner';
 import axios from 'axios';
 
+import {
+    BoldItalicUnderlineToggles,
+    MDXEditor,
+    MDXEditorMethods,
+    UndoRedo,
+    headingsPlugin,
+    listsPlugin,
+    markdownShortcutPlugin,
+    quotePlugin,
+    thematicBreakPlugin,
+    toolbarPlugin,
+    frontmatterPlugin,
+    InsertFrontmatter,
+    InsertTable,
+    ListsToggle,
+    Separator,
+    CreateLink,
+    BlockTypeSelect,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
+import ReactMarkdown from 'react-markdown';
+
 import { getOneNews, deleteNews } from '../../hooks/http.hook';
 
 import './_editNews.scss'
@@ -14,6 +36,7 @@ import './_editNews.scss'
 const EditNews = () => {
     const form = useRef<any>(null);
     const fileInput = useRef<any>(null)
+    const mainInput = useRef<any>(null)
     const {id} = useParams(); 
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
@@ -22,6 +45,8 @@ const EditNews = () => {
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [del, setDel] = useState<boolean>(false)
     const [errors, setErrors] = useState<any>({});
+    const [oldText, setOldText] = useState<string>('')
+ 
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
         title: ''
@@ -29,14 +54,18 @@ const EditNews = () => {
 
     const [news, setNews] = useState({
         id: 0,
-        title: '',
+        title: '', 
         content: '',
         descr: '',
         imagessrc: [],
-        files: ''
+        files: '',
+        main: '',
+        mainimage: ''
     }); 
 
-
+    const mkdStr = ``;
+    const [value, setValue] = useState(mkdStr);
+    const ref = useRef<MDXEditorMethods>(null);
     const validateValues = (inputName: string, inputValue: string) => {
 
 		let error = {
@@ -68,6 +97,13 @@ const EditNews = () => {
 			error.content = "";
 			}
 			break;
+        case 'mainimage':
+        if (!inputValue) {
+        error.files = "Прикрепите файл";
+        } else {
+        error.files = "";
+        }
+        break;
 		default:
 			console.error('Неизвестное поле');
 		}
@@ -79,6 +115,7 @@ const EditNews = () => {
     useEffect(() => { 
         getOneNews(id).then(res => {
             setNews(res)
+            setOldText(res.content)
         })
     }, []);
 
@@ -105,7 +142,12 @@ const EditNews = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${news.id}`)
-        axios.put('http://83.147.246.205:5000/api/news', formData, {
+        if(news.content.length > 0) {
+            formData.append('content', `${news.content}`)
+        } else {
+            formData.append('content', `${oldText}`)
+        }
+        axios.put('https://api.atman-auto.ru/api/news', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -189,6 +231,11 @@ const EditNews = () => {
 
     images = (fileInput?.current?.files?.length) > 0 ? imagesItemsFromUpload() : ((news?.imagessrc?.length > 0) ? imagesItemsFromBackend(news.imagessrc) : 'нет картинок')
 
+    const changeContent = (e: any) => {
+        setValue(value)
+        setNews((state:any) => ({...state, content: e}))
+    }
+
     return (
     <>
        <PanelHeader title="Редактировать новость" children={null} showBackBtn={true} />
@@ -213,12 +260,49 @@ const EditNews = () => {
 
                 <label className="create-knowlege__label">
                     <span>Содержание новости</span>
-                    <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
                     name="content"
                     value={news.content}
                     onChange={handleChange}/>
-                    <div className='error'>{errors.content}</div>
+                    <div className='error'>{errors.content}</div> */}
+                    <div className="create-knowlege__text">
+                        <ReactMarkdown>{oldText}</ReactMarkdown>
+                    </div>
                 </label>
+                <label className="create-knowlege__label">
+                    <span>Перепишите текст новости, если это необходимо</span>
+                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    name="content"
+                    value={news.content}
+                    onChange={handleChange}/>
+                    <div className='error'>{errors.content}</div> */}
+                </label>
+                    <MDXEditor
+                        ref={ref}
+                        onChange={changeContent}
+                        markdown=""
+                        plugins={[
+                            toolbarPlugin({
+                                toolbarClassName: "my-classname",
+                                toolbarContents: () => (
+                                    <>
+                                        <BlockTypeSelect />
+                                        <UndoRedo />
+                                        <BoldItalicUnderlineToggles />
+                                        <InsertFrontmatter />
+                                        <ListsToggle />
+                                        <CreateLink />
+                                    </>
+                                ),
+                            }),
+                            headingsPlugin(),
+                            listsPlugin(),
+                            quotePlugin(),
+                            thematicBreakPlugin(),
+                            markdownShortcutPlugin(),
+                            frontmatterPlugin(),
+                        ]}
+                    />
 
                 <label className="create-news__label create-news__input">
                     <span>Загрузите файлы, если хотите заменить существующие</span>
@@ -231,6 +315,14 @@ const EditNews = () => {
                         images
                     }
                 </div>
+                <label className="create-knowlege__label create-knowlege__input">
+                    <span>Загрузите файл</span>
+                    <input className='' type="file" name="mainimage" id="main"
+                    onChange={handleChange} ref={mainInput}/>
+                    <img src={fileImage} alt="file_image" />
+                    <span>{(mainInput?.current?.value.length > 0) ? mainInput?.current?.value.replace(regular, '') : (news.main ? news.main.replace(regular, '') : 'Файл не выбран')}</span>
+                    <div className='error'>{errors.mainimage}</div>
+                </label>
                 </div>
                 <div className="create-news__btns">
                 <button type="button" className="create-news__btn button button--orange"

@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const SERVER_URL:string = 'http://83.147.246.205:5000/api';
+const SERVER_URL:string = 'https://api.atman-auto.ru/api';
 
 const $api = axios.create({
     withCredentials: true,
@@ -20,16 +20,13 @@ interface Admin {
     password: string,
 }
 
-interface Login {
-    email: string,
-    password: string,
-}
 
 const getAllAdmins = async () =>  {
     try {
         const response = await axios.get(`${SERVER_URL}/users`);
         return response.data;
     } catch (error: any) {
+        console.log(error);
         return error.response.data
     } 
 }
@@ -386,6 +383,29 @@ const checkAuth = async () => {
         return error
     }
 }
+
+const reset = async (email: string) => {
+   
+    try {
+        const response = await axios.post(`${SERVER_URL}/auth/reset`, {
+            data: {
+                email
+            }
+        });
+        return response.data;
+    } catch (error: any) {
+        return error.response.data
+    }
+}
+const pass = async (token: any) => {
+    try {
+      
+        const response = await axios.get(`${SERVER_URL}/auth/password/${token}`);
+        return response.data;
+    } catch (error: any) {
+        return error.response.data;
+    } 
+}
 export { 
     createAdmin, 
     getAllAdmins,
@@ -423,4 +443,6 @@ export {
     getCompany,
     auth,
     checkAuth
+    reset,
+    pass
 };

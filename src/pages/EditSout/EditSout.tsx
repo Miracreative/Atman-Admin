@@ -93,7 +93,7 @@ const EditSout = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${sout.id}`)
-        axios.put('http://83.147.246.205:5000/api/sout', formData, {
+        axios.put('https://api.atman-auto.ru/api/sout', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }

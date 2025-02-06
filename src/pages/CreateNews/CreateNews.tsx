@@ -12,6 +12,8 @@ const CreateNews = () => {
         content: '',
         descr: '',
         imagessrc: [],
+        main: '',
+        mainimage: '',
         files: ''
     }); 
 

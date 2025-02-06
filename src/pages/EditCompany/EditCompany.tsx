@@ -117,7 +117,7 @@ const EditCompany = () => {
                     }
                     break;
             case 'email':
-                let emailRegExp = /^[a-zA-Z0-9._]+@[a-z.]+\.[a-z]{2,6}$/i;
+                let emailRegExp = /^[a-zA-Z0-9._]+@[a-z.]+\-+[a-z.]+\.[a-z]{2,6}$/i;
                 if (!emailRegExp.test(inputValue)) {
                 error.email = "Email некорректный"
                 } else {
@@ -195,7 +195,7 @@ const EditCompany = () => {
                     }
                     break;
             case 'bic':
-                if (inputValue.length < 19) {
+                if (inputValue.length < 9) {
                     error.bic = "БИК слишком короткий";
                     } else {
                     error.bic = '';
@@ -273,7 +273,7 @@ const EditCompany = () => {
         formData.append('correspondentAccount', `${company.correspondentaccount}`);
         formData.delete('bic');
         formData.append('BIC', `${company.bic}`);
-        axios.put('http://83.147.246.205:5000/api/company', formData, {
+        axios.put('https://api.atman-auto.ru/api/company', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }

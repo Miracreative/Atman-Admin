@@ -13,6 +13,7 @@ const CreateGoods = () => {
         goodsindustrialimages: [],
         parameter: [0,0, 0,0 ,0 ,0, 0, 0,0,0, 0,0 ,0 ,0, 0, 0, 0,0, 0,0 ,0 ,0, 0, 0],
         mainparameter: [0,0, 0,0 ,0 ,0, 0, 0],
+        recommendparameter: [0,0, 0,0 ,0 ,0, 0, 0],
         article: '',
         advantages: [''],
         thickness: '',

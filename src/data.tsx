@@ -33,6 +33,37 @@ export const filtersData = [
     },
 ]
 
+export const recommendData = [
+    {
+        id: 0,
+        title: 'Автомобильная промышленность'
+    },
+   {
+        id: 1,
+        title: 'Производство бытовой техники'
+    },
+    {
+        id: 2,
+        title: 'Мебельная промышленность'
+    },
+    {
+        id: 3,
+        title: 'Производство электроники'
+    },
+    {
+        id: 4,
+        title: 'Строительство и ремонт'
+    },
+    {
+        id: 5,
+        title: 'Транспорт'
+    },
+    {
+        id: 6,
+        title: 'РОС'
+    },
+]
+
 export const parametersData = [
     {
         id: 0,

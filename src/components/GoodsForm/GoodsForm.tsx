@@ -3,7 +3,7 @@ import Spinner from '../Spinner/Spinner';
 import checked from "../../assets/icons/checked.svg";
 import SetContent from "./../../utils/SetContent";
 import ModalAlert from '../ModalAlert/ModalAlert';
-import { filtersData, parametersData } from "../../data";
+import { filtersData, recommendData, parametersData } from "../../data";
 import fileImage from '../../assets/icons/file.svg'
 import axios from 'axios';
 import './_goodsForm.scss'
@@ -16,6 +16,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
             goodsindustrialimages: string[],
             parameter: number[],
             mainparameter: number[],
+            recommendparameter: number[],
             article: string,
             advantages: string[],
             thickness: string,
@@ -43,6 +44,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         const [showAlert, setShowAlert] = useState(false);
 		const [errors, setErrors] = useState<any>({});
 		const [mainParametersArray, setMainParametersArray] = useState<number[]>(good?.mainparameter);
+        const [recommendParametersArray, setRecommendParametersArray] = useState<number[]>(good?.recommendparameter);
 
         const [parametersArray, setParametersArray] = useState<number[]>(good?.parameter);
 
@@ -58,6 +60,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
             goodsindustrialimages: '',
             parameter: '',
             mainparameter: '',
+            recommendparameter: '',
             article: '',
             advantages: '',
             basetype: '',
@@ -103,6 +106,13 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 error.mainparameter = "Не указаны характеристики";
                 } else {
                 error.mainparameter = '';
+                }
+                break;
+        case 'recommendparameter':
+            if (mainParametersArray.includes(1)) {
+                error.recommendparameter = "Не указаны характеристики";
+                } else {
+                error.recommendparameter = '';
                 }
                 break;
 		case 'name':
@@ -162,7 +172,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
 	};
 
 	const checkForm = () => {
-		if (good.name && good.description && good.article && good.material && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.parameter.length > 0 && good.advantages.length > 0 && fileInputIndustrial.current.files.length > 0 && fileInputPersonal.current.files.length > 0  && good.type && good.basetype && fileInputPdf.current.value) {
+		if (good.name && good.description && good.article && good.material && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.recommendparameter.length > 0 && good.parameter.length > 0 && good.advantages.length > 0 && fileInputIndustrial.current.files.length > 0 && fileInputPersonal.current.files.length > 0  && good.type && good.basetype && fileInputPdf.current.value) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -203,6 +213,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 goodsindustrialimages: [],
                 parameter: [0,0, 0,0 ,0 ,0, 0, 0,0,0, 0,0 ,0 ,0, 0, 0, 0,0, 0,0 ,0 ,0, 0, 0],
                 mainparameter: [0,0, 0,0 ,0 ,0, 0, 0],
+                renderparameter : [0,0, 0,0 ,0 ,0, 0],
                 article: '',
                 advantages: [''],
                 thickness: '',
@@ -242,9 +253,11 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         .replace(']', '}'));
         formData.append('mainParameter', JSON.stringify(good.mainparameter).replace('[', '{')
         .replace(']', '}'));
+        formData.append('recommendparameter', JSON.stringify(good.mainparameter).replace('[', '{')
+        .replace(']', '}'));
         formData.append('parameter', JSON.stringify(good.parameter).replace('[', '{')
         .replace(']', '}'));
-        axios.post('http://83.147.246.205:5000/api/goods', formData, {
+        axios.post('https://api.atman-auto.ru/api/goods', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -253,6 +266,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
             setLoading(false);
             setShowAlert(true);
             setTextAlert('Товар был успешно создан')
+            clearForm();
           })
           .catch(() => {
             setLoading(false);
@@ -261,6 +275,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         }).finally(() => {
             setLoading(false);
             setShowAlert(true)
+        
         })
     }
 
@@ -369,6 +384,28 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         setMainParametersArray(newArr1)
     }
 
+    const onRecommendParameters = (id: number) => {
+        let newArray = good;
+        let newItem;
+        if( newArray.recommendparameter[id] == 1) {
+            newItem = 0
+        } else {
+            newItem = 1
+        }
+        let newArr = [...newArray.recommendparameter.slice(0, id), newItem, ...newArray.recommendparameter.slice(id + 1, newArray.recommendparameter.length)]
+        newArray.recommendparameter = newArr;
+        setGood(newArray)
+        let newFilterArray = recommendParametersArray;
+        let newItem1;
+        if(newFilterArray[id] == 1) {
+            newItem1 = 0
+        } else {
+            newItem1 = 1
+        }
+        let newArr1 = [...newFilterArray.slice(0, id), newItem1, ...newFilterArray.slice(id + 1, newFilterArray.length)]
+        setRecommendParametersArray(newArr1)
+    }
+
     const onParameters = (id: number) => {
         let newArray = good;
         let newItem;
@@ -400,6 +437,28 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                     <div className="filters__check" onClick={() => {onMainParameters(id)}}>
                         { 
                             good.mainparameter[i] ? <img src={checked} alt="checked" /> : null 
+                        }
+                    </div>
+                    <span className="filters__title">{title}</span>
+                </li>
+            )
+        })
+
+        return (
+            
+            filtersList
+            
+        )
+    }
+
+    const renderRecommendParameters = (arr: any[]) => {
+        const filtersList = arr.map((item :{id:number; title:string}, i:number) => {
+            const {id, title} = item;
+            return (
+                <li key={id} className='filters__item'>
+                    <div className="filters__check" onClick={() => {onRecommendParameters(id)}}>
+                        { 
+                            good.recommendparameter[i] ? <img src={checked} alt="checked" /> : null 
                         }
                     </div>
                     <span className="filters__title">{title}</span>
@@ -613,6 +672,10 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                     <SetContent process={process} component={renderMainParameters(filtersData)}/>
                 </div>
                 <div className="create-goods__wrap">
+                    <h3 className='create-goods__title'>К каким группам рекомендаций относится данный товар</h3>
+                    <SetContent process={process} component={renderRecommendParameters(recommendData)}/>
+                </div>
+                <div className="create-goods__wrap">
                     <h3 className='create-goods__title'>Параметры товара</h3>
                     <div className="parameters">
                         <SetContent process={process} component={renderParameters(parametersData)}/>
@@ -625,7 +688,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 disabled={checkForm()}
                 onClick={(e) => {
                     submitForm(e)
-                    clearForm();
+                   
                 }}>{buttonTitle}</button>
                 </div>
             </form>

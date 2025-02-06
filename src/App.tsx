@@ -2,6 +2,8 @@ import Main from "./pages/Main/Main";
 import { useState, useEffect, useCallback } from "react";
 import Spinner from './components/Spinner/Spinner';
 import Login from "./components/Login/Login";
+import Recovery from "./pages/Recovery/Recovery.tsx";
+import Password from "./pages/Password/Password.tsx";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { isLogIn, setUser } from './redux/slices/authSlice.tsx';
@@ -76,6 +78,7 @@ export default function App() {
 
   loading ? spinner = <Spinner active={true} /> : spinner = <Spinner active={false} />
 
+
   if (isAuth) {
     return (
       <>
@@ -84,6 +87,7 @@ export default function App() {
     </>
     )
   } else {
+
     return (
        <>
         {spinner}
@@ -93,5 +97,5 @@ export default function App() {
         </Routes>
      </>
     )
-  }
+  // }
 }
