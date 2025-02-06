@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useDeferredValue } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate} from 'react-router-dom';
 import fileImage from '../../assets/icons/file.svg'
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
@@ -117,7 +117,7 @@ const EditNews = () => {
             setNews(res)
             setOldText(res.content)
         })
-    }, []);
+    }, []); 
 
     const checkForm = () => {
 		if (news.title && news.content) {
