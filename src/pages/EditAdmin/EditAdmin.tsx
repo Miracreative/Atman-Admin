@@ -11,6 +11,8 @@ import { getOneAdmin, deleteAdmin, editAdmin } from '../../hooks/http.hook';
 import './_editAdmin.scss'
 
 const EditAdmin = () => {
+
+    
     const form = useRef<any>(null);
     const {id} = useParams(); 
     const navigate = useNavigate();
@@ -79,8 +81,20 @@ const EditAdmin = () => {
   //отправляем запрос получния данных об админе
     useEffect(() => { 
         getOneAdmin(id).then(res => {
-            setAdmin(res)
-            setAdmin(state => ({...state, password: 'введите новый пароль'}))
+            if (res.status === 401) {
+                console.log('Ошибка 401: Не авторизован');
+                // window.location.href = '/login';
+            } else {
+                setAdmin(res)
+                setAdmin(state => ({...state, password: 'введите новый пароль'}))
+            }
+        }).catch(() => {
+            setTextAlert('У Вас нет прав находиться в этом разделе')
+            setShowAlert(true)
+            setTimeout(() =>  {
+                setShowAlert(false)
+                navigate('/admins-list');
+            },1500)
         })
     }, []);
 

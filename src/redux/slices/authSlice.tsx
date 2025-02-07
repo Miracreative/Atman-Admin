@@ -1,24 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AuthState } from '../types/authTypes';
 
-const initialState = {
-    auth: false,
-    user: {
-
-    }
-}
+const initialState: AuthState = {
+    isLoggedIn: false,
+    user: {}
+};
 
 export const authSlice = createSlice({
-    name: 'autentification',
+    name: 'authentication', // Исправлено название
     initialState,
     reducers: {
-        isLogIn(state, action) {
-            state.auth = action.payload;
+        isLogIn(state: AuthState, action: PayloadAction<boolean>) {
+            state.isLoggedIn = action.payload;
         },
-        setUser(state, action) {
-            state.user = action.payload
+        setUser(state: AuthState, action: PayloadAction<any>) {
+            state.user = action.payload;
         }
     },
-})
+});
 
 export const { isLogIn, setUser } = authSlice.actions;
 
