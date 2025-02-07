@@ -1,9 +1,30 @@
-import { useState} from 'react';
+import { useState, useRef} from 'react';
 import Spinner from '../Spinner/Spinner';
 import ModalAlert from '../ModalAlert/ModalAlert';
 import fileImage from '../../assets/icons/file.svg'
 import axios from 'axios';
 import './_knowlegeForm.scss'
+
+import {
+    BoldItalicUnderlineToggles,
+    MDXEditor,
+    MDXEditorMethods,
+    UndoRedo,
+    headingsPlugin,
+    listsPlugin,
+    markdownShortcutPlugin,
+    quotePlugin,
+    thematicBreakPlugin,
+    toolbarPlugin,
+    frontmatterPlugin,
+    InsertFrontmatter,
+    InsertTable,
+    ListsToggle,
+    Separator,
+    CreateLink,
+    BlockTypeSelect,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
 
 const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
         knowledge: {
@@ -12,13 +33,16 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
             file: any
 		},
 		setKnowlege: (value: any) => void,
-		buttonTitle: string,
+		buttonTitle: string, 
 		form: any
 	}) => {
         const [loading, setLoading] = useState(false);
         const [textAlert, setTextAlert] = useState('');
         const [showAlert, setShowAlert] = useState(false);
 		const [errors, setErrors] = useState<any>({});
+        const mkdStr = ``;
+        const [value, setValue] = useState(mkdStr);
+        const ref = useRef<MDXEditorMethods>(null);
 		const validateValues = (inputName:string, inputValue: string) => {
 
 		let error = {
@@ -89,6 +113,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
     const submitForm = async (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target.form);
+        formData.append('content', `${knowledge.content}`)
         axios.post('https://api.atman-auto.ru/api/base', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -97,7 +122,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
           .then(() => {
             setLoading(false);
             setShowAlert(true);
-            setTextAlert('Новая база была успешно создана')
+            setTextAlert('Новая база была успешно создана') 
           })
           .catch(() => {
             setLoading(false);
@@ -107,6 +132,11 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
             setLoading(false);
             setShowAlert(true)
         })
+    }
+
+    const changeContent = (e: any) => {
+        setValue(value)
+        setKnowlege((state:any) => ({...state, content: e}))
     }
 
     const regular = /^.*[\/\\]| \(\d+\)\.\w+$/g
@@ -125,14 +155,41 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
                     onChange={handleChange}/>
                     <div className='error'>{errors.title}</div>
                 </label>
-                <label className="create-knowlege__label">
+                {/* <label className="create-knowlege__label"> */}
                     <span>Содержание базы</span>
-                    <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
                     name="content"
                     value={knowledge.content}
                     onChange={handleChange}/>
-                    <div className='error'>{errors.content}</div>
-                </label>
+                    <div className='error'>{errors.content}</div> */}
+                {/* </label> */}
+
+                <MDXEditor
+                    ref={ref}
+                    onChange={changeContent}
+                    markdown=""
+                    plugins={[
+                        toolbarPlugin({
+                            toolbarClassName: "my-classname",
+                            toolbarContents: () => (
+                                <>
+                                    <BlockTypeSelect />
+                                    <UndoRedo />
+                                    <BoldItalicUnderlineToggles />
+                                    <InsertFrontmatter />
+                                    <ListsToggle />
+                                    <CreateLink />
+                                </>
+                            ),
+                        }),
+                        headingsPlugin(),
+                        listsPlugin(),
+                        quotePlugin(),
+                        thematicBreakPlugin(),
+                        markdownShortcutPlugin(),
+                        frontmatterPlugin(),
+                    ]}
+                />
                 <label className="create-knowlege__label create-knowlege__input">
                     <span>Загрузите файл</span>
                     <input className='' type="file" name="file" id="file"
@@ -154,7 +211,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
                 }}>{buttonTitle}</button>
                 </div>
             </form>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
         </>
 	)
 }

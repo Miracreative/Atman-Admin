@@ -6,14 +6,34 @@ import ModalAlert from '../ModalAlert/ModalAlert';
 import { filtersData, recommendData, parametersData } from "../../data";
 import fileImage from '../../assets/icons/file.svg'
 import axios from 'axios';
-import './_goodsForm.scss'
+import './_goodsForm.scss';
+import {
+    BoldItalicUnderlineToggles,
+    MDXEditor,
+    MDXEditorMethods,
+    UndoRedo,
+    headingsPlugin,
+    listsPlugin,
+    markdownShortcutPlugin,
+    quotePlugin,
+    thematicBreakPlugin,
+    toolbarPlugin,
+    frontmatterPlugin,
+    InsertFrontmatter,
+    InsertTable,
+    ListsToggle,
+    Separator,
+    CreateLink,
+    BlockTypeSelect,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
 
 const GoodsForm = ({good, setGood, buttonTitle, form} : {
         good: {
             imageurl: string,
             material: string,
             goodspersonalimages:  string[],
-            goodsindustrialimages: string[],
+            goodsindustrialimages: string[], 
             parameter: number[],
             mainparameter: number[],
             recommendparameter: number[],
@@ -43,9 +63,13 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         const [textAlert, setTextAlert] = useState('');
         const [showAlert, setShowAlert] = useState(false);
 		const [errors, setErrors] = useState<any>({});
+
+        const mkdStr = ``;
+        const [value, setValue] = useState(mkdStr);
+        const ref = useRef<MDXEditorMethods>(null);
+        
 		const [mainParametersArray, setMainParametersArray] = useState<number[]>(good?.mainparameter);
         const [recommendParametersArray, setRecommendParametersArray] = useState<number[]>(good?.recommendparameter);
-
         const [parametersArray, setParametersArray] = useState<number[]>(good?.parameter);
 
         const [process, setProcess] = useState<string>('confirmed');
@@ -213,7 +237,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 goodsindustrialimages: [],
                 parameter: [0,0, 0,0 ,0 ,0, 0, 0,0,0, 0,0 ,0 ,0, 0, 0, 0,0, 0,0 ,0 ,0, 0, 0],
                 mainparameter: [0,0, 0,0 ,0 ,0, 0, 0],
-                renderparameter : [0,0, 0,0 ,0 ,0, 0],
+                recommendparameter : [0,0, 0,0 ,0 ,0, 0],
                 article: '',
                 advantages: [''],
                 thickness: '',
@@ -241,6 +265,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         const formData = new FormData(e.target.form);
         formData.delete('type')
         formData.append('type', `${good.type}`);
+        formData.append('description', `${good.description}`);
         formData.delete('basetype')
         formData.append('baseType', `${good.basetype}`);
         formData.delete('linertype')
@@ -253,7 +278,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         .replace(']', '}'));
         formData.append('mainParameter', JSON.stringify(good.mainparameter).replace('[', '{')
         .replace(']', '}'));
-        formData.append('recommendparameter', JSON.stringify(good.mainparameter).replace('[', '{')
+        formData.append('recommendparameter', JSON.stringify(good.recommendparameter).replace('[', '{')
         .replace(']', '}'));
         formData.append('parameter', JSON.stringify(good.parameter).replace('[', '{')
         .replace(']', '}'));
@@ -275,7 +300,6 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         }).finally(() => {
             setLoading(false);
             setShowAlert(true)
-        
         })
     }
 
@@ -404,6 +428,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         }
         let newArr1 = [...newFilterArray.slice(0, id), newItem1, ...newFilterArray.slice(id + 1, newFilterArray.length)]
         setRecommendParametersArray(newArr1)
+        console.log(newArr1)
     }
 
     const onParameters = (id: number) => {
@@ -496,6 +521,11 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         )
     }
 
+    const changeContent = (e: any) => {
+        setValue(value)
+        setGood((state:any) => ({...state, description: e}))
+    }
+
 	return (
         <>
             {spinner}
@@ -519,12 +549,38 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 </div>
                 <label className="create-goods__label">
                     <span>Описание товара</span>
-                    <textarea className={`input input--textarea ${errors.description ? 'input--error' : ''}`} 
+                    {/* <textarea className={`input input--textarea ${errors.description ? 'input--error' : ''}`} 
                     name="description"
                     value={good.description}
                     onChange={handleChange}/>
-                    <div className='error'>{errors.description}</div>
+                    <div className='error'>{errors.description}</div> */}
                 </label>
+                <MDXEditor
+                    ref={ref}
+                    onChange={changeContent}
+                    markdown=""
+                    plugins={[
+                        toolbarPlugin({
+                            toolbarClassName: "my-classname",
+                            toolbarContents: () => (
+                                <>
+                                    <BlockTypeSelect />
+                                    <UndoRedo />
+                                    <BoldItalicUnderlineToggles />
+                                    <InsertFrontmatter />
+                                    <ListsToggle />
+                                    <CreateLink />
+                                </>
+                            ),
+                        }),
+                        headingsPlugin(),
+                        listsPlugin(),
+                        quotePlugin(),
+                        thematicBreakPlugin(),
+                        markdownShortcutPlugin(),
+                        frontmatterPlugin(),
+                    ]}
+                />
                 <label className="create-goods__label create-goods__input">
                     <span>Документ о товаре</span>
                     <input className='' type="file" name="pdfUrl" id="pdf"
@@ -692,7 +748,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 }}>{buttonTitle}</button>
                 </div>
             </form>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
         </>
 	)
 }

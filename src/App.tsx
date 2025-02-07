@@ -6,8 +6,11 @@ import Recovery from "./pages/Recovery/Recovery.tsx";
 import Password from "./pages/Password/Password.tsx";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { isLogIn, setUser } from './redux/slices/authSlice.tsx';
-import {auth, checkAuth} from './hooks/http.hook';
+import { isLogIn, setUser } from './redux/slices/authSlice';
+import { AuthState } from './redux/types/authTypes'; 
+import { RootState } from './redux/types/reduxTypes';
+import {auth, checkAuth} from './hooks/http.hook.tsx';
+import ModalAlert from "./components/ModalAlert/ModalAlert.tsx";
 import "./scss/app.scss"
 
 export default function App() {
@@ -15,18 +18,70 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
 
-  const isAuth = useSelector(state => state.auth.auth);
-  
+  const [textAlert, setTextAlert] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
+  const isAuth = useSelector((state: RootState) => state.auth.isLoggedIn);
+  interface CookieOptions {
+    expires?: Date | string | number; // Может быть Date, строкой или количеством секунд
+    path?: string;
+    domain?: string;
+    secure?: boolean;
+    "max-age"?: number;
+    samesite?: 'strict' | 'lax' | 'none';
+    [key: string]: any; // Для дополнительных опций
+  }
+
+  function getCookie(name: string): string | undefined {
+    const matches = document.cookie.match(
+      new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+\-^])/g, '\\$1') + '=([^;]*)')
+    );
+    return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+  
+ 
+  
+  function setCookie(name: string, value: string, options: CookieOptions = {}): void {
+    let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+  
+    for (const optionKey in options) {
+      if (!options.hasOwnProperty(optionKey)) {
+        continue;
+      }
+  
+      updatedCookie += "; " + optionKey;
+  
+      let optionValue = options[optionKey];
+  
+      if (optionValue !== true) {
+        if (optionKey === 'expires' && optionValue instanceof Date) {
+          optionValue = optionValue.toUTCString();
+        }
+        updatedCookie += "=" + optionValue;
+      }
+    }
+  
+    document.cookie = updatedCookie;
+  }
+  
   useEffect(() => {
-    if (localStorage.getItem('token')) {
-      checkAuth()
-        .then(response => {
-          console.log(response );
-          
-        // localStorage.setItem('token', response.token)
-        // dispatch(isLogIn(true))
-        // нужно имя пользователя
+    const refreshToken = getCookie('refresh_token');
+    if (refreshToken) {
+      checkAuth().then(response => {
+        setCookie('token', `${response.token}`, {
+          'max-age': 3600,   
+          path: '/',         
+          secure: true,       
+          samesite: 'lax'     
+        });
+        setCookie('userName', `${response.user_name}`, {
+          'max-age': 3600,   
+          path: '/',         
+          secure: true,      
+          samesite: 'lax' 
+        });
+        dispatch(isLogIn(true))
+        dispatch(setUser(response.user_name))
       });
     }
   }, [])
@@ -35,43 +90,40 @@ export default function App() {
     setLoading(true);
     auth(logName, password)
       .then(response => {
-        console.log(response);
         
         if(response.status === 200) {
-          localStorage.setItem('token', response.data.token)
-          dispatch(isLogIn(true))
+          setCookie('userName', `${response.data.user_name}`, {
+            'max-age': 3600,   
+            path: '/',         
+            secure: true,    
+            samesite: 'lax'     
+          });
+          setCookie('token', `${response.data.token}`, {
+            'max-age': 3600,  
+            path: '/',        
+            secure: true,       
+            samesite: 'lax'   
+          });
+          setCookie('refresh_token', `${response.data.refresh_token}`, {
+            'max-age': 7200,   
+            path: '/',         
+            secure: true,       
+            samesite: 'lax'     
+          });
+          
+          dispatch(isLogIn(true)) 
           dispatch(setUser(response.data.user_name))
-          // нужно имя пользователя
         } else {
-          throw new Error("Ошибка!");
+          // setTextAlert('Логин или пароль неверные')
+          // setShowAlert(true)
         }
+        console.log(response)
       })
-      .catch(error => console.log('catch', error))
+      .catch(() => {
+          setTextAlert('Логин или пароль неверные')
+          setShowAlert(true)
+      })
       .finally (() => setLoading(false))
-
-    //для локальной разработки
-
-    // request(undefined, {
-    //     "command": "auth.authorization",
-    //     "logName": logName,
-    //     "password": pass
-    //   })
-    //     .then(res => {
-    //       ///получаем ошибку
-    //       if (res.status === "2") {
-    //         //Вывод ошибки авторизации о некорректных данных
-    //       }
-
-    //       ///если все хорошо
-    //       if (res.status === "1") {
-            
-    //         dispatch(isLogIn(true));
-    //         window.sessionStorage.setItem('isLogin', 'true')
-    //         window.sessionStorage.setItem('admin', JSON.stringify({name: res.message[0].name, login: logName}))
-    //       }
-
-    //       isLoaded()
-    //     })
   }
 
   let spinner;
@@ -84,6 +136,7 @@ export default function App() {
       <>
         {spinner}
         <Main />
+        <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
     </>
     )
   } else {
@@ -93,9 +146,9 @@ export default function App() {
         {spinner}
         <Routes >
           <Route path="/" element={<Login login={login} loginError={loadingError} />} />
-          {/* <Route path="/recovery/" element={<Recovery />} /> */}
+          <Route path="/recovery/" element={<Recovery />} />
         </Routes>
      </>
     )
-  // }
+  }
 }

@@ -211,7 +211,7 @@ const PersonForm = ({person, setPerson, buttonTitle, form} : {
                 }}>{buttonTitle}</button>
                 </div>
             </form>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
         </>
 	)
 }

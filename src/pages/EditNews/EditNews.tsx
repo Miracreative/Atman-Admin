@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useDeferredValue } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate} from 'react-router-dom';
 import fileImage from '../../assets/icons/file.svg'
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
@@ -117,7 +117,7 @@ const EditNews = () => {
             setNews(res)
             setOldText(res.content)
         })
-    }, []);
+    }, []); 
 
     const checkForm = () => {
 		if (news.title && news.content) {
@@ -335,7 +335,7 @@ const EditNews = () => {
                 </div>
             </form>
             <ConfirmModal question='Удалить новость?' text1={targetConfirm.title} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeNews(targetConfirm.id)}/>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/news') :
                 console.log('edit')} />

@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
 import { NavLink, useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 
 
@@ -28,7 +28,7 @@ import EditPerson from "../EditPerson/EditPerson";
 import CreatePerson from "../CreatePerson/CreatePerson";
 import CreateCompany from "../CreateCompany/CreateCompany";
 import EditCompany from "../EditCompany/EditCompany";
-import './_main.scss'
+import './_main.scss';
 
 import logo from './../../assets/icons/logo.svg';
 
@@ -37,15 +37,21 @@ import logo from './../../assets/icons/logo.svg';
 
 const Main = () =>  {
     const navigate = useNavigate();
-    const {name} = JSON.parse(window.sessionStorage.getItem('admin') || '""')
-    useEffect(() => {
-        // getAllGoods().then(res => {
-        //     console.log(res)
-        // });
-    }, [])
+    function getCookie(name: string): string | undefined {
+        const matches = document.cookie.match(
+          new RegExp('(?:^|; )' + name.replace(/([.$?*|{}()[\]\\/+\-^])/g, '\\$1') + '=([^;]*)')
+        );
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+      
+    const myCookieValue = getCookie('userName');
+   
     
     const logOut = () => {
-        window.sessionStorage.clear();
+        Cookies.remove('userName');
+        Cookies.remove('token');
+        Cookies.remove('refresh_token');
+        
         navigate('/');
         window.location.reload();
     }
@@ -55,7 +61,7 @@ const Main = () =>  {
                 <div className="navigation__top">
                     <img className="navigation__logo" src={logo} alt="logo" />
                     <div className="navigation__user">
-                        <div className="navigation__name">{name ? name : 'Admin'}</div>
+                        <div className="navigation__name">{myCookieValue ? myCookieValue : 'Admin'}</div>
                         {/* <div className="navigation__login">{login}</div> */}
                     </div>
                 </div>

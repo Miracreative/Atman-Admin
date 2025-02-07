@@ -176,7 +176,7 @@ const EditSertification = () => {
                 </div>
             </form>
             <ConfirmModal question='Удалить сертификат?' text1={targetConfirm.title} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeSertification(targetConfirm.id)}/>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/sertifications-list') :
                 console.log('edit')} />

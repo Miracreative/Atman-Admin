@@ -11,6 +11,8 @@ import { getOneAdmin, deleteAdmin, editAdmin } from '../../hooks/http.hook';
 import './_editAdmin.scss'
 
 const EditAdmin = () => {
+
+    
     const form = useRef<any>(null);
     const {id} = useParams(); 
     const navigate = useNavigate();
@@ -19,6 +21,7 @@ const EditAdmin = () => {
     const [textAlert, setTextAlert] = useState<string>('');
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [del, setDel] = useState<boolean>(false)
+    
     const [errors, setErrors] = useState<any>({});
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
@@ -79,8 +82,20 @@ const EditAdmin = () => {
   //отправляем запрос получния данных об админе
     useEffect(() => { 
         getOneAdmin(id).then(res => {
-            setAdmin(res)
-            setAdmin(state => ({...state, password: 'введите новый пароль'}))
+            if (res.status === 401) {
+                console.log('Ошибка 401: Не авторизован');
+                // window.location.href = '/login';
+            } else {
+                setAdmin(res)
+                setAdmin(state => ({...state, password: 'введите новый пароль'}))
+            }
+        }).catch(() => {
+            setTextAlert('У Вас нет прав находиться в этом разделе')
+            setShowAlert(true)
+            setTimeout(() =>  {
+                setShowAlert(false)
+                navigate('/');
+            },1500)
         })
     }, []);
 
@@ -228,7 +243,7 @@ const EditAdmin = () => {
         </div>
     </form>
     <ConfirmModal question='Удалить админа?' text1={targetConfirm.name} text2={targetConfirm.email} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeAdmin(targetConfirm.id)}/>
-    <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+    <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
         del ?
         navigate('/admins-list') :
         console.log('edit')} />

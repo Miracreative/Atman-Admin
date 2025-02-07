@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-
+import Cookies from 'js-cookie';
 const SERVER_URL:string = 'https://api.atman-auto.ru/api';
 
 const $api = axios.create({
@@ -9,9 +9,24 @@ const $api = axios.create({
 })
 
 $api.interceptors.request.use(config => {
-    config.headers.Authorization = `${localStorage.getItem('token')}`
-    return config
-})
+    const token = Cookies.get('token');
+    
+    if (token) {
+        config.headers.Authorization = `${token}`; 
+    }
+
+    return config;
+});
+
+$api.interceptors.response.use(
+    (response) => response,
+        (error) => {
+            if (error.response && error.response.status === 401) {
+                return {message: 'Не авторизован'}
+            }
+            return Promise.reject(error);
+        }
+);
 
 interface Admin {
     name: string,
@@ -23,7 +38,7 @@ interface Admin {
 
 const getAllAdmins = async () =>  {
     try {
-        const response = await axios.get(`${SERVER_URL}/users`);
+        const response = await $api.get(`${SERVER_URL}/users`);
         return response.data;
     } catch (error: any) {
         console.log(error);
@@ -34,7 +49,7 @@ const getAllAdmins = async () =>  {
 const createAdmin = async (admin: Admin) => {
    
     try {
-        const response = await axios.post(`${SERVER_URL}/auth/registration`, {
+        const response = await $api.post(`${SERVER_URL}/auth/registration`, {
             data: {
                 admin
             }
@@ -47,7 +62,7 @@ const createAdmin = async (admin: Admin) => {
 
 const deleteAdmin = async (id:number) =>  {
     try {
-        const response = await axios.delete(`${SERVER_URL}/users/${id}`);
+        const response = await $api.delete(`${SERVER_URL}/users/${id}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -56,7 +71,10 @@ const deleteAdmin = async (id:number) =>  {
 
 const getOneAdmin = async (id: any) => {
     try {
-        const response = await axios.get(`${SERVER_URL}/users/${id}`);
+        const response = await $api.get(`${SERVER_URL}/users/${id}`);
+        if( response.status == 401) {
+            return console.log('Admin')
+        }
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -81,7 +99,7 @@ const getAllKnowlege = async (page: any) =>  {
         const response = await axios.get(`${SERVER_URL}/base-admin/${page}`);
         return response.data;
     } catch (error: any) {
-        return error.response.data;
+        return error.response;
     } 
 }
 
@@ -358,7 +376,7 @@ const getCompany = async () =>  {
 
 const auth = async (logName: string, password: string) => {
     try {
-        const response = await $api.post(`/auth/login`, {
+        const response = await axios.post(`${SERVER_URL}/auth/login`, {
             data: {
                 email: logName,
                 password
@@ -368,17 +386,26 @@ const auth = async (logName: string, password: string) => {
         
         return response;
     } catch (error: any) {
-        console.log('error', error);
         
-        return error
+        if (error.response) {
+            return error.response;
+        } else {
+            return {
+                status: error.request ? error.request.status : 500,
+                data: { message: error.message || 'Network error' } 
+            };
+        }
     }
 }
 
 const checkAuth = async () => {
+    const refresh_token = Cookies.get('refresh_token');
     try {
-        const response = await $api.get(`${SERVER_URL}/auth/refresh`);
-        
-        return response;
+        if (!refresh_token) {
+            return Promise.reject('Refresh token отсутствует');
+        }
+        const response = await $api.get(`${SERVER_URL}/auth/refresh/${refresh_token}`);
+        return response.data;
     } catch (error: any) {
         return error
     }
@@ -442,7 +469,7 @@ export {
     getAllPerson,
     getCompany,
     auth,
-    checkAuth
+    checkAuth,
     reset,
     pass
 };

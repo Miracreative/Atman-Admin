@@ -9,14 +9,34 @@ import checked from "./../../assets/icons/checked.svg";
 import SetContent from "../../utils/SetContent";
 import { filtersData, recommendData, parametersData } from "../../data";
 import axios from 'axios';
-
+import {
+    BoldItalicUnderlineToggles,
+    MDXEditor,
+    MDXEditorMethods,
+    UndoRedo,
+    headingsPlugin,
+    listsPlugin,
+    markdownShortcutPlugin,
+    quotePlugin,
+    thematicBreakPlugin,
+    toolbarPlugin,
+    frontmatterPlugin,
+    InsertFrontmatter,
+    InsertTable,
+    ListsToggle,
+    Separator,
+    CreateLink,
+    BlockTypeSelect,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
+import ReactMarkdown from 'react-markdown';
 import { getOneGood, deleteGood } from '../../hooks/http.hook';
 
 import './_editGoods.scss'
 
 const EditGood = () => {
    
-    const form = useRef<any>(null);
+    const form = useRef<any>(null); 
     const {id} = useParams(); 
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
@@ -30,7 +50,10 @@ const EditGood = () => {
         id: 0,
         name: ''
     });
-
+    const mkdStr = ``;
+    const [value, setValue] = useState(mkdStr);
+    const ref = useRef<MDXEditorMethods>(null);
+    const [oldText, setOldText] = useState<string>('')
     const [good, setGood] = useState<any>({
         id: 0,
         imageurl: '',
@@ -123,7 +146,9 @@ const EditGood = () => {
     useEffect(() => { 
         getOneGood(id).then(res => {
             setGood(res)
-            setMainParametersArray(res.mainparameter)
+            // setMainParametersArray(res.mainparameter)
+            // setRecommendParametersArray(res.recommendparameter)
+            setOldText(res.description)
         }).then(
             () =>setProcess('confirmed')
             
@@ -169,6 +194,11 @@ const EditGood = () => {
         const formData = new FormData(e.target.form);
         formData.delete('type')
         formData.append('id', `${good.id}`);
+        if(good.description.length > 0) {
+            formData.append('description', `${good.description}`)
+        } else {
+            formData.append('description', `${oldText}`)
+        }
         formData.append('type', `${good.type}`);
         formData.delete('basetype')
         formData.append('baseType', `${good.basetype}`);
@@ -457,6 +487,10 @@ const EditGood = () => {
         )
     }
    
+    const changeContent = (e: any) => {
+        setValue(value)
+        setGood((state:any) => ({...state, description: e}))
+    }
 
 
     return (
@@ -481,14 +515,51 @@ const EditGood = () => {
                         <div className='error'>{errors.name}</div>
                     </label>
                 </div>
+                 <label className="create-knowlege__label">
+                                    <span>Содержание описания</span>
+                                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                                    name="content"
+                                    value={knowledge.content}
+                                    onChange={handleChange}/>
+                                    <div className='error'>{errors.content}</div> */}
+                                    <div className="create-knowlege__text">
+                                        <ReactMarkdown>{oldText}</ReactMarkdown>
+                                    </div>
+                                </label>
                 <label className="create-goods__label">
                     <span>Описание товара</span>
-                    <textarea className={`input input--textarea ${errors.description ? 'input--error' : ''}`} 
+                    {/* <textarea className={`input input--textarea ${errors.description ? 'input--error' : ''}`} 
                     name="description"
                     value={good.description}
                     onChange={handleChange}/>
-                    <div className='error'>{errors.description}</div>
+                    <div className='error'>{errors.description}</div> */}
                 </label>
+                <MDXEditor
+                        ref={ref}
+                        onChange={changeContent}
+                        markdown=""
+                        plugins={[
+                            toolbarPlugin({
+                                toolbarClassName: "my-classname",
+                                toolbarContents: () => (
+                                    <>
+                                        <BlockTypeSelect />
+                                        <UndoRedo />
+                                        <BoldItalicUnderlineToggles />
+                                        <InsertFrontmatter />
+                                        <ListsToggle />
+                                        <CreateLink />
+                                    </>
+                                ),
+                            }),
+                            headingsPlugin(),
+                            listsPlugin(),
+                            quotePlugin(),
+                            thematicBreakPlugin(),
+                            markdownShortcutPlugin(),
+                            frontmatterPlugin(),
+                        ]}
+                    />
                 <label className="create-goods__label create-goods__input">
                     <span>Документ о товаре</span>
                     <input className='' type="file" name="pdfUrl" id="pdf"
@@ -656,7 +727,7 @@ const EditGood = () => {
                 </div>
             </form>
             <ConfirmModal question='Удалить товар?' text1={targetConfirm.name} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeGood(targetConfirm.id)}/>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/goods') :
                 console.log('edit')} />

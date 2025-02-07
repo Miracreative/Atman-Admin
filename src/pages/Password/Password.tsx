@@ -180,7 +180,7 @@ const Password = () => {
                     onClick={() => sendNewPassword(admin)}
                     >Создать новый пароль</button>
             </form>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => setShowAlert(false)} />
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => setShowAlert(false)} />
         </div>
     )
 }
