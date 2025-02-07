@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate} from 'react-router-dom';
 import { getAllAdmins, deleteAdmin } from "../../hooks/http.hook";
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import ConfirmModal from "../../components/ConfirmModal/ConfirmModal";
@@ -8,11 +9,12 @@ import SetContent from "../../utils/SetContent";
 import './_admins.scss'
 import trash from "./../../assets/icons/trash.svg";
 const Admins = () => {
-
+    const navigate = useNavigate();
     const [admins, setAdmins] = useState([]);
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [textAlert, setTextAlert] = useState<string>('');
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const [alertBtnOpacity, setAlertBtnOpacity] = useState<boolean>(false)
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
         name: '',
@@ -22,10 +24,23 @@ const Admins = () => {
 
     const getUsers = () => {
         getAllAdmins().then(res => {
-            setAdmins(res)
-        }).then(
+            if (res.status === 401) {
+                console.log('Ошибка 401: Не авторизован');
+            } else {
+                setAdmins(res)
+            }
+         
+        }).catch (() =>{
+            setAlertBtnOpacity(true)
+            setTextAlert('У Вас нет прав находиться в этом разделе')
+            setShowAlert(true)
+            setTimeout(() =>  {
+                setShowAlert(false)
+                navigate('/');
+            },1500)
+        }).finally(() => {
             () => {setProcess('confirmed')}
-        );
+        });
     }
 
     useEffect(() => {
@@ -79,7 +94,7 @@ const Admins = () => {
 
             <SetContent process={process} component={renderItems(admins)}/>
             <ConfirmModal question='Удалить админа?' text1={targetConfirm.name} text2={targetConfirm.email} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeAdmin(targetConfirm.id)}/>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')} />
+            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert}alertBtnOpacity={alertBtnOpacity} message={textAlert} alertConfirm={() => null} />
         </>
     )
 }

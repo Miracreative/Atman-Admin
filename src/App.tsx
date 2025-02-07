@@ -10,12 +10,16 @@ import { isLogIn, setUser } from './redux/slices/authSlice';
 import { AuthState } from './redux/types/authTypes'; 
 import { RootState } from './redux/types/reduxTypes';
 import {auth, checkAuth} from './hooks/http.hook.tsx';
+import ModalAlert from "./components/ModalAlert/ModalAlert.tsx";
 import "./scss/app.scss"
 
 export default function App() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const [loadingError, setLoadingError] = useState(false);
+
+  const [textAlert, setTextAlert] = useState('');
+  const [showAlert, setShowAlert] = useState(false);
 
   const isAuth = useSelector((state: RootState) => state.auth.isLoggedIn);
   interface CookieOptions {
@@ -107,13 +111,18 @@ export default function App() {
             samesite: 'lax'     
           });
           
-          dispatch(isLogIn(true))
+          dispatch(isLogIn(true)) 
           dispatch(setUser(response.data.user_name))
         } else {
-          throw new Error("Ошибка!");
+          // setTextAlert('Логин или пароль неверные')
+          // setShowAlert(true)
         }
+        console.log(response)
       })
-      .catch(error => console.log('catch', error))
+      .catch(() => {
+          setTextAlert('Логин или пароль неверные')
+          setShowAlert(true)
+      })
       .finally (() => setLoading(false))
   }
 
@@ -127,6 +136,7 @@ export default function App() {
       <>
         {spinner}
         <Main />
+        <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
     </>
     )
   } else {

@@ -104,7 +104,7 @@ const Recovery = () => {
                  */}
                  <InputEmail clazz={clazz} email={email} onLogEmailChange={onLogEmailChange} onCheckDisable={onCheckDisable} button={button} sendEmailAddress={sendEmailAddress}/>
             </form>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => setShowAlert(false)} />
+            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => setShowAlert(false)} />
         </div>
     )
 }

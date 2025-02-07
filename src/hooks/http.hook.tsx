@@ -1,7 +1,6 @@
 
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router';
 const SERVER_URL:string = 'https://api.atman-auto.ru/api';
 
 const $api = axios.create({
@@ -36,7 +35,7 @@ interface Admin {
     password: string,
 }
 
-const navigate = useNavigate();
+
 const getAllAdmins = async () =>  {
     try {
         const response = await $api.get(`${SERVER_URL}/users`);
@@ -50,7 +49,7 @@ const getAllAdmins = async () =>  {
 const createAdmin = async (admin: Admin) => {
    
     try {
-        const response = await axios.post(`${SERVER_URL}/auth/registration`, {
+        const response = await $api.post(`${SERVER_URL}/auth/registration`, {
             data: {
                 admin
             }
@@ -63,7 +62,7 @@ const createAdmin = async (admin: Admin) => {
 
 const deleteAdmin = async (id:number) =>  {
     try {
-        const response = await axios.delete(`${SERVER_URL}/users/${id}`);
+        const response = await $api.delete(`${SERVER_URL}/users/${id}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;
@@ -387,9 +386,15 @@ const auth = async (logName: string, password: string) => {
         
         return response;
     } catch (error: any) {
-        console.log('error', error);
         
-        return error
+        if (error.response) {
+            return error.response;
+        } else {
+            return {
+                status: error.request ? error.request.status : 500,
+                data: { message: error.message || 'Network error' } 
+            };
+        }
     }
 }
 
@@ -397,8 +402,6 @@ const checkAuth = async () => {
     const refresh_token = Cookies.get('refresh_token');
     try {
         if (!refresh_token) {
-            //  Если refresh_token отсутствует, перенаправляем на страницу логина
-            navigate('/')
             return Promise.reject('Refresh token отсутствует');
         }
         const response = await $api.get(`${SERVER_URL}/auth/refresh/${refresh_token}`);

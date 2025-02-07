@@ -21,6 +21,7 @@ const EditAdmin = () => {
     const [textAlert, setTextAlert] = useState<string>('');
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [del, setDel] = useState<boolean>(false)
+    
     const [errors, setErrors] = useState<any>({});
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
@@ -93,7 +94,7 @@ const EditAdmin = () => {
             setShowAlert(true)
             setTimeout(() =>  {
                 setShowAlert(false)
-                navigate('/admins-list');
+                navigate('/');
             },1500)
         })
     }, []);
@@ -242,7 +243,7 @@ const EditAdmin = () => {
         </div>
     </form>
     <ConfirmModal question='Удалить админа?' text1={targetConfirm.name} text2={targetConfirm.email} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeAdmin(targetConfirm.id)}/>
-    <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+    <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
         del ?
         navigate('/admins-list') :
         console.log('edit')} />
