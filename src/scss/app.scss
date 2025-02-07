@@ -494,6 +494,13 @@ body {
     border-right: none;
   }
 }
+
+._contentEditable_uazmk_379 {
+  background-color: white;
+  border: 1px solid rgba(12, 3, 0, 0.5);
+  border-radius: 20px;
+  min-height: 150px;
+}
 @media print {
   body {
     background-color: transparent;

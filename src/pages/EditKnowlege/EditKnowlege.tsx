@@ -11,6 +11,28 @@ import { getOneKnowlege, deleteKnowlege } from '../../hooks/http.hook';
 
 import './_editKnowlege.scss'
 
+import {
+    BoldItalicUnderlineToggles,
+    MDXEditor,
+    MDXEditorMethods,
+    UndoRedo,
+    headingsPlugin,
+    listsPlugin,
+    markdownShortcutPlugin,
+    quotePlugin,
+    thematicBreakPlugin,
+    toolbarPlugin,
+    frontmatterPlugin,
+    InsertFrontmatter,
+    InsertTable,
+    ListsToggle,
+    Separator,
+    CreateLink,
+    BlockTypeSelect,
+} from "@mdxeditor/editor";
+import "@mdxeditor/editor/style.css";
+import ReactMarkdown from 'react-markdown';
+
 const EditKnowlege = () => {
     const form = useRef<any>(null);
     const {id} = useParams(); 
@@ -21,6 +43,10 @@ const EditKnowlege = () => {
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [del, setDel] = useState<boolean>(false)
     const [errors, setErrors] = useState<any>({});
+    const mkdStr = ``;
+    const [value, setValue] = useState(mkdStr);
+    const ref = useRef<MDXEditorMethods>(null);
+    const [oldText, setOldText] = useState<string>('')
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
         title: ''
@@ -69,6 +95,7 @@ const EditKnowlege = () => {
     useEffect(() => { 
         getOneKnowlege(id).then(res => {
             setKnowledge(res)
+            setOldText(res.content)
         })
     }, []);
 
@@ -95,6 +122,11 @@ const EditKnowlege = () => {
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${knowledge.id}`)
+        if(knowledge.content.length > 0) {
+            formData.append('content', `${knowledge.content}`)
+        } else {
+            formData.append('content', `${oldText}`)
+        }
         axios.put('https://api.atman-auto.ru/api/base', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -129,6 +161,11 @@ const EditKnowlege = () => {
         setTargetConfirm({id, title})
     }
 
+    const changeContent = (e: any) => {
+        setValue(value)
+        setKnowledge((state:any) => ({...state, content: e}))
+    }
+
     const regular = /^.*[\/\\]| \(\d+\)\.\w+$/g
 
     let spinner = loading ? <Spinner active/> : null;
@@ -148,12 +185,49 @@ const EditKnowlege = () => {
                 </label>
                 <label className="create-knowlege__label">
                     <span>Содержание базы</span>
-                    <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
                     name="content"
                     value={knowledge.content}
                     onChange={handleChange}/>
-                    <div className='error'>{errors.content}</div>
+                    <div className='error'>{errors.content}</div> */}
+                    <div className="create-knowlege__text">
+                        <ReactMarkdown>{oldText}</ReactMarkdown>
+                    </div>
                 </label>
+                <label className="create-knowlege__label">
+                    <span>Перепишите текст новости, если это необходимо</span>
+                    {/* <textarea className={`input input--textarea ${errors.content ? 'input--error' : ''}`} 
+                    name="content"
+                    value={news.content}
+                    onChange={handleChange}/>
+                    <div className='error'>{errors.content}</div> */}
+                </label>
+                    <MDXEditor
+                        ref={ref}
+                        onChange={changeContent}
+                        markdown=""
+                        plugins={[
+                            toolbarPlugin({
+                                toolbarClassName: "my-classname",
+                                toolbarContents: () => (
+                                    <>
+                                        <BlockTypeSelect />
+                                        <UndoRedo />
+                                        <BoldItalicUnderlineToggles />
+                                        <InsertFrontmatter />
+                                        <ListsToggle />
+                                        <CreateLink />
+                                    </>
+                                ),
+                            }),
+                            headingsPlugin(),
+                            listsPlugin(),
+                            quotePlugin(),
+                            thematicBreakPlugin(),
+                            markdownShortcutPlugin(),
+                            frontmatterPlugin(),
+                        ]}
+                    />
                 <label className="create-knowlege__label create-knowlege__input">
                     <span>Загрузите файл</span>
                     <input className='' type="file" name="file" id="file"

@@ -100,7 +100,7 @@ const getAllKnowlege = async (page: any) =>  {
         const response = await axios.get(`${SERVER_URL}/base-admin/${page}`);
         return response.data;
     } catch (error: any) {
-        return error.response.data;
+        return error.response;
     } 
 }
 
