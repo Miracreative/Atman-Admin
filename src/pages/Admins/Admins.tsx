@@ -27,7 +27,8 @@ const Admins = () => {
             if (res.status === 401) {
                 console.log('Ошибка 401: Не авторизован');
             } else {
-                setAdmins(res)
+                setProcess('confirmed')
+                setAdmins(res);
             }
          
         }).catch (() =>{
@@ -39,7 +40,6 @@ const Admins = () => {
                 navigate('/');
             },1500)
         }).finally(() => {
-            () => {setProcess('confirmed')}
         });
     }
 
@@ -94,7 +94,7 @@ const Admins = () => {
 
             <SetContent process={process} component={renderItems(admins)}/>
             <ConfirmModal question='Удалить админа?' text1={targetConfirm.name} text2={targetConfirm.email} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeAdmin(targetConfirm.id)}/>
-            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert}alertBtnOpacity={alertBtnOpacity} message={textAlert} alertConfirm={() => null} />
+            <ModalAlert showAlert={showAlert} setShowAlert={setShowAlert} alertBtnOpacity={alertBtnOpacity} message={textAlert} alertConfirm={() => null} />
         </>
     )
 }
