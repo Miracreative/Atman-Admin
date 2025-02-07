@@ -147,6 +147,7 @@ export default function App() {
         <Routes >
           <Route path="/" element={<Login login={login} loginError={loadingError} />} />
           <Route path="/recovery/" element={<Recovery />} />
+          <Route path="/password/:token" element={<Password />} />
         </Routes>
      </>
     )

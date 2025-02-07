@@ -1,5 +1,5 @@
 import {useLayoutEffect, useState, useRef} from "react";
-import {useParams } from 'react-router-dom';
+import {useParams, useNavigate } from 'react-router-dom';
 import generatePass from '../../services/GeneratePass';
 import title from './../../assets/icons/logo-atman.svg';
 import unsecret from './../../assets/icons/show-pass.svg';
@@ -10,6 +10,7 @@ import Spinner from "../../components/Spinner/Spinner";
 import "./_password.scss";
 
 const Password = () => {
+    const navigate = useNavigate();
     const {token}  =  useParams();
     const [admin, setAdmin] = useState({
         role: '',
@@ -27,6 +28,7 @@ const Password = () => {
         document.title = "Смена пароля - ATMAN Admin";
         pass(token).then((res: any) => {
            setAdmin({...res, password: password.password})
+           console.log(res)
             if(res.code !== 1) {
                 setTextAlert(res.message)
                 setShowAlert(true)
@@ -180,7 +182,7 @@ const Password = () => {
                     onClick={() => sendNewPassword(admin)}
                     >Создать новый пароль</button>
             </form>
-            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => setShowAlert(false)} />
+            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() =>{setShowAlert(false); navigate('/recovery')} } />
         </div>
     )
 }
