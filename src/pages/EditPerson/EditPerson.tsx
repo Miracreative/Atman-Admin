@@ -232,7 +232,7 @@ const EditPerson = () => {
                 </div>
             </form>
             <ConfirmModal question='Удалить сотрудника?' text1={targetConfirm.name} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removePerson(targetConfirm.id)}/>
-            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/persons') :
                 console.log('edit')} />

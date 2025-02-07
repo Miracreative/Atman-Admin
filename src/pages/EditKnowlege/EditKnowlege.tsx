@@ -249,7 +249,7 @@ const EditKnowlege = () => {
                 </div>
             </form>
             <ConfirmModal question='Удалить базу?' text1={targetConfirm.title} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeKnowlege(targetConfirm.id)}/>
-            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/knowledge-list') :
                 console.log('edit')} />

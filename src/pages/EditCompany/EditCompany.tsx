@@ -466,7 +466,7 @@ const EditCompany = () => {
                 }}>Обновить компанию</button>
                 </div>
             </form>
-            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 console.log('edit')} />
     </>
   )

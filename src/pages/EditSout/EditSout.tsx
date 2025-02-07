@@ -164,7 +164,7 @@ const EditSout = () => {
                 </div>
             </form>
             <ConfirmModal question='Удалить СОУТ?' text1={targetConfirm.name} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeSout(targetConfirm.id)}/>
-            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/sout') :
                 console.log('edit')} />

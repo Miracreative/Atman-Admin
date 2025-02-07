@@ -463,7 +463,7 @@ const CompanyForm = ({company, setCompany, buttonTitle, form} : {
                 }}>{buttonTitle}</button>
                 </div>
             </form>
-            <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
+            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
         </>
 	)
 }
