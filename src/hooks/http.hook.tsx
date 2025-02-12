@@ -62,7 +62,7 @@ const createAdmin = async (admin: Admin) => {
 
 const deleteAdmin = async (id:number) =>  {
     try {
-        const response = await $api.delete(`${SERVER_URL}/users/${id}`);
+        const response = await axios.delete(`${SERVER_URL}/users/${id}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;

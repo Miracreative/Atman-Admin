@@ -148,7 +148,9 @@ const EditAdmin = () => {
     
     const removeAdmin = (id: number) => {
         setShowConfirm(false);
-        deleteAdmin(id)
+        deleteAdmin(id).then((res) => {
+            console.log(res.message);
+        })
         setDel(true)
         setShowAlert(true);
         setTextAlert('Админ успешно удален');

@@ -42,9 +42,9 @@ const PersonForm = ({person, setPerson, buttonTitle, form} : {
                 break;
         case 'descr':
             if (inputValue.length < 10) {
-                error.name = "Описание слишком короткое";
+                error.descr = "Описание слишком короткое";
                 } else {
-                error.name = '';
+                error.descr = '';
                 }
                 break;
 		case 'file':

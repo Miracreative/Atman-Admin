@@ -68,10 +68,14 @@ const Recovery = () => {
 
     const sendEmailAddress = (email: string) => {
         setLoading(true);
-        reset(email).then(() => {
-            setLoading(false);
-            setTextAlert('Письмо отправлено');
+        reset(email).then((response) => {
+            if(response.message) {
+                setTextAlert(response.message);
+            } else {
+                setTextAlert('Письмо отправлено');
+            }
             setShowAlert(true);
+            setLoading(false);
         }).catch((e) => {
             console.log(e)
             setTextAlert('Письмо не отправлено');

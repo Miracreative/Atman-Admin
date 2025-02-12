@@ -114,16 +114,18 @@ export default function App() {
           dispatch(isLogIn(true)) 
           dispatch(setUser(response.data.user_name))
         } else {
-          // setTextAlert('Логин или пароль неверные')
-          // setShowAlert(true)
+          setTextAlert(response.data.message)
+          setShowAlert(true)
+          console.log(showAlert)
         }
-        console.log(response)
       })
       .catch(() => {
-          setTextAlert('Логин или пароль неверные')
+          setTextAlert('Что-то пошло не так')
           setShowAlert(true)
       })
-      .finally (() => setLoading(false))
+      .finally (() => {setLoading(false);
+        console.log(showAlert)
+      })
   }
 
   let spinner;
@@ -136,7 +138,6 @@ export default function App() {
       <>
         {spinner}
         <Main />
-        <ModalAlert alertBtnOpacity showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
     </>
     )
   } else {
@@ -149,6 +150,7 @@ export default function App() {
           <Route path="/recovery/" element={<Recovery />} />
           <Route path="/password/:token" element={<Password />} />
         </Routes>
+        <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
      </>
     )
   }

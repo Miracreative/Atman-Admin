@@ -460,7 +460,7 @@ const EditCompany = () => {
                 
                 <div className="create-company__btns">
                 <button type="button" className="create-company__btn button"
-                disabled={checkForm()}
+                // disabled={checkForm()}
                 onClick={(e) => {
                     submitForm(e)
                 }}>Обновить компанию</button>
