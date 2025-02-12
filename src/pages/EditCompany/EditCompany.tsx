@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate} from 'react-router-dom';
 import fileImage from '../../assets/icons/file.svg'
 import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import ModalAlert from '../../components/ModalAlert/ModalAlert';
 import Spinner from '../../components/Spinner/Spinner';
 import InputMask from 'react-input-mask';
-
+import Cookies from 'js-cookie';
 import axios from 'axios';
  
 import { getCompany } from '../../hooks/http.hook';
@@ -12,11 +13,14 @@ import { getCompany } from '../../hooks/http.hook';
 import './_editCompany.scss'
 
 const EditCompany = () => {
+    const navigate = useNavigate();
+    const SERVER_URL:string = 'https://api.atman-auto.ru/api';
     const form = useRef<any>(null);
     const fileInput = useRef<any>(null)
     const [loading, setLoading] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState<boolean>(false); 
     const [textAlert, setTextAlert] = useState<string>('');
+    const [showBtn, setShowBtn] = useState<boolean>(false);
     const [errors, setErrors] = useState<any>({});
 
     const [company, setCompany] = useState({
@@ -240,6 +244,31 @@ const EditCompany = () => {
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
+    const $api = axios.create({
+        withCredentials: true,
+        baseURL: SERVER_URL
+    })
+    
+    $api.interceptors.request.use(config => {
+        const token = Cookies.get('token');
+        
+        if (token) {
+            config.headers.Authorization = `${token}`; 
+        }
+    
+        return config;
+    });
+    
+    $api.interceptors.response.use(
+        (response) => response,
+            (error) => {
+                if (error.response && error.response.status === 401) {
+                    return {message: 'Не авторизован'}
+                }
+                return Promise.reject(error);
+            }
+    );
+
     const submitForm = async (e: any) => {
         e.preventDefault()
         setLoading(true);
@@ -273,23 +302,27 @@ const EditCompany = () => {
         formData.append('correspondentAccount', `${company.correspondentaccount}`);
         formData.delete('bic');
         formData.append('BIC', `${company.bic}`);
-        axios.put('https://api.atman-auto.ru/api/company', formData, {
+        $api.put('https://api.atman-auto.ru/api/company', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           })
-          .then(() => {
+          .then((res) => {
             setLoading(false);
+            setShowBtn(false)
             setShowAlert(true);
             setTextAlert('Компания была успешно обновлена')
           })
           .catch(() => {
             setLoading(false);
+            setShowBtn(true)
+            setTextAlert('У Вас нет прав редактировать этот раздел')
             setShowAlert(true)
-            setTextAlert('Что-то пошло не так')
+            setTimeout(() =>  {
+                setShowAlert(false)
+                navigate('/');
+            },1500)
         }).finally(() => {
-            setLoading(false);
-            setShowAlert(true)
         })
     }
   
@@ -466,7 +499,7 @@ const EditCompany = () => {
                 }}>Обновить компанию</button>
                 </div>
             </form>
-            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity={showBtn} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 console.log('edit')} />
     </>
   )

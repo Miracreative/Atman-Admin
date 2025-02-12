@@ -14,7 +14,7 @@ const Admins = () => {
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [textAlert, setTextAlert] = useState<string>('');
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
-    const [alertBtnOpacity, setAlertBtnOpacity] = useState<boolean>(false)
+    const [alertBtnOpacity, setAlertBtnOpacity] = useState<boolean>(false) 
     const [targetConfirm, setTargetConfirm] = useState({
         id: 0,
         name: '',
@@ -28,6 +28,7 @@ const Admins = () => {
                 console.log('Ошибка 401: Не авторизован');
             } else {
                 setProcess('confirmed')
+                setAlertBtnOpacity(false)
                 setAdmins(res);
             }
          

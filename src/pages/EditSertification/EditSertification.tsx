@@ -5,6 +5,7 @@ import PanelHeader from '../../components/PanelHeader/PanelHeader';
 import ModalAlert from '../../components/ModalAlert/ModalAlert';
 import ConfirmModal from '../../components/ConfirmModal/ConfirmModal';
 import Spinner from '../../components/Spinner/Spinner';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 
 import { getOneSertificate, deleteSertificate } from '../../hooks/http.hook';
@@ -12,11 +13,13 @@ import { getOneSertificate, deleteSertificate } from '../../hooks/http.hook';
 import './_editSertification.scss'
 
 const EditSertification = () => {
+    const SERVER_URL:string = 'https://api.atman-auto.ru/api';
     const form = useRef<any>(null);
     const {id} = useParams(); 
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [showAlert, setShowAlert] = useState<boolean>(false); 
+    const [alertBtnOpacity, setAlertBtnOpacity] = useState<boolean>(false) 
     const [textAlert, setTextAlert] = useState<string>('');
     const [showConfirm, setShowConfirm] = useState<boolean>(false);
     const [del, setDel] = useState<boolean>(false)
@@ -82,38 +85,85 @@ const EditSertification = () => {
         setErrors((state: any) => ({...state, ...validateValues(e.target.name, e.target.value)}))
     }
 
+    const $api = axios.create({
+        withCredentials: true,
+        baseURL: SERVER_URL
+    })
+    
+    $api.interceptors.request.use(config => {
+        const token = Cookies.get('token');
+        
+        if (token) {
+            config.headers.Authorization = `${token}`; 
+        }
+    
+        return config;
+    });
+    
+    $api.interceptors.response.use(
+        (response) => response,
+            (error) => {
+                if (error.response && error.response.status === 401) {
+                    return {message: 'Не авторизован'}
+                }
+                return Promise.reject(error);
+            }
+    );
+
     const submitForm = async (e: any) => {
         e.preventDefault()
         setLoading(true);
         const formData = new FormData(e.target.form);
         formData.append('id', `${sertificate.id}`)
-        axios.put('https://api.atman-auto.ru/api/sertificate', formData, {
+        $api.put('https://api.atman-auto.ru/api/sertificate', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
           })
-          .then(() => {
+          .then((res) => {
+            setAlertBtnOpacity(false)
             setLoading(false);
             setShowAlert(true); 
             setTextAlert('Сертификат был успешно обновлен')
+            setLoading(false);
+            console.log(res.data.message);
           }) 
           .catch(() => {
             setLoading(false);
+            setAlertBtnOpacity(true)
+            setTextAlert('У Вас нет прав редактировать этот раздел')
             setShowAlert(true)
-            setTextAlert('Что-то пошло не так')
+            setTimeout(() =>  {
+                setShowAlert(false)
+                navigate('/');
+            },1500)
         }).finally(() => {
-            setLoading(false);
-            setShowAlert(true)
         })
     }
   
     
     const removeSertification = (id: number) => {
         setShowConfirm(false);
-        deleteSertificate(id)
-        setDel(true)
-        setShowAlert(true);
-        setTextAlert('Сертификат успешно удален');
+        deleteSertificate(id).then((res) => {
+            setAlertBtnOpacity(false)
+            setLoading(false);
+            setShowAlert(true); 
+            setDel(true)
+            setTextAlert('Сертификат был успешно удален')
+            setLoading(false);
+          }) 
+          .catch(() => {
+            setLoading(false);
+            setAlertBtnOpacity(true)
+            setTextAlert('У Вас нет прав редактировать этот раздел')
+            setShowAlert(true)
+            setDel(false)
+            setTimeout(() =>  {
+                setShowAlert(false)
+                navigate('/');
+            },1500)
+        }).finally(() => {
+        })
     }
   // показываем окно подтверждения
     const onConfirmDelete = (id: number, title: string) => {
@@ -176,7 +226,7 @@ const EditSertification = () => {
                 </div>
             </form>
             <ConfirmModal question='Удалить сертификат?' text1={targetConfirm.title} text2={''} showConfirm={showConfirm} setShowConfirm={setShowConfirm} actionConfirmed={() => removeSertification(targetConfirm.id)}/>
-            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
+            <ModalAlert alertBtnOpacity={alertBtnOpacity} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => 
                 del ?
                 navigate('/sertifications-list') :
                 console.log('edit')} />

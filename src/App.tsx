@@ -80,6 +80,12 @@ export default function App() {
           secure: true,      
           samesite: 'lax' 
         });
+        setCookie('role', `${response.role}`, {
+          'max-age': 3600,   
+          path: '/',         
+          secure: true,      
+          samesite: 'lax' 
+        });
         dispatch(isLogIn(true))
         dispatch(setUser(response.user_name))
       });
@@ -110,7 +116,12 @@ export default function App() {
             secure: true,       
             samesite: 'lax'     
           });
-          
+          setCookie('role', `${response.data.role}`, {
+            'max-age': 3600,   
+            path: '/',         
+            secure: true,      
+            samesite: 'lax' 
+          });
           dispatch(isLogIn(true)) 
           dispatch(setUser(response.data.user_name))
         } else {

@@ -45,7 +45,7 @@ const Main = () =>  {
     }
       
     const myCookieValue = getCookie('userName');
-   
+   const adminRole = getCookie('role');
     
     const logOut = () => {
         Cookies.remove('userName');
@@ -66,24 +66,46 @@ const Main = () =>  {
                     </div>
                 </div>
                 <ul className="navigation__list">
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/admins-list">
-                            Список Админов
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/admins-create">
-                            Создать админа
-                        </NavLink>
-                    </li>
+                    {adminRole == 'admin' ? 
+                        <>
+                            <li className="navigation__item">
+                                <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/admins-list">
+                                    Список Админов
+                                </NavLink>
+                            </li> 
+                            <li className="navigation__item">
+                                <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/admins-create">
+                                    Создать админа
+                                </NavLink>
+                            </li>
+                            <li className="navigation__item">
+                                <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/sertifications-list">
+                                    Сертификаты
+                                </NavLink>
+                            </li>
+                            <li className="navigation__item">
+                                <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/sout">
+                                    СОУТ
+                                </NavLink>
+                            </li>
+                            <li className="navigation__item">
+                                <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/persons">
+                                    Сотрудники
+                                </NavLink>
+                            </li>
+                            <li className="navigation__item">
+                                <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/edit-company">
+                                    Редактировать компанию
+                                </NavLink>
+                            </li>
+                        </>
+                        :
+                        null
+                    }
+                   
                     <li className="navigation__item">
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/knowledge-list">
                             База знаний
-                        </NavLink>
-                    </li>
-                    <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/sertifications-list">
-                            Сертификаты
                         </NavLink>
                     </li>
                     <li className="navigation__item">
@@ -95,20 +117,6 @@ const Main = () =>  {
                         <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/goods">
                             Товары
                         </NavLink>
-                        <li className="navigation__item">
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/sout">
-                            СОУТ
-                        </NavLink>
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/persons">
-                           Сотрудники
-                        </NavLink>
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/create-company">
-                           Создать компанию
-                        </NavLink>
-                        <NavLink className={({ isActive }) => (`navigation__link ${isActive ? 'active' : ''}`)} to="/edit-company">
-                           Редактировать компанию
-                        </NavLink>
-                    </li>
                     </li>
                 </ul>
                 <div className="navigation__bottom">

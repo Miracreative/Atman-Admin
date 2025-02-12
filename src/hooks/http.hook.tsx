@@ -164,7 +164,7 @@ const getOneSertificate = async (id: any) => {
 
 const deleteSertificate = async (id: number) =>  {
     try {
-        const response = await axios.delete(`${SERVER_URL}/sertificate/${id}`);
+        const response = await $api.delete(`${SERVER_URL}/sertificate/${id}`);
         return response.data;
     } catch (error: any) {
         return error.response.data;

@@ -2,20 +2,25 @@ import { useState} from 'react';
 import Spinner from '../Spinner/Spinner';
 import ModalAlert from '../ModalAlert/ModalAlert';
 import fileImage from '../../assets/icons/file.svg'
+import { useNavigate} from 'react-router-dom';
+import Cookies from 'js-cookie';
 import axios from 'axios';
 import './_sertificateForm.scss'
 
 const SertificationForm = ({sertificate, setSertificate, buttonTitle, form} : {
     sertificate: {
-            title: string,
-            type: string,
-            file: any
-		},
-		setSertificate: (value: any) => void,
-		buttonTitle: string,
-		form: any
-	}) => {
+        title: string,
+        type: string,
+        file: any
+    },
+    setSertificate: (value: any) => void,
+    buttonTitle: string,
+    form: any
+}) => {
+        const SERVER_URL:string = 'https://api.atman-auto.ru/api';
+        const navigate = useNavigate();
         const [loading, setLoading] = useState(false);
+        const [alertBtnOpacity, setAlertBtnOpacity] = useState<boolean>(false)
         const [textAlert, setTextAlert] = useState('');
         const [showAlert, setShowAlert] = useState(false);
 		const [errors, setErrors] = useState<any>({});
@@ -79,10 +84,35 @@ const SertificationForm = ({sertificate, setSertificate, buttonTitle, form} : {
 		})
 	}
 
+    const $api = axios.create({
+        withCredentials: true,
+        baseURL: SERVER_URL
+    })
+    
+    $api.interceptors.request.use(config => {
+        const token = Cookies.get('token');
+        
+        if (token) {
+            config.headers.Authorization = `${token}`; 
+        }
+    
+        return config;
+    });
+    
+    $api.interceptors.response.use(
+        (response) => response,
+            (error) => {
+                if (error.response && error.response.status === 401) {
+                    return {message: 'Не авторизован'}
+                }
+                return Promise.reject(error);
+            }
+    );
+
     const submitForm = async (e: any) => {
         e.preventDefault()
         const formData = new FormData(e.target.form);
-        axios.post('https://api.atman-auto.ru/api/sertificate', formData, {
+        $api.post('https://api.atman-auto.ru/api/sertificate', formData, {
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
             }
@@ -94,11 +124,14 @@ const SertificationForm = ({sertificate, setSertificate, buttonTitle, form} : {
           })
           .catch(() => {
             setLoading(false);
+            setAlertBtnOpacity(true)
+            setTextAlert('У Вас нет прав для создания сертификатов')
             setShowAlert(true)
-            setTextAlert('Что-то пошло не так')
+            setTimeout(() =>  {
+                setShowAlert(false)
+                navigate('/');
+            },1500)
         }).finally(() => {
-            setLoading(false);
-            setShowAlert(true)
         })
     }
 
@@ -156,7 +189,7 @@ const SertificationForm = ({sertificate, setSertificate, buttonTitle, form} : {
                 }}>{buttonTitle}</button>
                 </div>
             </form>
-            <ModalAlert alertBtnOpacity={false} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
+            <ModalAlert alertBtnOpacity={alertBtnOpacity} showAlert={showAlert} setShowAlert={setShowAlert} message={textAlert} alertConfirm={() => console.log('alert')}/>
         </>
 	)
 }
