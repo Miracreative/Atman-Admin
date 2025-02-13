@@ -64,7 +64,7 @@ const EditPerson = () => {
                 }
                 break;
         case 'email':
-            let emailRegExp = /^[a-zA-Z0-9._]+@[a-z.]+\.[a-z]{2,6}$/i;
+            let emailRegExp = /^[a-zA-Z0-9._]+@[a-z.]+\-+[a-z.]+\.[a-z]{2,6}$/i;
             if (!emailRegExp.test(inputValue)) {
             error.email = "Email некорректный"
             } else {
