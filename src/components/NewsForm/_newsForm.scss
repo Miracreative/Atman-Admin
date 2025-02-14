@@ -35,14 +35,17 @@
       width: 100%;
     }
   }
+  &__into {
+    margin-top: 40px;
+  }
   &__input {
     position: relative;
     input {
         opacity: 0;
         position: relative;
-        z-index: 8;
+        z-index: 3;
         background-color: red;
-        width: 320px;
+        width: 335px;
         height: 70px;
         cursor: pointer;
     }

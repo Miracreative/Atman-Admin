@@ -229,7 +229,8 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
     }
 
 	const clearForm = () => {
-        form.current.reset()
+        form.current.reset();
+        ref.current?.setMarkdown('')
 		setGood((state: any) => {
             let newState = { imageurl: '',
                 material: '',

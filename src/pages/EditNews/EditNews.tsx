@@ -306,7 +306,7 @@ const EditNews = () => {
 
                 <label className="create-news__label create-news__input">
                     <span>Загрузите файлы, если хотите заменить существующие</span>
-                    <input className='' type="file" name="files" multiple
+                    <input className='create-news__into' type="file" name="files" multiple
                     onChange={handleChange} ref={fileInput}/>
                     <button className='button' type="button">Загрузить файлы</button>
                 </label>

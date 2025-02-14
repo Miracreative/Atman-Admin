@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Spinner from '../Spinner/Spinner';
 import ModalAlert from '../ModalAlert/ModalAlert';
 import fileImage from '../../assets/icons/file.svg'
@@ -57,6 +57,8 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
         descr: '',
         files: ''
     };
+
+
 
     switch(inputName) {
         case 'title':
@@ -124,6 +126,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
 
 	const clearForm = () => {
         form.current.reset()
+        ref.current?.setMarkdown('')
 		setNews((state: any) => {
             let newState = {...state}
             for (let key in newState) {
@@ -251,7 +254,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                 />
                 <div className='error'>{errors.content}</div>
                 <label className="create-news__label create-news__input">
-                    <input className='' type="file" name="files" multiple
+                    <input className='create-news__into' type="file" name="files" multiple
                     onChange={handleChange} ref={fileInput}/>
                     <button className='button' type="button">Загрузить файлы</button>
                     <div className='error'>{errors.files}</div>
@@ -278,7 +281,6 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                 onClick={(e) => {
                     submitForm(e)
                     clearForm();
-                    console.log(news)
                 }}>{buttonTitle}</button>
                 </div>
             </form>

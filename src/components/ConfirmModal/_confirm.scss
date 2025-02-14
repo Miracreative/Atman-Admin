@@ -6,7 +6,7 @@
     height: 100%;
     display: none;
     background-color: rgba(243, 237, 223, .5);
-    z-index: 2;
+    z-index: 10;
     &.show {
         display: block;
     }

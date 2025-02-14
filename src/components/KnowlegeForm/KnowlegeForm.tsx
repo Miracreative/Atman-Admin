@@ -100,7 +100,8 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
 	}
 
 	const clearForm = () => {
-        form.current.reset()
+        form.current.reset();
+        ref.current?.setMarkdown('')
 		setKnowlege((state: any) => {
             let newState = {...state}
             for (let key in newState) {
