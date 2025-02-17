@@ -61,10 +61,14 @@ const Login = ({login, loginError}: {
                     </div>
                 </div>
                 
-                <div className="login__form">
+                <form className="login__form" onSubmit={(e) => {
+                            e.preventDefault(); // Предотвращаем перезагрузку страницы
+                            login(logName, pass); // Вызываем функцию логина
+                        }}>
                     <label className="label">
-                        Login
+                        Адрес электронной почты
                         <input 
+                        tabIndex={1}
                         type="text" 
                         name="login" 
                         className={clazz}
@@ -73,8 +77,9 @@ const Login = ({login, loginError}: {
                         onInput={(e: React.ChangeEvent<HTMLInputElement>) => onCheckDisable(e, pass)}/>
                     </label>
                     <label className="label">
-                        Password
+                        Пароль
                         <input 
+                          tabIndex={2}
                             type={`${typeInput}`}
                             name="password" 
                             className={clazz}
@@ -83,14 +88,15 @@ const Login = ({login, loginError}: {
                             onInput={(e: React.ChangeEvent<HTMLInputElement>) => onCheckDisable(e, logName)} />
                             <img onClick={() => onToggleVisiblePassword()} src={show ? showPass : secret}/>
                     </label>
-                        <Link to="/recovery/" className="login__fogot">Fogot your password?</Link>
+                        <Link to="/recovery/" className="login__fogot">Забыли свой пароль?</Link>
                     <button 
+                      tabIndex={3}
                         ref={button}
                         className="button" 
-                        type="button"
-                        onClick={() => login(logName, pass)}
-                        >Enter</button>
-                </div>
+                        type="submit"
+                        disabled={!logName ||!pass}
+                        >Вход</button>
+                </form>
             </div>
         </div>
     )

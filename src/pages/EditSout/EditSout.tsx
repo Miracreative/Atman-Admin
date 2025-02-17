@@ -144,7 +144,7 @@ const EditSout = () => {
                     <div className='error'>{errors.name}</div>
                 </label>
                 <label className="create-sout__label create-sout__input">
-                    <span>Загрузите файл</span>
+                    <span>Загрузите файл, если хотите заменить существующий</span>
                     <input className='' type="file" name="file" id="file" ref={fileInput}
                     onChange={handleChange}/>
                     <img src={fileImage} alt="file_image" />

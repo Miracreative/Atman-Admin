@@ -216,7 +216,7 @@ const EditAdmin = () => {
             <div className="parent-form__row">
             <div className="parent-form__payments">
                 <label className="create-admin__label">
-                    <span>Роль администратора</span>
+                    <span className="create-admin__role">Роль администратора</span>
                     <div className="create-admin__checkboxes">
                     <label className="create-admin__checkbox">
                     <input className="sr-only" type="radio" name="role" value="admin"

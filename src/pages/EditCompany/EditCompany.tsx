@@ -410,7 +410,7 @@ const EditCompany = () => {
                         <div className='error'>{errors.website}</div>
                     </label>
                     <label className="create-company__label create-company__input">
-                        <span>Загрузите карточку компании</span>
+                        <span>Загрузите карточку компании, если хотите заменить существующую</span>
                         <input className='' type="file" name="file" id="file" ref={fileInput}
                         onChange={handleChange}/>
                         <img src={fileImage} alt="file_image" />

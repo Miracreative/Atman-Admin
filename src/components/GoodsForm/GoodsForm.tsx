@@ -32,8 +32,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         good: {
             imageurl: string,
             material: string,
-            goodspersonalimages:  string[],
-            goodsindustrialimages: string[], 
+            goodscarouselimages:  string[],
             parameter: number[],
             mainparameter: number[],
             recommendparameter: number[],
@@ -80,8 +79,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
 		let error = {
             imageurl: '',
             material: '',
-            goodspersonalimages: '',
-            goodsindustrialimages: '',
+            goodscarouselimages: '',
             parameter: '',
             mainparameter: '',
             recommendparameter: '',
@@ -104,18 +102,11 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 error.imageurl = '';
                 }
                 break;
-        case 'goodspersonalimages':
+        case 'goodscarouselimages':
             if (!inputValue) {
-                error.goodspersonalimages = "Изображения не выбраны";
+                error.goodscarouselimages = "Изображения не выбраны";
                 } else {
-                error.goodspersonalimages = '';
-                }
-                break;
-        case 'goodsindustrialimages':
-            if (!inputValue) {
-                error.goodsindustrialimages = "Изображения не выбраны";
-                } else {
-                error.goodsindustrialimages = '';
+                error.goodscarouselimages = '';
                 }
                 break;
         case 'parameter':
@@ -196,7 +187,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
 	};
 
 	const checkForm = () => {
-		if (good.name && good.description && good.article && good.material && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.recommendparameter.length > 0 && good.parameter.length > 0 && good.advantages.length > 0 && fileInputIndustrial.current.files.length > 0 && fileInputPersonal.current.files.length > 0  && good.type && good.basetype && fileInputPdf.current.value) {
+		if (good.name && good.description && good.article && good.material && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.recommendparameter.length > 0 && good.parameter.length > 0 && good.advantages.length > 0 && fileInputCarousel.current.files.length > 0  && good.type && good.basetype && fileInputPdf.current.value) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -234,8 +225,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
 		setGood((state: any) => {
             let newState = { imageurl: '',
                 material: '',
-                goodspersonalimages:  [],
-                goodsindustrialimages: [],
+                goodscarouselimages:  [],
                 parameter: [0,0, 0,0 ,0 ,0, 0, 0,0,0, 0,0 ,0 ,0, 0, 0, 0,0, 0,0 ,0 ,0, 0, 0],
                 mainparameter: [0,0, 0,0 ,0 ,0, 0, 0],
                 recommendparameter : [0,0, 0,0 ,0 ,0, 0],
@@ -308,8 +298,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
 
     let spinner = loading ? <Spinner active/> : null;
 
-    const fileInputPersonal = useRef<any>(null)
-    const fileInputIndustrial = useRef<any>(null)
+    const fileInputCarousel = useRef<any>(null)
     const fileInputPdf = useRef<any>(null)
     const fileInputMaterial = useRef<any>(null)
 
@@ -340,12 +329,9 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
     }
 
 
-    let imagesPersonal;
+    let imagesCarousel;
 
-    imagesPersonal = (fileInputPersonal?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputPersonal) : 'нет картинок'
-
-    let imagesIndustrial;
-    imagesIndustrial = (fileInputIndustrial?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputIndustrial) : 'нет картинок'
+    imagesCarousel = (fileInputCarousel?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputCarousel) : 'Файлы не выбраны'
 
     let imagePdf;
 
@@ -548,7 +534,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                         <div className='error'>{errors.name}</div>
                     </label>
                 </div>
-                <label className="create-goods__label">
+                <label className="create-goods__label create-goods__label--mb-0">
                     <span>Описание товара</span>
                     {/* <textarea className={`input input--textarea ${errors.description ? 'input--error' : ''}`} 
                     name="description"
@@ -582,7 +568,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                         frontmatterPlugin(),
                     ]}
                 />
-                <label className="create-goods__label create-goods__input">
+                <label className="create-goods__label create-goods__label--mt-40 create-goods__input">
                     <span>Документ о товаре</span>
                     <input className='' type="file" name="pdfUrl" id="pdf"
                     onChange={handleChange} ref={fileInputPdf}/>
@@ -601,25 +587,15 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                     {/* <div className='error'>{errors.file}</div> */}
                 </label>
                 <label className="create-goods__label create-goods__input">
-                    <span>Персональные товары</span>
-                    <input className='' type="file" name="goodsPersonalImages" multiple
-                    onChange={handleChange} ref={fileInputPersonal}/>
+                    <span>Карусель товаров</span>
+                    <input className='' type="file" name="goodsCarouselImages" multiple
+                    onChange={handleChange} ref={fileInputCarousel}/>
                     <button className='button' type="button">Загрузить картинки</button>
                 </label>
-                <div className="create-goods__image-wrapper">
+                <div className="create-goods__image-wrapper create-goods__image--span">
+                    <img className='create-goods__image' src={fileImage} alt="file_image" />
                     {
-                        imagesPersonal
-                    }
-                </div>
-                <label className="create-goods__label create-goods__input">
-                    <span>Производственные товары</span>
-                    <input className='' type="file" name="goodsIndustrialImages" multiple
-                    onChange={handleChange} ref={fileInputIndustrial}/>
-                    <button className='button' type="button">Загрузить файлы</button>
-                </label>
-                <div className="create-news__image-wrapper">
-                    {
-                        imagesIndustrial
+                        imagesCarousel
                     }
                 </div>
                 </div>

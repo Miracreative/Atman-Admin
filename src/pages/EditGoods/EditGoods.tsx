@@ -58,8 +58,7 @@ const EditGood = () => {
         id: 0,
         imageurl: '',
         material: '',
-        goodspersonalimages:  [],
-        goodsindustrialimages: [],
+        goodscarouselimages:  [],
         parameter: [],
         mainparameter: [],
         recommendparameter: [],
@@ -257,8 +256,7 @@ const EditGood = () => {
 
     let spinner = loading ? <Spinner active/> : null;
 
-    const fileInputPersonal = useRef<any>(null)
-    const fileInputIndustrial = useRef<any>(null)
+    const fileInputCarousel = useRef<any>(null)
     const fileInputPdf = useRef<any>(null)
     const fileInputMaterial = useRef<any>(null)
 
@@ -302,15 +300,13 @@ const EditGood = () => {
         )
     }
 
-   imagesItemsFromBackend(good.goodspersonalimages)
+   imagesItemsFromBackend(good.goodscarouselimages)
 
-    let imagesPersonal;
+    let imagesCarousel;
 
-    imagesPersonal = (fileInputPersonal?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputPersonal) : ((good?.goodspersonalimages?.length > 0) ? imagesItemsFromBackend(good.goodspersonalimages) : 'нет картинок')
+    imagesCarousel = (fileInputCarousel?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputCarousel) : ((good?.goodscarouselimages?.length > 0) ? imagesItemsFromBackend(good.goodscarouselimages) : 'нет картинок')
 
-    let imagesIndustrial;
-    imagesIndustrial = (fileInputIndustrial?.current?.files?.length) > 0 ? imagesItemsFromUpload(fileInputIndustrial) : ((good?.goodsindustrialimages?.length > 0) ? imagesItemsFromBackend(good.goodsindustrialimages) : 'нет картинок')
-
+   
     let imagePdf;
 
     imagePdf = (fileInputPdf?.current?.value.length > 0) ? fileInputPdf?.current?.value.replace(regular, '') : (good.pdfurl ? good.pdfurl.replace(regular, '') : 'Файл не выбран')
@@ -526,7 +522,7 @@ const EditGood = () => {
                                         <ReactMarkdown>{oldText}</ReactMarkdown>
                                     </div>
                                 </label>
-                <label className="create-goods__label">
+                <label className="create-goods__label create-goods__label--mb-0">
                     <span>Описание товара</span>
                     {/* <textarea className={`input input--textarea ${errors.description ? 'input--error' : ''}`} 
                     name="description"
@@ -560,7 +556,7 @@ const EditGood = () => {
                             frontmatterPlugin(),
                         ]}
                     />
-                <label className="create-goods__label create-goods__input">
+                <label className="create-goods__label create-goods__label--mt-40 create-goods__input">
                     <span>Документ о товаре</span>
                     <input className='' type="file" name="pdfUrl" id="pdf"
                     onChange={handleChange} ref={fileInputPdf}/>
@@ -579,25 +575,14 @@ const EditGood = () => {
                     {/* <div className='error'>{errors.file}</div> */}
                 </label>
                 <label className="create-goods__label create-goods__input">
-                    <span>Персональные товары</span>
-                    <input className='' type="file" name="goodsPersonalImages" multiple
-                    onChange={handleChange} ref={fileInputPersonal}/>
+                    <span>Товары для карусели</span>
+                    <input className='' type="file" name="goodsCarouselImages" multiple
+                    onChange={handleChange} ref={fileInputCarousel}/>
                     <button className='button' type="button">Загрузить картинки</button>
                 </label>
                 <div className="create-goods__image-wrapper">
                     {
-                        imagesPersonal
-                    }
-                </div>
-                <label className="create-goods__label create-goods__input">
-                    <span>Производственные товары</span>
-                    <input className='' type="file" name="goodsIndustrialImages" multiple
-                    onChange={handleChange} ref={fileInputIndustrial}/>
-                    <button className='button' type="button">Загрузить файлы</button>
-                </label>
-                <div className="create-news__image-wrapper">
-                    {
-                        imagesIndustrial
+                        imagesCarousel
                     }
                 </div>
                 </div>

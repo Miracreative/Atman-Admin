@@ -176,7 +176,7 @@ const EditPerson = () => {
                         <div className='error'>{errors.name}</div>
                     </label>
                     <label className="create-person__label create-person__input">
-                        <span>Загрузите фото</span>
+                        <span>Загрузите фото, если хотите заменить существующее</span>
                         <input className='' type="file" name="file" id="file" ref={fileInput}
                         onChange={handleChange}/>
                         <img src={fileImage} alt="file_image" />
