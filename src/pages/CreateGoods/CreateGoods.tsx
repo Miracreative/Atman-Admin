@@ -9,8 +9,7 @@ const CreateGoods = () => {
     const [good, setGood] = useState({
         imageurl: '',
         material: '',
-        goodspersonalimages:  [],
-        goodsindustrialimages: [],
+        goodscarouselimages:  [],
         parameter: [0,0, 0,0 ,0 ,0, 0, 0,0,0, 0,0 ,0 ,0, 0, 0, 0,0, 0,0 ,0 ,0, 0, 0],
         mainparameter: [0,0, 0,0 ,0 ,0, 0, 0],
         recommendparameter: [0,0, 0,0 ,0 ,0, 0, 0],
