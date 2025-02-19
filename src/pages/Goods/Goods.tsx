@@ -14,17 +14,15 @@ import './_goods.scss'
 const Goods = () => {
 
     const [goods, setGoods] = useState<any[]>([]);
-    // const [favourites, setFavourites] = useState<any[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [flag, setFlag] = useState<boolean>(false);
-    // const [isFavourite, setIsFavourite] = useState<any[]>([])
     const [process, setProcess] = useState<string>('loading');
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState(1);
     const [search, setSearch] = useState('');
     const [searchForBackend, setSearchForBackend] = useState('');
     const [filterArray, setFilterArray] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0]);
-    const [parametersForBackend, setParametersForBackend] = useState<number[]>([])
+    const [parametersForBackend, setParametersForBackend] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0])
     const [checkedAll, setCheckedAll] = useState<boolean>(true)
 
     let spinner = loading ? <Spinner active/> : null;
@@ -39,7 +37,7 @@ const Goods = () => {
 
     const updateSearchValue = useCallback(
         debounce((str:string) => {
-           setSearchForBackend(str);
+            setSearchForBackend(str);
         }, 1000),[],
     );
     const updateParameters = useCallback(
@@ -71,45 +69,20 @@ const Goods = () => {
                         }
                     )
         )
-        // .then(
-        //     () => getAllFavouriteGoods().then(res => {
-        //         setFavourites(res.favourite);
-        //         // createIsFavouritesArray(res.favourite)
-               
-        //     }).then(
-        //         () => getAllGoods(currentPage).then(response => {
-        //             setGoods(response.result) 
-        //         }).then(
-        //             () => {setProcess('confirmed');
-        //                 setFlag(true);
-        //                 setLoading(false)
-        //             }
-        //         )
-        //     )
-        // )
     }
 
     const getSearch = (searchForBackend:string) => {
-        setLoading(true)
-        setCheckedAll(false)
-        getSearchGoods(searchForBackend).then(res => {
-            setGoods(res)
-            setTotalPages(1)
-        }).then(
-                    () => {setProcess('confirmed');
-                        setLoading(false)
-                    }
-                )
-        // .then(
-        //     () => getAllFavouriteGoods().then(res => {
-        //         setFavourites(res.favourite);
-        //         // createIsFavouritesArray(res.favourite)
-        //     }).then(
-        //         () => {setProcess('confirmed');
-        //             setLoading(false)
-        //         }
-        //     )
-        // )
+
+            setLoading(true)
+            setCheckedAll(false)
+            getSearchGoods(searchForBackend).then(res => {
+                setGoods(res)
+                setTotalPages(1)
+            }).then(
+                        () => {setProcess('confirmed');
+                            setLoading(false)
+                        }
+                    )
     }
 
     const getParameters = (parametersForBackend:number[]) => {
@@ -125,36 +98,7 @@ const Goods = () => {
                         setCheckedAll(false);
                     }
                 )
-        // .then(
-        //     () => getAllFavouriteGoods().then(res => {
-        //         setFavourites(res.favourite);
-        //         // createIsFavouritesArray(res.favourite)
-        //         // setFlag(!flag);
-        //     }).then(
-        //         () => {setProcess('confirmed');
-        //             setLoading(false);
-        //             setCheckedAll(false);
-        //         }
-        //     )
-        // )
     }
-
-    // const createIsFavouritesArray = (favourites: any) => {
-    //     let arr:Boolean[] = [];
-    //     let favorietsId:number[] = [];
-    //     favourites?.forEach((item: {good_id: number}) => {
-    //         favorietsId.push(item.good_id)
-    //     })
-    //     goods?.forEach((good: {id:number}) => {
-    //         if(favorietsId.indexOf(good.id) != -1) {
-    //             arr.push(true)
-    //         } else {
-    //             arr.push(false)
-    //         }
-    //     })
-    //     setIsFavourite(arr)
-    // }
-
 
     const changeFlag = () => {
         setCheckedAll(true)
@@ -165,7 +109,12 @@ const Goods = () => {
         if(search == '' && checkedAll) {
             getGoods(currentPage);
         }  else if(search == '' && !checkedAll) {
-            getParameters(parametersForBackend)
+            if (parametersForBackend.every((item) => item == 0)) {
+                getGoods(currentPage);
+                setCheckedAll(true)
+            } else {
+                getParameters(parametersForBackend)
+            }
         } else {
            getSearch(searchForBackend)
         }
@@ -176,24 +125,6 @@ const Goods = () => {
         updateSearchValue(e.target.value);
     }
 
-    // const handleChangeIsFavourite = (i: number, favourite: boolean, id:number) => {
-    //     favourite ? (
-    //         deleteFavourite(id)
-    //     ) : (
-    //         createFavourite(id)
-    //     )
-       
-    //     const newFavourite = isFavourite;
-    //     let newItem;
-    //     if(newFavourite[i] == true) {
-    //         newItem = false
-    //     } else {
-    //         newItem = true
-    //     }
-    //     let newArr = [...newFavourite.slice(0, i), newItem, ...newFavourite.slice(i + 1, newFavourite.length)]
-    //     setIsFavourite(newArr)
-        
-    // }
 
     const hendleChoiseAllGoods = () => {
         onClickClear();
@@ -202,18 +133,13 @@ const Goods = () => {
     }
     
     const renderItems = (arr: any[]) => {
-        const goodsList = arr.map((item: { id: number; name: string; description: string}, i:number) => {
+        const goodsList = arr?.map((item: { id: number; name: string; description: string}, i:number) => {
             const {id, name, description} = item;
             return (
                 <li key={id} className='rows-list__box goods__box'>
                     <span>{i + 1}</span>
                     <span>{name}</span>
                     <span>{description}</span>
-                    {/* <button type="button" className="rows-list__btn button button--red goods__btn" onClick={() => handleChangeIsFavourite(i, isFavourite[i], id)}>
-                        {
-                            isFavourite[i] ? 'Убрать' : 'Рекомендовать'
-                        }
-                    </button> */}
                     <Link className="rows-list__btn button button--red  goods__btn" to={`/edit-goods/${id}`}>Редактировать</Link>
                 </li>
             )

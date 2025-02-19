@@ -78,6 +78,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      
       span {
         font-weight: 300;
         color: rgba(53, 53, 53, 1);
@@ -124,6 +125,7 @@
       font-size: 20px;
       font-weight: 500;
     }
+    
   }
   &__label {
     position: relative;
@@ -142,6 +144,12 @@
       font-size: 20px;
       font-weight: 700;
       color: rgba(228, 31, 38, 1);
+    }
+    &:first-of-type {
+      span {
+        margin-right: 0px !important;
+        width: 50px;
+      }
     }
     &--mb-0 {
       margin-bottom: 0;

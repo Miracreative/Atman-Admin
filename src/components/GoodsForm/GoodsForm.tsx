@@ -187,7 +187,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
 	};
 
 	const checkForm = () => {
-		if (good.name && good.description && good.article && good.material && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.recommendparameter.length > 0 && good.parameter.length > 0 && good.advantages.length > 0 && fileInputCarousel.current.files.length > 0  && good.type && good.basetype && fileInputPdf.current.value) {
+		if (good.name && good.description && good.article && good.material && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.recommendparameter.length > 0 && good.parameter.length > 0 && fileInputCarousel.current.files.length > 0  && fileInputPdf.current.value) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -255,16 +255,32 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
         deleteEmptyAdvantages();
         const formData = new FormData(e.target.form);
         formData.delete('type')
-        formData.append('type', `${good.type}`);
+        formData.append('type', `${good.type.trim()}`);
         formData.append('description', `${good.description}`);
         formData.delete('basetype')
-        formData.append('baseType', `${good.basetype}`);
+        formData.append('baseType', `${good.basetype.trim()}`);
         formData.delete('linertype')
-        formData.append('linerType', `${good.linertype}`);
+        formData.append('linerType', `${good.linertype.trim()}`);
         formData.delete('typeglue')
-        formData.append('typeGlue', `${good.typeglue}`);
+        formData.append('typeGlue', `${good.typeglue.trim()}`);
         formData.delete('heatresistance')
-        formData.append('heatResistance', `${good.heatresistance}`);
+        formData.append('heatResistance', `${good.heatresistance.trim()}`);
+        formData.delete('material')
+        formData.append('material', `${good.material.trim()}`);
+        formData.delete('article')
+        formData.append('article', `${good.article.trim()}`);
+        formData.delete('thickness')
+        formData.append('thickness', `${good.thickness.trim()}`);
+        formData.delete('volume')
+        formData.append('volume', `${good.volume.trim()}`);
+        formData.delete('pcs')
+        formData.append('pcs', `${good.pcs.trim()}`);
+        formData.delete('color')
+        formData.append('color', `${good.color.trim()}`);
+        formData.delete('name')
+        formData.append('name', `${good.name.trim()}`);
+        formData.delete('size')
+        formData.append('size', `${good.size.trim()}`);
         formData.append('advantages', JSON.stringify(good.advantages).replace('[', '{')
         .replace(']', '}'));
         formData.append('mainParameter', JSON.stringify(good.mainparameter).replace('[', '{')
@@ -587,7 +603,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                     {/* <div className='error'>{errors.file}</div> */}
                 </label>
                 <label className="create-goods__label create-goods__input">
-                    <span>Карусель товаров</span>
+                    <span>Изображения для карусели</span>
                     <input className='' type="file" name="goodsCarouselImages" multiple
                     onChange={handleChange} ref={fileInputCarousel}/>
                     <button className='button' type="button">Загрузить картинки</button>

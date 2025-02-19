@@ -207,6 +207,22 @@ const EditGood = () => {
         formData.append('typeGlue', `${good.typeglue}`);
         formData.delete('heatresistance')
         formData.append('heatResistance', `${good.heatresistance}`);
+        formData.delete('material')
+        formData.append('material', `${good.material.trim()}`);
+        formData.delete('article')
+        formData.append('article', `${good.article.trim()}`);
+        formData.delete('thickness')
+        formData.append('thickness', `${good.thickness.trim()}`);
+        formData.delete('volume')
+        formData.append('volume', `${good.volume.trim()}`);
+        formData.delete('pcs')
+        formData.append('pcs', `${good.pcs.trim()}`);
+        formData.delete('color')
+        formData.append('color', `${good.color.trim()}`);
+        formData.delete('name')
+        formData.append('name', `${good.name.trim()}`);
+        formData.delete('size')
+        formData.append('size', `${good.size.trim()}`);
         formData.append('advantages', JSON.stringify(good.advantages).replace('[', '{')
         .replace(']', '}'));
         formData.append('mainParameter', JSON.stringify(good.mainparameter).replace('[', '{')
@@ -575,7 +591,7 @@ const EditGood = () => {
                     {/* <div className='error'>{errors.file}</div> */}
                 </label>
                 <label className="create-goods__label create-goods__input">
-                    <span>Товары для карусели</span>
+                    <span>Изображения для карусели</span>
                     <input className='' type="file" name="goodsCarouselImages" multiple
                     onChange={handleChange} ref={fileInputCarousel}/>
                     <button className='button' type="button">Загрузить картинки</button>
