@@ -144,20 +144,6 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 error.name = '';
                 }
                 break;
-        case 'basetype':
-            if (inputValue.length < 2) {
-                error.name = "Название товара слишком короткое";
-                } else {
-                error.name = '';
-                }
-                break;
-        case 'material':
-            if (inputValue.length < 2) {
-                error.material = "Название материала слишком короткое";
-                } else {
-                error.material = '';
-                }
-                break;
         case 'article':
             if (inputValue.length < 2) {
                 error.article = "Артикул слишком короткий";
@@ -187,7 +173,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
 	};
 
 	const checkForm = () => {
-		if (good.name && good.description && good.article && good.material && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.recommendparameter.length > 0 && good.parameter.length > 0 && fileInputCarousel.current.files.length > 0  && fileInputPdf.current.value) {
+		if (good.name && good.description && good.article && good.brand && fileInputMaterial.current.value && good.mainparameter.length > 0 && good.recommendparameter.length > 0 && good.parameter.length > 0 && fileInputCarousel.current.files.length > 0  && fileInputPdf.current.value) {
 		for (let key in errors) {
 			if (errors[key] !== '') {
 			return true
@@ -616,9 +602,9 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                 </div>
                 </div>
                 <div className="create-goods__wrap">
-                    <h3 className='create-goods__title'>Характеристики</h3>
+                    
                     <label className="create-goods__label">
-                       <span>Тип материала</span>
+                       <span>Краткое описание</span>
                        <input className={`input ${errors.type ? 'input--error' : ''}`} type="text" name="type"
                        value={good.type} 
                        onChange={handleChange}/>
@@ -632,8 +618,9 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                         onChange={handleChange}/>
                         <div className='error'>{errors.brand}</div>
                     </label>
+                    <h3 className='create-goods__title'>Характеристики</h3>
                     <label className="create-goods__label">
-                        <span>Цвет</span>
+                        <span> </span>
                         <input className={`input ${errors.color ? 'input--error' : ''}`} type="text" name="color"
                         value={good.color} 
                         onChange={handleChange}/>
@@ -641,70 +628,70 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                     </label>
                     <label className="create-goods__label">
                        
-                        <span>Толщина</span>
+                        <span> </span>
                         <input className={`input ${errors.thickness ? 'input--error' : ''}`} type="text" name="thickness"
                         value={good.thickness} 
                         onChange={handleChange}/>
                         {/* <div className='error'>{errors.thickness}</div> */}
                     </label>
                     <label className="create-goods__label">
-                        <span>Тип лайнера</span>
+                        <span> </span>
                         <input className={`input ${errors.linertype ? 'input--error' : ''}`} type="text" name="linertype"
                         value={good.linertype} 
                         onChange={handleChange}/>
                         {/* <div className='error'>{errors.linertype}</div> */}
                     </label>
                     <label className="create-goods__label">
-                       <span>Тип основы</span>
+                       <span> </span>
                        <input className={`input ${errors.type ? 'input--error' : ''}`} type="text" name="basetype"
                        value={good.basetype} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.type}</div> */}
                    </label>
                    <label className="create-goods__label">
-                       <span>Плотность</span>
+                       <span> </span>
                        <input className={`input ${errors.dencity ? 'input--error' : ''}`} type="text" name="dencity"
                        value={good.dencity} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.dencity}</div> */}
                    </label>
                    <label className="create-goods__label">
-                       <span>Материал</span>
+                       <span> </span>
                        <input className={`input ${errors.material ? 'input--error' : ''}`} type="text" name="material"
                        value={good.material} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.material}</div> */}
                    </label>
                    <label className="create-goods__label">
-                       <span>Объем</span>
+                       <span> </span>
                        <input className={`input ${errors.volume ? 'input--error' : ''}`} type="text" name="volume"
                        value={good.volume} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.material}</div> */}
                    </label>
                    <label className="create-goods__label">
-                       <span>Количество</span>
+                       <span> </span>
                        <input className={`input ${errors.pcs ? 'input--error' : ''}`} type="text" name="pcs"
                        value={good.pcs} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.material}</div> */}
                    </label>
                    <label className="create-goods__label">
-                       <span>Темп. устойч.</span>
+                       <span> </span>
                        <input className={`input ${errors.heatResistance ? 'input--error' : ''}`} type="text" name="heatresistance"
                        value={good.heatresistance} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.material}</div> */}
                    </label>
                    <label className="create-goods__label">
-                       <span>Размер</span>
+                       <span> </span>
                        <input className={`input ${errors.size ? 'input--error' : ''}`} type="text" name="size"
                        value={good.size} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.material}</div> */}
                    </label>
                    <label className="create-goods__label">
-                       <span>Тип клея</span>
+                       <span>  </span> 
                        <input className={`input ${errors.typeGlue ? 'input--error' : ''}`} type="text" name="typeglue"
                        value={good.typeglue} 
                        onChange={handleChange}/>
