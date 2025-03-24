@@ -688,12 +688,12 @@ const EditGood = () => {
                    </label>
                    <label className="create-goods__label">
                        <span> </span>
-                       <input className={`input ${errors.size ? 'input--error' : ''}`} type="text" name="size"
+                       <input className={`input ${errors.size ? 'input--error' : ''} `} type="text" name="size"
                        value={good.size} 
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.material}</div> */}
                    </label>
-                   <label className="create-goods__label">
+                   <label className="create-goods__label sr-only">
                        <span> </span>
                        <input className={`input ${errors.typeGlue ? 'input--error' : ''}`} type="text" name="typeglue"
                        value={good.typeglue} 

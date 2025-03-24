@@ -690,7 +690,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                        onChange={handleChange}/>
                        {/* <div className='error'>{errors.material}</div> */}
                    </label>
-                   <label className="create-goods__label">
+                   <label className="create-goods__label sr-only">
                        <span>  </span> 
                        <input className={`input ${errors.typeGlue ? 'input--error' : ''}`} type="text" name="typeglue"
                        value={good.typeglue} 

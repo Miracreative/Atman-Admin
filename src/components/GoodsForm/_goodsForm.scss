@@ -74,17 +74,18 @@
       margin-bottom: 40px;
     }
     label {
-      width: 48%;
+      width: 49%;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
       
       span {
         font-weight: 300;
         color: rgba(53, 53, 53, 1);
+        margin-bottom: 0;
       }
       input {
-        width: 75%;
+        width: 82%;
         margin-bottom: 0;
       }
     }
