@@ -86,7 +86,7 @@ const Knowlege = () => {
                     <span>{content}</span>
                     <span>
                         <img src={fileImage} alt="file" />
-                        <span>{file_name}</span>
+                        {/* <span>{file_name}</span> */}
                     </span>
                     <Link className="rows-list__btn button button--red  knowlege__btn" to={`/edit-knowlege/${id}`}>Редактировать</Link>
                 </li>

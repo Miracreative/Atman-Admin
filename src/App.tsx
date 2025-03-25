@@ -75,13 +75,13 @@ export default function App() {
           samesite: 'lax'     
         });
         setCookie('userName', `${response.user_name}`, {
-          'max-age': 3600,   
+          'max-age': 7200,   
           path: '/',         
           secure: true,      
           samesite: 'lax' 
         });
         setCookie('role', `${response.role}`, {
-          'max-age': 3600,   
+          'max-age': 7200,   
           path: '/',         
           secure: true,      
           samesite: 'lax' 
@@ -99,7 +99,7 @@ export default function App() {
         
         if(response.status === 200) {
           setCookie('userName', `${response.data.user_name}`, {
-            'max-age': 3600,   
+            'max-age': 7200,   
             path: '/',         
             secure: true,    
             samesite: 'lax'     
@@ -117,7 +117,7 @@ export default function App() {
             samesite: 'lax'     
           });
           setCookie('role', `${response.data.role}`, {
-            'max-age': 3600,   
+            'max-age': 7200,   
             path: '/',         
             secure: true,      
             samesite: 'lax' 

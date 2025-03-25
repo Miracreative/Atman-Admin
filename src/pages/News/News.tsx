@@ -78,7 +78,7 @@ const News = () => {
             const imagesItems = (arr: any[]) => {
                 const images = arr.map((_, i) => {
                     return (
-                            <img key={i} src={fileImage} alt="image" />
+                        <img key={i} src={fileImage} alt="image" />
                     )
                 })
                 return (
@@ -92,7 +92,9 @@ const News = () => {
                     <span>{content}</span>
                     <span>
                     {
-                        imagesItems(imagessrc)
+                        imagessrc.length > 0 ?
+                        <img src={fileImage} alt="file" /> :
+                        null
                     }
                     </span>
                     <Link className="rows-list__btn button button--red  news__btn" to={`/edit-news/${id}`}>Редактировать</Link>

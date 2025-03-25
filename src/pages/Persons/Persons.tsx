@@ -85,9 +85,9 @@ const Persons = () => {
                     <span>{name}</span>
                     <span>{email}</span>
                     <span>{watsapp}</span>
-                    <span>
+                    {/* <span>
                         <img src={fileImage} alt="file" />
-                    </span>
+                    </span> */}
                     <Link className="rows-list__btn button button--red  person__btn" to={`/edit-person/${id}`}>Редактировать</Link>
                 </li>
             )
