@@ -63,6 +63,20 @@ export default function App() {
   
     document.cookie = updatedCookie;
   }
+
+  useEffect(() => {
+    const handleWheel = (e: any) => {
+      if (e.ctrlKey) {
+        e.preventDefault();
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
   
   useEffect(() => {
     const refreshToken = getCookie('refresh_token');

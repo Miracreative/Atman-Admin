@@ -543,6 +543,13 @@ body {
     color: #000 !important;
   }
 }
+
+html, body {
+  touch-action: pan-x pan-y;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 @media (max-width: 1920px) {
   body {
     font-size: calcVW(20);
