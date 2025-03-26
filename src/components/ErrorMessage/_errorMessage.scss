@@ -1,3 +1,4 @@
+@import './../../scss/_functions';
 .error-message {
     margin: 10vh 0;
     display: flex;
@@ -7,4 +8,10 @@
     height: 100%;
     font-size: 48px;
     text-align: center;
+  }
+
+  @media(max-width:1920px) {
+    .error-message {
+      font-size: calcVW(48);
+    }
   }

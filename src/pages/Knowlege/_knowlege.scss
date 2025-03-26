@@ -1,3 +1,4 @@
+@import "../../scss//_functions";
 .knowlege {
     &__wrapper {
         display: flex;
@@ -68,6 +69,47 @@
         margin-bottom: 20px;
         &--add {
             margin-left: 0;
+        }
+    }
+}
+
+@media(max-width:1920px) {
+    .knowlege {
+        &__box {
+            border-radius: calcVW(20);
+            padding-top: calcVW(40);
+            padding-bottom: calcVW(40);
+            padding-left: calcVW(20);
+            padding-right: calcVW(20);
+            margin-bottom: calcVW(40);
+            span {
+                height: calcVW(50);
+                margin-bottom: calcVW(20);
+            }
+            span + span {
+                padding-left: calcVW(20);
+                margin-right: calcVW(20);
+            }
+            span {
+                
+                margin-bottom: calcVW(40);
+                margin-top: calcVW(40);
+                padding-left: calcVW(20);
+                img {
+                    width: calcVW(35);
+                }
+                gap: calcVW(20);
+                span {
+                    margin-bottom: calcVW(20);
+                    margin-top: calcVW(20);
+                    
+                }
+            }
+        }
+        
+        &__btn {
+            margin-top: calcVW(20);
+            margin-bottom: calcVW(20);
         }
     }
 }

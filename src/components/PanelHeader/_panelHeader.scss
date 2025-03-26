@@ -1,4 +1,4 @@
-
+@import './../../scss/functions.scss';
 .panelhead {
     margin-bottom: 40px;
     padding: 30px 50px;
@@ -27,3 +27,27 @@
       }
     }
   }
+
+
+@media(max-width: 1920px) {
+  .panelhead {
+    margin-bottom: calcVW(40);
+    padding: calcVW(30) calcVW(50);
+    gap: calcVW(30);
+    &__title {
+      font-size: calcVW(48);
+    }
+    input {
+      border-radius: calcVW(20);
+      padding-right: calcVW(120);
+    }
+    .search {
+      img {
+        width: calcVW(40);
+        height: calcVW(40);
+        margin-left: calcVW(-80);
+        margin-top: calcVW(18);
+      }
+    }
+  }
+}

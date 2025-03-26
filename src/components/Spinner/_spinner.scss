@@ -1,3 +1,4 @@
+@import './../../scss/functions.scss';
 .loader {
     width: 48px;
     height: 48px;
@@ -60,4 +61,19 @@
         opacity: 1;
         z-index: 2;
     }
+}
+
+@media(max-width: 1920px) {
+  .loader {
+    width: calcVW(48);
+    height: calcVW(48);
+    margin:calcVW(15) auto;
+    top: calc(50% - calcVW(24));
+    left: calc(50% - calcVW(24));
+  }
+  .loader::after,
+  .loader::before {
+    width: calcVW(24);
+    height: calcVW(24);
+  }
 }

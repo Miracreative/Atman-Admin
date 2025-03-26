@@ -1,3 +1,4 @@
+@import './../../scss/functions.scss';
 .parent-form {
     &__inner {
       display: flex;
@@ -196,3 +197,100 @@
       }
     }
   }
+
+@media(max-width: 1920px) {
+  .parent-form {
+    input[type=text],
+    .input {
+      padding: calcVW(23) calcVW(30);
+      border-radius: calcVW(20);
+    }
+    &__left {
+      padding-right: calcVW(40);
+    }
+    
+    &__plus {
+      width: calcVW(50);
+      height: calcVW(50);
+      &::before,
+      &::after {
+        width: calcVW(20);
+      }
+    }
+    &__right {
+      padding-left: calcVW(40);
+    }
+    &__col-box {
+      margin-bottom: calcVW(30);
+    }
+    &__col {
+      label {
+        + label {
+          margin-top: calcVW(30);
+        }
+      }
+    }
+    &__label-name {
+      font-size: calcVW(12);
+      padding-left: calcVW(20);
+    }
+    &__labels-box {
+      margin-top: calcVW(30);
+      margin-bottom: calcVW(30);
+      &--gender {
+        margin-top: calcVW(30);
+      }
+    }
+    &__checkboxes {
+      margin-top: calcVW(30);
+    }
+    &__checkbox-list {
+      gap: calcVW(30) 0;
+      padding: calcVW(15);
+      border-radius: calcVW(20);
+    }
+  
+    &__btns {
+      margin-top: calcVW(60);
+      gap: calcVW(80);
+      button {
+        max-width: calcVW(335);
+      }
+    }
+    &__row {
+      margin-bottom: calcVW(50);
+      padding-bottom: calcVW(50);
+    }
+    &__subtitle {
+      margin-bottom: calcVW(30);
+      font-size: calcVW(36);
+    }
+    &__payments-label {
+      span {
+        margin-bottom: calcVW(10);
+        font-size: calcVW(12);
+      }
+      div {
+        height: calcVW(70);
+        padding: calcVW(15);
+        border-radius: calcVW(20);
+      }
+    }
+  
+    &__child {
+      height: calcVW(70);
+      border-radius: calcVW(200);
+      img {
+        width: calcVW(70);
+        height: calcVW(70);
+      }
+      a {
+        width: calcVW(150);
+        height: calcVW(50);
+        padding: calcVW(17) calcVW(10);
+        margin-right: calcVW(10);
+        border-radius: calcVW(40);
+      }
+    }
+  }
+}

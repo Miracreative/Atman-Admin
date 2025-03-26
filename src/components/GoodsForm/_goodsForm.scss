@@ -287,9 +287,113 @@
   }
 }
 @media (max-width: 1920px) {
-  .create-admin {
+  .create-goods {
+    gap: calcVW(50) calcVW(20);
     &__box {
       padding: calcVW(50);
+      border-radius: calcVW(20);
+    }
+    &__image-wrapper {
+      gap: calcVW(40);
+      margin-top: calcVW(-20);
+      margin-bottom: calcVW(40);
+    }
+    &__image-container {
+      gap: calcVW(20);
+  
+      img {
+        width: calcVW(40);
+        height: calcVW(40);
+      }
+    }
+    &__image {
+      margin-top: calcVW(115);
+      border-radius: calcVW(10);
+    }
+    &__image--span {
+      margin-top: calcVW(30);
+    }
+    &__wrap {
+      padding-top: calcVW(80);
+      input {
+        margin-bottom: calcVW(40);
+      }
+    }
+    &__title {
+      margin-left: calcVW(80);
+      margin-bottom: calcVW(40);
+    }
+    &__input {
+      input {
+        top: calcVW(40);
+        height: calcVW(70);
+        max-width: calcVW(335);
+  
+      }
+      img {
+          top: calcVW(20);
+      }
+      span {
+        margin-left: calcVW(20);
+        font-size: calcVW(20);
+      }
+    }
+    &__label {
+      margin-bottom: calcVW(40);
+      span {
+        margin-bottom: calcVW(20);
+        margin-right: calcVW(20);
+        padding-left: calcVW(30);
+        font-size: calcVW(20);
+      }
+      img {
+        right: calcVW(15);
+        bottom: calcVW(8);
+        width: calcVW(40);
+        height: calcVW(40);
+      }
+      .error {
+        right: calcVW(30);
+      }
+    }
+    &__checkbox {
+      span {
+        padding: calcVW(30) calcVW(40) calcVW(30) calcVW(80);
+        font-size: calcVW(14);
+        border-radius: calcVW(25);
+        min-width: calcVW(220);
+        &::before {
+          left: calcVW(4);
+          border-radius: calcVW(20);
+        }
+      }
+    }
+    &__gen {
+      margin-left: calcVW(30);
+      font-size: calcVW(14);
+    }
+    &__btn {
+      max-width: calcVW(330);
+    }
+  }
+  .parameters {
+    gap: calcVW(20);
+    margin-bottom: calcVW(40);
+    &__item {
+        max-width: calcVW(200);
+    }
+    &__check {
+        min-width: calcVW(23);
+        height: calcVW(23);
+        border-radius: calcVW(7);
+        margin-right: calcVW(20);
+        img {
+            width: calcVW(21);
+            height: calcVW(21);
+        }
+    }
+    &__title {
+        font-size: calcVW(12);
     }
   }
 }

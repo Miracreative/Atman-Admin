@@ -1,3 +1,5 @@
+@import "./../../scss/functions.scss";
+
 .confirm {
     position: fixed;
     top: 0;
@@ -60,5 +62,27 @@
     to {
         opacity: 1;
         transform: scale(1);
+    }
+}
+
+@media(max-width:1920px) {
+    .confirm {
+        &__modal {
+            width: calcVW(780);
+            border-radius: calcVW(30);
+            padding: calcVW(50) calcVW(35) calcVW(35);
+            h3 {
+                font-size: calcVW(36);
+                margin-bottom: calcVW(50);
+            }
+            span {
+                margin-bottom: calcVW(30);
+                font-size: calcVW(24);
+            }
+        }
+       
+        &__buttons {
+            padding-top: calcVW(45);
+        }
     }
 }

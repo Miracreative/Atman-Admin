@@ -121,7 +121,59 @@
 }
 
 @media (max-width: 1920px) {
+  .navigation {
+    padding-right: calcVW(20);
+    min-width: calcVW(300);
+    border-radius: 0 calcVW(20) calcVW(20) 0;
+    &__top {
+      padding-top: calcVW(25);
+      height: calcVW(125);
+      margin-left: calcVW(20);
+      margin-bottom: calcVW(60);
+      padding-bottom:calcVW(25);
+      gap: calcVW(20);
+    }
+    &__logo {
+      width: calcVW(200);
+    }
+    &__login {
+      font-size: calcVW(16);
+    }
+    &__list {
+      padding-bottom: calcVW(50);
+    }
+    &__link {
+      padding: calcVW(15) calcVW(25) calcVW(15) calcVW(50);
+      border-radius: 0 calcVW(20) calcVW(20) 0;
+      font-size: calcVW(16);
+      &::after {
+        margin-left: calcVW(10);
+        width: calcVW(20);
+        height: calcVW(16);
+      }
+      &.active {
+        padding: calcVW(25) calcVW(25) calcVW(25) calcVW(50);
+      }
+    }
+    &__bottom {
+      margin-left: calcVW(20);
+      padding-top: calcVW(50);
+      padding-bottom: calcVW(20);
+    }
+    &__logout {
+      padding: calcVW(20) 0 calcVW(25);
+      font-size: calcVW(20);
+      border-radius: calcVW(20);
+      &::before {
+        width: calcVW(20);
+        height: calcVW(16);
+      }
+    }
+  }
   .content {
-    padding: 0 calcVW(50);
+    width: 100%;
+    height: 100%;
+    max-width: calcVW(1540);
+    padding: 0 calcVW(70);
   }
 }

@@ -1,3 +1,4 @@
+@import './../../scss/_functions';
 .goods {
     &__wrapper {
         display: flex;
@@ -106,4 +107,73 @@
         align-self: center;
     }
 }
-   
+@media(max-width: 1920px) {
+    .goods {
+        &__wrapper {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        &__box {
+            border-radius: calcVW(20);
+            padding-top: calcVW(40);
+            padding-bottom: calcVW(40);
+            padding-left: calcVW(20);
+            padding-right: calcVW(20);
+            margin-bottom: calcVW(40);
+            span {
+                height: calcVW(50);
+                margin-bottom: calcVW(20);
+            }
+            span + span {
+                padding-left: calcVW(20);
+                margin-right: calcVW(20);
+            }
+            span {
+                
+                margin-bottom: calcVW(40);
+                margin-top: calcVW(40);
+                padding-left: calcVW(20);
+                img {
+                    width: calcVW(35);
+                     
+                }
+                gap: calcVW(20);
+                span {
+                    margin-bottom: calcVW(20);
+                    margin-top: calcVW(20);
+                    
+                }
+            }
+        }
+        
+        &__btn {
+            margin-top: calcVW(20);
+            margin-bottom: calcVW(20);
+        }
+    }
+    .goods__btn + .goods__btn {
+        margin-left: calcVW(20);
+    }
+    .filters {
+        gap: calcVW(20);
+        margin-bottom: calcVW(40);
+        &__item {
+            max-width: calcVW(200);
+        }
+        &__check {
+            min-width: calcVW(23);
+            height: calcVW(23);
+            border-radius: calcVW(7);
+            margin-right: calcVW(20);
+            img {
+                object-fit: contain;
+                width: calcVW(21);
+                height: calcVW(21);
+            }
+        }
+        &__title {
+            font-size: calcVW(12);
+        }
+    }
+}

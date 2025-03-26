@@ -1,3 +1,4 @@
+@import './../../scss/functions.scss';
 .pagination {
     font-family: "Monstaerrat", sans-serif;
     display: flex;
@@ -27,3 +28,17 @@
       }
     }
   }
+
+@media(max-width: 1920px) {
+  .pagination {
+    gap: calcVW(30);
+    &__pages {
+      min-width: calcVW(60);
+    }
+    button {
+      width: calcVW(70);
+      height: calcVW(70);
+      border-radius: calcVW(20);
+    }
+  }
+}
