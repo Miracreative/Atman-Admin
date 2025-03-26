@@ -1,3 +1,4 @@
+@import "./../../scss/functions";
 .login {
 
     background-color: #F1F1F1;
@@ -66,5 +67,37 @@
         flex-direction: column;
         gap: 6vw;
         justify-content: space-between;
+    }
+}
+
+@media(min-width: 1920px) {
+    .login {
+        &__wrapper {
+            gap: calcVW(60);
+        }
+        &__container {
+            padding: calcVW(80) 0;
+        }
+        &__yammy {
+            width: calcVW(160);
+            height: calcVW(160);
+        }
+        &__form {
+            max-width: calcVW(450);
+            label {
+                &:last-of-type {
+                    margin-bottom: calcVW(20);
+                }
+            }
+        }
+        &__fogot {
+            font-size: calcVW(14);
+            margin-bottom: calcVW(60);
+        }
+        &__wrap {
+            margin: 0 calcVW(80);
+            border-radius: calcVW(40);
+            padding-bottom: calcVW(80);
+        }
     }
 }
