@@ -82,6 +82,7 @@ export default function App() {
     const refreshToken = getCookie('refresh_token');
     if (refreshToken) {
       checkAuth().then(response => {
+        setLoading(true);
         setCookie('token', `${response.token}`, {
           'max-age': 3600,   
           path: '/',         
@@ -102,6 +103,10 @@ export default function App() {
         });
         dispatch(isLogIn(true))
         dispatch(setUser(response.user_name))
+      }).catch(() => {
+        dispatch(isLogIn(false))
+      }).finally(() => {
+        setLoading(false);
       });
     }
   }, [])

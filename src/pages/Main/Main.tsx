@@ -45,7 +45,7 @@ const Main = () =>  {
     }
       
     const myCookieValue = getCookie('userName');
-   const adminRole = getCookie('role');
+    const adminRole = getCookie('role');
     
     const logOut = () => {
         Cookies.remove('userName');
