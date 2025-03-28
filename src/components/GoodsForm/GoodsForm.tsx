@@ -564,7 +564,7 @@ const GoodsForm = ({good, setGood, buttonTitle, form} : {
                         }),
                         headingsPlugin(),
                         listsPlugin(),
-                        quotePlugin(),
+                        // quotePlugin(),
                         thematicBreakPlugin(),
                         markdownShortcutPlugin(),
                         frontmatterPlugin(),

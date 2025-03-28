@@ -297,7 +297,7 @@ const EditNews = () => {
                             }),
                             headingsPlugin(),
                             listsPlugin(),
-                            quotePlugin(),
+                            // quotePlugin(),
                             thematicBreakPlugin(),
                             markdownShortcutPlugin(),
                             frontmatterPlugin(),

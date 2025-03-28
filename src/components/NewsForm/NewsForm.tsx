@@ -246,7 +246,7 @@ const NewsForm = ({news, setNews, buttonTitle, form} : {
                         }),
                         headingsPlugin(),
                         listsPlugin(),
-                        quotePlugin(),
+                        // quotePlugin(),
                         thematicBreakPlugin(),
                         markdownShortcutPlugin(),
                         frontmatterPlugin(),

@@ -185,7 +185,7 @@ const KnowlegeForm = ({knowledge, setKnowlege, buttonTitle, form} : {
                         }),
                         headingsPlugin(),
                         listsPlugin(),
-                        quotePlugin(),
+                        // quotePlugin(),
                         thematicBreakPlugin(),
                         markdownShortcutPlugin(),
                         frontmatterPlugin(),

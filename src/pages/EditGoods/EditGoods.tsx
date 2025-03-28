@@ -568,7 +568,7 @@ const EditGood = () => {
                             }),
                             headingsPlugin(),
                             listsPlugin(),
-                            quotePlugin(),
+                            // quotePlugin(),
                             thematicBreakPlugin(),
                             markdownShortcutPlugin(),
                             frontmatterPlugin(),
