@@ -646,7 +646,6 @@ const EditGood = () => {
                     <UndoRedo />
                     {/* <Separator/> */}
                     <BoldItalicUnderlineToggles />
-                    <InsertFrontmatter />
                     <ListsToggle />
                     {/* <InsertTable/> */}
                     <CreateLink />

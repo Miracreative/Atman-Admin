@@ -311,7 +311,6 @@ const EditNews = () => {
                     <BlockTypeSelect />
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
-                    <InsertFrontmatter />
                     <ListsToggle />
                     <CreateLink />
                   </>

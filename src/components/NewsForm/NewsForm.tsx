@@ -262,7 +262,6 @@ const NewsForm = ({
                     <BlockTypeSelect />
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
-                    <InsertFrontmatter />
                     <ListsToggle />
                     <CreateLink />
                   </>

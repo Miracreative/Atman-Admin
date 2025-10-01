@@ -667,7 +667,6 @@ const GoodsForm = ({
                     <BlockTypeSelect />
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
-                    <InsertFrontmatter />
                     <ListsToggle />
                     <CreateLink />
                   </>

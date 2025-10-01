@@ -200,7 +200,6 @@ const KnowlegeForm = ({
                     <BlockTypeSelect />
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
-                    <InsertFrontmatter />
                     <ListsToggle />
                     <CreateLink />
                   </>

@@ -235,7 +235,6 @@ const EditKnowlege = () => {
                     <BlockTypeSelect />
                     <UndoRedo />
                     <BoldItalicUnderlineToggles />
-                    <InsertFrontmatter />
                     <ListsToggle />
                     <CreateLink />
                   </>
